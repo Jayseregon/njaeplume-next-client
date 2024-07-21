@@ -1,0 +1,10 @@
+.venv
+.git
+.gitignore
+.env_local
+_dev*/
+npm-debug.log
+Dockerfile
+.dockerignore
+README.md
+.node_modules

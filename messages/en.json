@@ -1,0 +1,25 @@
+{
+  "HomePage": {
+    "title": "Personalization like you want it",
+    "subtitle": "We are reinventing ourselves to offer you a unique experience.",
+    "redirect": "In the mean time, you can still visit our Portfolio containing all previous creations.",
+    "code": "Currently in development"
+  },
+  "LocaleSwitcher": {
+    "label": "Change language",
+    "locale": "{locale, select, fr {🇫🇷 French} en {🇬🇧 English} other {🚫 Unknown}}",
+    "localeFlag": "{locale, select, fr {🇫🇷} en {🇬🇧} other {🚫}}"
+  },
+  "Portfolio": {
+    "h1_title": "Portfolio",
+    "subtitle": "Will display current creations with possible buying options."
+  },
+  "Contact": {
+    "h1_title": "Contact",
+    "subtitle": "Future contact form."
+  },
+  "Themes": {
+    "h1_title": "Themes",
+    "subtitle": "Testing the Dark & Light themes color scheme."
+  }
+}
