@@ -4,7 +4,7 @@ import { headers } from "next/headers";
 import { unstable_setRequestLocale } from "next-intl/server";
 
 import { Navbar } from "@/components/navbar";
-import { HeartFooterIcon } from "@/components/icons";
+import { Footer } from "@/src/components/footer";
 
 const locales = ["en", "fr"];
 
@@ -39,15 +39,7 @@ export default async function LocaleLayout({
           {children}
         </main>
 
-        <footer
-          className="w-full flex items-center justify-center py-3 text-default-300 space-x-1"
-          nonce={nonce || undefined}
-        >
-          <span>Made with</span>
-          <HeartFooterIcon size={20} />
-          <span>in Canada</span>
-          <span>&copy; {new Date().getFullYear()} NJAE Plume</span>
-        </footer>
+        <Footer nonce={nonce || undefined} />
       </div>
     </NextIntlClientProvider>
   );

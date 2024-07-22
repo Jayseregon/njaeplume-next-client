@@ -1,15 +1,15 @@
 import {
   Fira_Code as FontMono,
   Italiana,
-  Roboto,
   Lora,
   Open_Sans,
+  Caudex,
 } from "next/font/google";
 
-export const fontSans = Roboto({
+export const fontSans = Caudex({
   subsets: ["latin"],
   variable: "--font-sans",
-  weight: ["100", "300", "400", "500", "700", "900"],
+  weight: ["400", "700"],
   style: ["normal", "italic"],
 });
 

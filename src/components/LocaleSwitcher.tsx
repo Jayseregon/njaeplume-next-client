@@ -21,7 +21,7 @@ export default function LocaleSwitcher({ nonce }: LocaleSwitcherProps) {
   const locale = useLocale();
   const router = useRouter();
 
-  const [isPending, startTransition] = useTransition();
+  const [, startTransition] = useTransition();
   const pathname = usePathname();
 
   useEffect(() => {

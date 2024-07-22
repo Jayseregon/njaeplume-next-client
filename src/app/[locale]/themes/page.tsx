@@ -1,7 +1,6 @@
 import { useTranslations } from "next-intl";
 
 import { ColorCard, ColorCardScale } from "@/components/ColorCard";
-import { title } from "@/components/typography";
 import { PageTmpCard } from "@/src/components/PageTmpCard";
 
 export default function ThemesPage() {
@@ -9,7 +8,7 @@ export default function ThemesPage() {
 
   return (
     <section className="flex flex-col items-center justify-center gap-4 py-8 md:py-10">
-      <h1 className={title()}>{t("h1_title")}</h1>
+      <h1 className="text-5xl font-bold mb-10">{t("h1_title")}</h1>
 
       <div className="py-3" />
 

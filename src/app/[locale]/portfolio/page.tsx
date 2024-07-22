@@ -5,7 +5,6 @@ import { unstable_setRequestLocale } from "next-intl/server";
 
 import { PageTmpCard } from "@/src/components/PageTmpCard";
 import { getListOfFiles } from "@/src/lib/mdReader";
-import { title } from "@/components/typography";
 
 export default function AboutPage({
   params: { locale },
@@ -19,7 +18,7 @@ export default function AboutPage({
 
   return (
     <div>
-      <h1 className={title()}>{t("h1_title")}</h1>
+      <h1 className="text-5xl font-bold mb-10">{t("h1_title")}</h1>
 
       <div className="py-3" />
 

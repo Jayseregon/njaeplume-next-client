@@ -5,6 +5,16 @@
     "redirect": "In the mean time, you can still visit our Portfolio containing all previous creations.",
     "code": "Currently in development"
   },
+  "Footer": {
+    "copyright": "NJAE Plume G.P. - All rights reserved - ",
+    "google1": "This site is protected by reCAPTCHA and the Google ",
+    "gpp": "Privacy Policy",
+    "gpp_href": "https://policies.google.com/privacy",
+    "gts": "Terms of Service",
+    "gts_href": "https://policies.google.com/terms",
+    "gtxt1": " and ",
+    "gtxt2": " apply."
+  },
   "LocaleSwitcher": {
     "label": "Change language",
     "locale": "{locale, select, fr {🇫🇷 French} en {🇬🇧 English} other {🚫 Unknown}}",
@@ -15,8 +25,19 @@
     "subtitle": "Will display current creations with possible buying options."
   },
   "Contact": {
-    "h1_title": "Contact",
-    "subtitle": "Future contact form."
+    "title": "Contact Us",
+    "firstName": "First Name",
+    "lastName": "Last Name",
+    "email": "Email",
+    "subject": "Subject",
+    "message": "Message",
+    "honeypot": "honeypot",
+    "btn": "Send",
+    "btn_pending": "Sending...",
+    "success": "Email sent successfully!",
+    "error1": "Oops!", 
+    "error2": "There was a problem sending your email.",
+    "error3": "Please try again later."
   },
   "Themes": {
     "h1_title": "Themes",
