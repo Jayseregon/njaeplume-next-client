@@ -1,10 +1,7 @@
 import { useTranslations } from "next-intl";
-import { headers } from "next/headers";
-import { Link } from "@nextui-org/link";
 import { unstable_setRequestLocale } from "next-intl/server";
 
-import { PageTmpCard } from "@/src/components/PageTmpCard";
-import { getListOfFiles } from "@/src/lib/mdReader";
+import { ProductList } from "@/src/components/portfolioProducts";
 
 export default function AboutPage({
   params: { locale },
@@ -13,20 +10,16 @@ export default function AboutPage({
 }) {
   unstable_setRequestLocale(locale);
   const t = useTranslations("Portfolio");
-  const mdFiles = getListOfFiles("posts");
-  const nonce = headers().get("x-nonce");
+  // const mdFiles = getListOfFiles("posts");
+  // const nonce = headers().get("x-nonce");
 
   return (
     <div>
       <h1 className="text-5xl font-bold mb-10">{t("h1_title")}</h1>
 
-      <div className="py-3" />
+      <div className="py-5" />
 
-      <PageTmpCard subtitle={t("subtitle")} />
-
-      <div className="py-20" />
-
-      <div>
+      {/* <div>
         {mdFiles.map((file, index) => (
           <ul key={index}>
             <li key={`${index}-${file}`}>
@@ -39,7 +32,9 @@ export default function AboutPage({
             </li>
           </ul>
         ))}
-      </div>
+      </div> */}
+
+      <ProductList locale={locale} />
     </div>
   );
 }

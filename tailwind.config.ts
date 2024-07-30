@@ -195,7 +195,7 @@ const config = {
         },
         dark: {
           colors: {
-            background: "#2A1D16",
+            background: "rgb(41 37 36)", // "#2A1D16",
             foreground: "#DAB6A5",
             primary: {
               // 50: "#2E1D4A",

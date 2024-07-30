@@ -3,7 +3,7 @@ services:
     build:
       context: .
       dockerfile: Dockerfile
-    container_name: jayseregon-portfolio
+    container_name: njaeplume-next-client
     ports:
       - "3000:3000"
     environment:
