@@ -194,9 +194,9 @@ export const FreebieCard = ({ freebie }: FreebieCardProps) => {
           src={`${BUNNY_CDN_PULL_ZONE}/${freebie.image}`}
         />
       </div>
-      <div className="pb-2">
+      {/* <div className="pb-2">
         <DownloadButton filePath={freebie.zip_file_name} />
-      </div>
+      </div> */}
     </div>
   );
 };
