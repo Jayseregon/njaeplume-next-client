@@ -59,7 +59,7 @@ function cspMiddleware(response: NextResponse) {
     default-src 'self';
     script-src 'self' 'nonce-${nonce}' 'strict-dynamic' https://www.google.com https://www.gstatic.com;
     style-src 'self' 'nonce-${nonce}';
-    img-src 'self' blob: data:;
+    img-src 'self' blob: data: https://njaeink-remote-pull.b-cdn.net;
     font-src 'self';
     object-src 'none';
     base-uri 'self';
