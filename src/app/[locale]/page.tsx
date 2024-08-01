@@ -90,7 +90,7 @@ export default function Home({
               {portfolio?.label}
             </Button>
           </Link>
-          <Link
+          {/* <Link
             passHref
             href={`/${locale}/${themes?.href}`}
             nonce={nonce || undefined}>
@@ -100,7 +100,7 @@ export default function Home({
               nonce={nonce || undefined}>
               {themes?.label}
             </Button>
-          </Link>
+          </Link> */}
         </ButtonGroup>
 
         <div className="py-5" />

@@ -65,6 +65,7 @@ function cspMiddleware(response: NextResponse) {
     base-uri 'self';
     form-action 'self';
     frame-src 'self' https://www.google.com;
+    connect-src 'self' https://ny.storage.bunnycdn.com;
     frame-ancestors 'none';
     upgrade-insecure-requests;
   `
