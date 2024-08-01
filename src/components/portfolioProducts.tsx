@@ -5,7 +5,7 @@ import { useInView } from "react-intersection-observer";
 import { Button } from "@nextui-org/button";
 import { CircularProgress } from "@nextui-org/progress";
 
-import { getFreebieZip } from "@/lib/bunnyRequest";
+import { getFreebieZip, fetchProductsData } from "@/lib/bunnyRequest";
 
 import { DownloadIcon } from "./icons";
 
@@ -211,13 +211,7 @@ export const ProductList = ({ locale }: { locale: string }) => {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const response = await fetch("/api/products");
-
-        if (!response.ok) {
-          throw new Error("Failed to fetch data");
-        }
-        const data = await response.json();
-
+        const data = await fetchProductsData();
         setProducts(data.products);
         setFreebies(data.freebies);
       } catch (err) {
