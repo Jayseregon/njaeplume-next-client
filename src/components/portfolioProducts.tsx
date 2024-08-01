@@ -187,7 +187,7 @@ export const FreebieCard = ({ freebie }: FreebieCardProps) => {
       className="border-1 border-foreground rounded-2xl pt-3"
     >
       <h3 className="text-xl pb-1 font-bold">{freebie.name}</h3>
-      <div className="pt-2 pb-2">
+      <div className="pt-2 pb-8">
         <LazyImage
           key={freebie.id}
           alt={freebie.alt_text}
