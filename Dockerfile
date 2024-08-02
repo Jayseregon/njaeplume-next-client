@@ -39,6 +39,9 @@ WORKDIR /app
 # ENV NODE_ENV=development
 ENV NEXT_TELEMETRY_DISABLED=1
 
+ENV RECAPTCHA_SECRET_KEY=$RECAPTCHA_SECRET_KEY
+ENV RESEND_API_KEY=$RESEND_API_KEY
+
 RUN addgroup --system --gid 1001 nodejs
 RUN adduser --system --uid 1001 nextjs
 
