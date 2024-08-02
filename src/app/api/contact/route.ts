@@ -3,8 +3,8 @@ import { Resend } from "resend";
 
 import { EmailTemplate } from "@/src/components/email-templates";
 
-const RECAPTCHA_SECRET = process.env.NEXT_PUBLIC_RECAPTCHA_SECRET_KEY;
-const resend = new Resend(process.env.NEXT_PUBLIC_RESEND_API_KEY);
+const RECAPTCHA_SECRET = process.env.RECAPTCHA_SECRET_KEY;
+const resend = new Resend(process.env.RESEND_API_KEY);
 
 interface ContactFormData {
   firstName: string;
@@ -63,8 +63,8 @@ export async function POST(request: NextRequest) {
 
   try {
     const { data, error } = await resend.emails.send({
-      from: process.env.NEXT_PUBLIC_CONTACT_DEFAULT_FROM ?? "",
-      to: process.env.NEXT_PUBLIC_CONTACT_DEFAULT_TO ?? "",
+      from: process.env.CONTACT_DEFAULT_FROM ?? "",
+      to: process.env.CONTACT_DEFAULT_TO ?? "",
       subject: subject,
       text: subject,
       react: EmailTemplate({ firstName, lastName, subject, email, message }),
