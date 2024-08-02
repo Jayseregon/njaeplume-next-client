@@ -5,7 +5,9 @@ services:
       dockerfile: Dockerfile
     container_name: njaeplume-next-client
     ports:
-      - "3000:3000"
+      - 3000:3000
+    env_file:
+      - .env.local
     environment:
       NODE_ENV: development
     volumes:

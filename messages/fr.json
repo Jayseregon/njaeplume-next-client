@@ -6,12 +6,11 @@
     "code": "En cours de développement"
   },
 "Footer": {
-    "copyright": "NJAE Plume S.E.N.C. - Tous droits réservés - ",
+    "copyright1": "NJAE Plume S.E.N.C.",
+    "copyright2": "Tous droits réservés",
     "google1" : "Ce site est protégé par reCAPTCHA et Google ",
     "gpp": "Politique de confidentialité",
-    "gpp_href" : "https://policies.google.com/privacy",
     "gts": "Conditions d'utilisation",
-    "gts_href" : "https://policies.google.com/terms",
     "gtxt1": " et ", 
     "gtxt2": " s'appliquent."
   },

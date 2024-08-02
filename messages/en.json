@@ -6,12 +6,11 @@
     "code": "Currently in development"
   },
   "Footer": {
-    "copyright": "NJAE Plume G.P. - All rights reserved - ",
+    "copyright1": "NJAE Plume G.P.",
+    "copyright2": "All rights reserved",
     "google1": "This site is protected by reCAPTCHA and the Google ",
     "gpp": "Privacy Policy",
-    "gpp_href": "https://policies.google.com/privacy",
     "gts": "Terms of Service",
-    "gts_href": "https://policies.google.com/terms",
     "gtxt1": " and ",
     "gtxt2": " apply."
   },

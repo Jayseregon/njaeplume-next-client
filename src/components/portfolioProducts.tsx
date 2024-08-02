@@ -247,7 +247,7 @@ export const ProductList = ({ locale }: { locale: string }) => {
   if (error) return <div>Something went wrong...</div>;
 
   return (
-    <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-10 mx-20">
+    <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-10 mx-20">
       {products.map((product) => (
         <ProductCard key={product.id} locale={locale} product={product} />
       ))}

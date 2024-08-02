@@ -29,24 +29,24 @@ export default function Home({
 
   return (
     <div className="flex flex-col items-center w-full">
-      <div className="grid grid-cols-3 justify-between">
+      <div className="flex justify-between items-center w-full">
         <Image
-          alt="NJAE PLume homepage logo"
-          className="justify-self-start self-center w-full relative -left-6"
+          alt="NJAE PLume homepage left image"
+          className="relative -left-10 w-1/5 md:w-1/4"
           src={NJAEHeadLeft}
           width={200}
           nonce={nonce || undefined}
         />
         <Image
           alt="NJAE PLume homepage logo"
-          className="justify-self-center"
+          className="w-3/5 md:w-2/4"
           src={NJAEPlumeMain}
           width={500}
           nonce={nonce || undefined}
         />
         <Image
-          alt="NJAE PLume homepage logo"
-          className="justify-self-end self-center w-full relative -right-6"
+          alt="NJAE PLume homepage right image"
+          className="relative -right-6 w-1/5 md:w-1/4"
           src={NJAEHeadRight}
           width={200}
           nonce={nonce || undefined}
