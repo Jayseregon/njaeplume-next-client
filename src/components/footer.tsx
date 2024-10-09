@@ -12,7 +12,8 @@ export const Footer: React.FC<FooterProps> = ({ nonce }) => {
   return (
     <footer
       className="w-full flex text-xs text-center antialiased items-center justify-center py-3 text-foreground/50 text-wrap"
-      nonce={nonce || undefined}>
+      nonce={nonce || undefined}
+    >
       {/* <div>
         &copy; {new Date().getFullYear()} {t("copyright")}
         {t("google1")}
@@ -34,13 +35,12 @@ export const Footer: React.FC<FooterProps> = ({ nonce }) => {
           </span>
           <Link
             className="underline"
-            href="https://policies.google.com/privacy">
+            href="https://policies.google.com/privacy"
+          >
             {t("gpp")}
           </Link>
           {t("gtxt1")}
-          <Link
-            className="underline"
-            href="https://policies.google.com/terms">
+          <Link className="underline" href="https://policies.google.com/terms">
             {t("gts")}
           </Link>
           {t("gtxt2")}

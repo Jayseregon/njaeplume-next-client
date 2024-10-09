@@ -3,7 +3,6 @@ import { Button, ButtonGroup } from "@nextui-org/button";
 import { unstable_setRequestLocale } from "next-intl/server";
 import { useTranslations } from "next-intl";
 import { headers } from "next/headers";
-
 import Image from "next/image";
 import Link from "next/link";
 
@@ -23,9 +22,9 @@ export default function Home({
   const nonce = headers().get("x-nonce");
   const t = useTranslations("HomePage");
   const portfolio = siteConfig.navItems.find(
-    (item) => item.label === "Portfolio"
+    (item) => item.label === "Portfolio",
   );
-  const themes = siteConfig.navItems.find((item) => item.label === "Themes");
+  // const themes = siteConfig.navItems.find((item) => item.label === "Themes");
 
   return (
     <div className="flex flex-col items-center w-full">
@@ -33,23 +32,23 @@ export default function Home({
         <Image
           alt="NJAE PLume homepage left image"
           className="relative -left-10 w-1/5 md:w-1/4"
+          nonce={nonce || undefined}
           src={NJAEHeadLeft}
           width={200}
-          nonce={nonce || undefined}
         />
         <Image
           alt="NJAE PLume homepage logo"
           className="w-3/5 md:w-2/4"
+          nonce={nonce || undefined}
           src={NJAEPlumeMain}
           width={500}
-          nonce={nonce || undefined}
         />
         <Image
           alt="NJAE PLume homepage right image"
           className="relative -right-6 w-1/5 md:w-1/4"
+          nonce={nonce || undefined}
           src={NJAEHeadRight}
           width={200}
-          nonce={nonce || undefined}
         />
       </div>
 
@@ -60,8 +59,9 @@ export default function Home({
             <Snippet
               hideCopyButton
               hideSymbol
+              nonce={nonce || undefined}
               variant="flat"
-              nonce={nonce || undefined}>
+            >
               <span>{t("code")}</span>
             </Snippet>
           </div>
@@ -74,19 +74,19 @@ export default function Home({
 
         <div className="py-1" />
 
-        <ButtonGroup
-          className="gap-4"
-          nonce={nonce || undefined}>
+        <ButtonGroup className="gap-4" nonce={nonce || undefined}>
           <Link
             passHref
             href={`/${locale}/${portfolio?.href}`}
-            nonce={nonce || undefined}>
+            nonce={nonce || undefined}
+          >
             <Button
               color="primary"
+              nonce={nonce || undefined}
               radius="full"
               startContent={<PortfolioIcon />}
               variant="bordered"
-              nonce={nonce || undefined}>
+            >
               {portfolio?.label}
             </Button>
           </Link>

@@ -212,6 +212,7 @@ export const ProductList = ({ locale }: { locale: string }) => {
     const fetchData = async () => {
       try {
         const data = await fetchProductsData();
+
         setProducts(data.products);
         setFreebies(data.freebies);
       } catch (err) {
