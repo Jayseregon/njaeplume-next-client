@@ -6,6 +6,9 @@ import { useRouter } from "next/navigation";
 import { ThemeProvider as NextThemesProvider } from "next-themes";
 import { ThemeProviderProps } from "next-themes/dist/types";
 
+import EnvProvider from "@/components/EnvProvider";
+import { validatedEnv } from "@/lib/env";
+
 export interface ProvidersProps {
   children: React.ReactNode;
   themeProps?: ThemeProviderProps;
@@ -18,7 +21,7 @@ export function Providers({ children, themeProps, nonce }: ProvidersProps) {
   return (
     <NextUIProvider navigate={router.push}>
       <NextThemesProvider {...themeProps} nonce={nonce}>
-        {children}
+        <EnvProvider env={validatedEnv}>{children}</EnvProvider>
       </NextThemesProvider>
     </NextUIProvider>
   );

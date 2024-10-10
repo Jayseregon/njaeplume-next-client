@@ -1,8 +1,8 @@
 import React, { useEffect, useState } from "react";
 import { Button } from "@nextui-org/react";
 import { useTheme } from "next-themes";
-
-import { SunIcon, MoonIcon } from "@/components/icons";
+import { Sun, Moon } from "lucide-react";
+import { motion } from "framer-motion";
 
 interface ThemeSwitchProps {
   className?: string;
@@ -31,19 +31,24 @@ export const ThemeSwitch: React.FC<ThemeSwitchProps> = ({
   }
 
   return (
-    <div>
-      <Button
-        aria-label="Toggle theme"
-        className={className}
-        color={undefined}
-        isIconOnly={true}
-        nonce={nonce}
-        size="sm"
-        variant={undefined}
-        onPress={toggleTheme}
+    <Button
+      aria-label="Toggle theme"
+      className={className}
+      color={undefined}
+      isIconOnly={true}
+      nonce={nonce}
+      size="sm"
+      variant={undefined}
+      onPress={toggleTheme}
+    >
+      <motion.div
+        key={theme} // This ensures the animation runs on theme change
+        animate={{ rotate: 360 }}
+        initial={{ rotate: 0 }}
+        transition={{ duration: 0.5 }}
       >
-        {theme === "dark" ? <SunIcon /> : <MoonIcon />}
-      </Button>
-    </div>
+        {theme === "dark" ? <Sun /> : <Moon />}
+      </motion.div>
+    </Button>
   );
 };

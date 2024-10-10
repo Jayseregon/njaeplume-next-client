@@ -7,6 +7,7 @@ import { CircularProgress } from "@nextui-org/progress";
 
 import { getFreebieZip, fetchProductsData } from "@/lib/bunnyRequest";
 
+import { useEnv } from "./EnvProvider";
 import { DownloadIcon } from "./icons";
 
 type ProductImageProps = {
@@ -53,26 +54,26 @@ type DownloadButtonProps = {
   filePath: string;
 };
 
-const BUNNY_CDN_PULL_ZONE = process.env.NEXT_PUBLIC_BUNNY_PULL_ZONE_URL;
-const BUNNY_STORAGE_REGION = process.env.NEXT_PUBLIC_BUNNY_STORAGE_REGION;
-const BUNNY_STORAGE_ZONE_NAME = process.env.NEXT_PUBLIC_BUNNY_STORAGE_ZONE_NAME;
-const BUNNY_API_ACCESS_KEY = process.env.NEXT_PUBLIC_BUNNY_API_ACCESS_KEY;
+// const fetchBunnyFile = async (filePath: string) => {
+//   const {
+//     BUNNY_STORAGE_REGION,
+//     BUNNY_STORAGE_ZONE_NAME,
+//     BUNNY_API_ACCESS_KEY,
+//   } = useEnv();
+//   const fileURL = `https://${BUNNY_STORAGE_REGION}.storage.bunnycdn.com/${BUNNY_STORAGE_ZONE_NAME}/zipfile/${filePath}`;
+//   const headers = new Headers();
 
-const fetchBunnyFile = async (filePath: string) => {
-  const fileURL = `https://${BUNNY_STORAGE_REGION}.storage.bunnycdn.com/${BUNNY_STORAGE_ZONE_NAME}/zipfile/${filePath}`;
-  const headers = new Headers();
+//   headers.set("AccessKey", BUNNY_API_ACCESS_KEY ?? "");
+//   const response = await fetch(fileURL, { headers });
 
-  headers.set("AccessKey", BUNNY_API_ACCESS_KEY ?? "");
-  const response = await fetch(fileURL, { headers });
+//   if (!response.ok) {
+//     throw new Error("Failed to fetch data");
+//   }
 
-  if (!response.ok) {
-    throw new Error("Failed to fetch data");
-  }
+//   const blob = await response.blob();
 
-  const blob = await response.blob();
-
-  return blob;
-};
+//   return blob;
+// };
 
 // lazy load image component
 export const LazyImage = ({ src, alt }: LazyImageProps) => {
@@ -163,6 +164,8 @@ export const DownloadButton = ({ filePath }: DownloadButtonProps) => {
 
 // product card component
 export const ProductCard = ({ product, locale }: ProductCardProps) => {
+  const { BUNNY_CDN_PULL_ZONE } = useEnv();
+
   return (
     <div
       key={product.id}
@@ -189,6 +192,8 @@ export const ProductCard = ({ product, locale }: ProductCardProps) => {
 
 // freebie card component
 export const FreebieCard = ({ freebie }: FreebieCardProps) => {
+  const { BUNNY_CDN_PULL_ZONE } = useEnv();
+
   return (
     <div
       key={freebie.id}
