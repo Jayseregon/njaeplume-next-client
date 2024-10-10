@@ -57,7 +57,7 @@ function cspMiddleware(response: NextResponse) {
   const nonce = Buffer.from(crypto.randomUUID()).toString("base64");
   const cspHeader = `
     default-src 'self';
-    script-src 'self' 'nonce-${nonce}' 'strict-dynamic' https://www.google.com https://www.gstatic.com;
+    script-src 'self' 'nonce-${nonce}' 'strict-dynamic' https://www.google.com https://www.gstatic.com https://vercel.live;
     style-src 'self' 'nonce-${nonce}';
     img-src 'self' blob: data: https://njaeink-remote-pull.b-cdn.net;
     font-src 'self';

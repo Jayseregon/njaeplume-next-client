@@ -95,28 +95,20 @@ export const LazyImage = ({ src, alt }: LazyImageProps) => {
   return (
     <div ref={ref} className="relative aspect-auto w-5/6 mx-auto bg-stone-200">
       {isLoaded ? (
-        <img alt={alt} className="object-scale-down" loading="lazy" src={src} />
+        <img alt={alt} className="object-scale-down" src={src} />
       ) : (
-        <>
-          <img
-            alt={alt}
-            className="object-scale-down blur-sm"
-            loading="lazy"
-            src="/static/landscape-placeholder.png"
+        <div className="flex items-center justify-center text-foreground bg-background">
+          <CircularProgress
+            aria-label="Loading..."
+            classNames={{
+              indicator: "stroke-foreground",
+              track: "stroke-white/10",
+            }}
+            color={undefined}
+            label="Loading..."
+            strokeWidth={5}
           />
-          <div className="flex items-center justify-center text-foreground bg-background absolute inset-0">
-            <CircularProgress
-              aria-label="Loading..."
-              classNames={{
-                indicator: "stroke-foreground",
-                track: "stroke-white/10",
-              }}
-              color={undefined}
-              label="Loading..."
-              strokeWidth={5}
-            />
-          </div>
-        </>
+        </div>
       )}
     </div>
   );
