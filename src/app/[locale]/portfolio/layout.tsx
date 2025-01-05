@@ -1,12 +1,15 @@
 import { unstable_setRequestLocale } from "next-intl/server";
 
-export default function AboutLayout({
-  children,
-  params: { locale },
-}: {
+export default async function AboutLayout(props: {
   children: React.ReactNode;
-  params: { locale: string };
+  params: Promise<{ locale: string }>;
 }) {
+  const params = await props.params;
+
+  const { locale } = params;
+
+  const { children } = props;
+
   unstable_setRequestLocale(locale);
 
   return (

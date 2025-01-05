@@ -1,5 +1,6 @@
-import { Snippet } from "@nextui-org/snippet";
-import { Button, ButtonGroup } from "@nextui-org/button";
+import { use } from "react";
+import { Snippet } from "@nextui-org/react";
+import { Button, ButtonGroup } from "@nextui-org/react";
 import { unstable_setRequestLocale } from "next-intl/server";
 import { useTranslations } from "next-intl";
 import { headers } from "next/headers";
@@ -13,13 +14,13 @@ import NJAEPlumeMain from "@/public/site/njae_main_logo_title.png";
 import NJAEHeadLeft from "@/public/site/landing_page_head_left.png";
 import NJAEHeadRight from "@/public/site/landing_page_head_right.png";
 
-export default function Home({
-  params: { locale },
-}: {
-  params: { locale: string };
-}) {
+export default function Home(props: { params: Promise<{ locale: string }> }) {
+  const params = use(props.params);
+
+  const { locale } = params;
+
   unstable_setRequestLocale(locale);
-  const nonce = headers().get("x-nonce");
+  const nonce = use(headers()).get("x-nonce");
   const t = useTranslations("HomePage");
   const portfolio = siteConfig.navItems.find(
     (item) => item.label === "Portfolio",

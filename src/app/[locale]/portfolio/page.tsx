@@ -1,13 +1,16 @@
+import { use } from "react";
 import { useTranslations } from "next-intl";
 import { unstable_setRequestLocale } from "next-intl/server";
 
 import { ProductList } from "@/src/components/portfolioProducts";
 
-export default function AboutPage({
-  params: { locale },
-}: {
-  params: { locale: string };
+export default function AboutPage(props: {
+  params: Promise<{ locale: string }>;
 }) {
+  const params = use(props.params);
+
+  const { locale } = params;
+
   unstable_setRequestLocale(locale);
   const t = useTranslations("Portfolio");
 

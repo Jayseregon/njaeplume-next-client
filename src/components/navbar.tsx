@@ -8,8 +8,8 @@ import {
   NavbarBrand,
   NavbarItem,
   NavbarMenuItem,
-} from "@nextui-org/navbar";
-import { Link } from "@nextui-org/link";
+  Link,
+} from "@nextui-org/react";
 import { link as linkStyles } from "@nextui-org/theme";
 import React, { useState } from "react";
 import NextLink from "next/link";

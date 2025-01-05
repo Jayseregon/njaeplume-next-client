@@ -2,8 +2,7 @@
 
 import { useEffect, useState } from "react";
 import { useInView } from "react-intersection-observer";
-import { Button } from "@nextui-org/button";
-import { CircularProgress } from "@nextui-org/progress";
+import { Button, CircularProgress } from "@nextui-org/react";
 
 import { getFreebieZip, fetchProductsData } from "@/lib/bunnyRequest";
 

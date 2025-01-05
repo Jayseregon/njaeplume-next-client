@@ -8,13 +8,13 @@ interface EmailTemplateProps {
   message: string;
 }
 
-export const EmailTemplate: React.FC<Readonly<EmailTemplateProps>> = ({
+export const EmailTemplate = ({
   firstName,
   lastName,
   subject,
   email,
   message,
-}) => (
+}: EmailTemplateProps) => (
   <div>
     <h1>NJAE Plume Contact Form</h1>
     <p>

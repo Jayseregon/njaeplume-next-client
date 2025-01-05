@@ -11,7 +11,7 @@ import {
   HoneypotField,
   ErrorDisplay,
   SuccessDisplay,
-} from "@/src/components/contactForm";
+} from "@/src/components/contactFormElements";
 
 interface FormData {
   firstName: string;

@@ -12,15 +12,18 @@ export function generateStaticParams() {
   return locales.map((locale) => ({ locale }));
 }
 
-export default async function LocaleLayout({
-  children,
-  params: { locale },
-}: {
+export default async function LocaleLayout(props: {
   children: React.ReactNode;
-  params: { locale: string };
+  params: Promise<{ locale: string }>;
 }) {
+  const params = await props.params;
+
+  const { locale } = params;
+
+  const { children } = props;
+
   const messages = await getMessages();
-  const nonce = headers().get("x-nonce");
+  const nonce = (await headers()).get("x-nonce");
 
   unstable_setRequestLocale(locale);
 
