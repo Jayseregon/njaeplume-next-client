@@ -1,6 +1,6 @@
 import { useTranslations } from "next-intl";
 
-import { PortfolioProductsPage } from "@/src/components/portfolioProducts";
+import { PortfolioProductsPage } from "@/src/components/portfolio/portfolioProducts";
 
 export default function AboutPage() {
   const t = useTranslations("Portfolio");

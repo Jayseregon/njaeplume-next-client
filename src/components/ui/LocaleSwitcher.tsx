@@ -6,10 +6,7 @@ import { motion } from "motion/react";
 
 import { cn } from "@/lib/utils";
 import { setUserLocale } from "@/lib/locale";
-
-export interface LocaleSwitcherProps {
-  nonce: string | undefined;
-}
+import { LocaleSwitcherProps } from "@/src/interfaces/UI";
 
 export default function LocaleSwitcher({
   nonce,

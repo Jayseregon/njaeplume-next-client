@@ -17,14 +17,14 @@ import clsx from "clsx";
 import { usePathname } from "next/navigation";
 
 import { siteConfig } from "@/config/site";
-import { ThemeSwitch } from "@/components/theme-switch";
+import { ThemeSwitch } from "@/src/components/ui/ThemeSwitch";
 import { Logo } from "@/components/icons";
-import { SearchInput } from "@/components/SearchInput";
+import { SearchInput } from "@/src/components/ui/SearchInput";
 import { NonceContext } from "@/app/providers";
 
 import LocaleSwitcher from "./LocaleSwitcher";
 
-export const Navbar = () => {
+export default function Navbar() {
   // Navbar state
   const nonce = useContext(NonceContext);
   const [isMenuOpen, setIsMenuOpen] = useState(false);
@@ -147,4 +147,4 @@ export const Navbar = () => {
       </NextUINavbar>
     );
   }
-};
+}

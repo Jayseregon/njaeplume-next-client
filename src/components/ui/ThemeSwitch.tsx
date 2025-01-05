@@ -4,15 +4,9 @@ import { useTheme } from "next-themes";
 import { Sun, Moon } from "lucide-react";
 import { motion } from "framer-motion";
 
-interface ThemeSwitchProps {
-  className?: string;
-  nonce?: string;
-}
+import { ThemeSwitchProps } from "@/src/interfaces/UI";
 
-export const ThemeSwitch: React.FC<ThemeSwitchProps> = ({
-  className,
-  nonce,
-}) => {
+export const ThemeSwitch = ({ className, nonce }: ThemeSwitchProps) => {
   const { theme, setTheme } = useTheme();
   const [mounted, setMounted] = useState(false);
 

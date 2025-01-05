@@ -1,37 +1,14 @@
 import React from "react";
-import { useTranslations } from "next-intl";
 
-import { EmailErrorIcon, EmailSuccessIcon } from "./icons";
+import {
+  ErrorDisplayProps,
+  FieldInputProps,
+  HoneypotProps,
+  SuccessDisplayProps,
+  TextInputProps,
+} from "@/src/interfaces/Contact";
 
-interface FieldInputProps {
-  fieldTarget: string;
-  t: ReturnType<typeof useTranslations>;
-  value?: string;
-  type: string;
-  onChange: (event: React.ChangeEvent<HTMLInputElement>) => void;
-}
-
-interface HoneypotProps {
-  t: ReturnType<typeof useTranslations>;
-  value?: string;
-  onChange: (event: React.ChangeEvent<HTMLInputElement>) => void;
-}
-
-interface TextInputProps {
-  fieldTarget: string;
-  t: ReturnType<typeof useTranslations>;
-  value: string;
-  onChange: (event: React.ChangeEvent<HTMLTextAreaElement>) => void;
-}
-
-interface ErrorDisplayProps {
-  error?: string | null;
-  t: ReturnType<typeof useTranslations>;
-}
-
-interface SuccessDisplayProps {
-  t: ReturnType<typeof useTranslations>;
-}
+import { EmailErrorIcon, EmailSuccessIcon } from "../icons";
 
 export const FieldInput = ({
   fieldTarget,

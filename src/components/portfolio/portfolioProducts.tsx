@@ -16,8 +16,9 @@ import {
 import { getUserLocale } from "@/lib/locale";
 import { validatedEnv } from "@/lib/env";
 
+import { DownloadIcon } from "../icons";
+
 import { useEnv } from "./EnvProvider";
-import { DownloadIcon } from "./icons";
 import EnvProvider from "./EnvProvider";
 
 // lazy load image component

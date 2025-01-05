@@ -1,12 +1,10 @@
-import React from "react";
+import React, { JSX } from "react";
 import { useTranslations } from "next-intl";
 import Link from "next/link";
 
-interface FooterProps {
-  nonce?: string;
-}
+import { FooterProps } from "@/src/interfaces/UI";
 
-export const Footer: React.FC<FooterProps> = ({ nonce }) => {
+export default function Footer({ nonce }: FooterProps): JSX.Element {
   const t = useTranslations("Footer");
 
   return (
@@ -48,4 +46,4 @@ export const Footer: React.FC<FooterProps> = ({ nonce }) => {
       </div>
     </footer>
   );
-};
+}

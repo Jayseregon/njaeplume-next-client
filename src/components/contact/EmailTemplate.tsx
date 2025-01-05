@@ -1,12 +1,6 @@
 import * as React from "react";
 
-interface EmailTemplateProps {
-  firstName: string;
-  lastName: string;
-  subject: string;
-  email: string;
-  message: string;
-}
+import { EmailTemplateProps } from "@/src/interfaces/Contact";
 
 export const EmailTemplate = ({
   firstName,
