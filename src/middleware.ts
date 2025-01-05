@@ -53,8 +53,9 @@ function localeMiddleware(req: NextRequest) {
 }
 
 // New CSP middleware function
-function cspMiddleware(response: NextResponse) {
+function cspMiddleware(req: NextRequest): NextResponse {
   const nonce = Buffer.from(crypto.randomUUID()).toString("base64");
+
   const cspHeader = `
     default-src 'self';
     script-src 'self' 'nonce-${nonce}' 'strict-dynamic' https://www.google.com https://www.gstatic.com https://vercel.live;
@@ -72,30 +73,41 @@ function cspMiddleware(response: NextResponse) {
     .replace(/\s{2,}/g, " ")
     .trim();
 
+  const requestHeaders = new Headers(req.headers);
+
+  requestHeaders.set("x-nonce", nonce);
+
+  const response = NextResponse.next({
+    request: {
+      headers: requestHeaders,
+    },
+  });
+
   response.headers.set("Content-Security-Policy", cspHeader);
-  response.headers.set("x-nonce", nonce);
 
   return response;
 }
 
 // Combined middleware function
-export function middleware(req: NextRequest) {
+export async function middleware(req: NextRequest) {
+  const { pathname } = req.nextUrl;
+
   const isDev = process.env.NODE_ENV === "development";
 
   let response = localeMiddleware(req);
 
   if (!isDev) {
-    response = cspMiddleware(response);
+    return cspMiddleware(req);
+  } else {
+    return NextResponse.next();
   }
-
-  return response;
 }
 
 export const config = {
   matcher: [
-    "/", // Redirect to a matching locale at the root
+    "/", // Root for CSP
     "/(fr|en)/:path*", // Set a cookie to remember the previous locale
-    "/((?!_next|_vercel|.*\\..*).*)", // Exclude image paths and /docs/auto-loops from locale prefixing
-    "/((?!api|_next/static|_next/image|static|site|favicon.ico).*)", // Match all paths except API, static files, and favicon
+    "/((?!_next/static|_vercel|.*\\..*).*)", // Exclude Next.js static routes and other specified patterns
+    "/((?!api|_next/static|_next/image|_next/data|static|favicon.ico|favicon.png|favicon.webp).*)", // Exclude API routes, static assets, etc.
   ],
 };

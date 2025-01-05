@@ -90,17 +90,6 @@ export default function Home({
               {portfolio?.label}
             </Button>
           </Link>
-          {/* <Link
-            passHref
-            href={`/${locale}/${themes?.href}`}
-            nonce={nonce || undefined}>
-            <Button
-              className="bg-gradient-to-tr from-pink-500 to-yellow-500 text-white shadow-lg"
-              radius="full"
-              nonce={nonce || undefined}>
-              {themes?.label}
-            </Button>
-          </Link> */}
         </ButtonGroup>
 
         <div className="py-5" />

@@ -8,13 +8,18 @@
   "extends": [
     "plugin:react/recommended",
     "plugin:prettier/recommended",
-    // "plugin:@typescript-eslint/recommended",
-    "plugin:react-hooks/recommended",
-    "plugin:jsx-a11y/recommended",    
-    "next", 
+    "plugin:jsx-a11y/recommended",
+    "next",
     "next/core-web-vitals"
   ],
-  "plugins": ["react", "unused-imports", "import", "@typescript-eslint", "jsx-a11y", "prettier"],
+  "plugins": [
+    "react",
+    "unused-imports",
+    "import",
+    "@typescript-eslint",
+    "jsx-a11y",
+    "prettier"
+  ],
   "parser": "@typescript-eslint/parser",
   "parserOptions": {
     "ecmaFeatures": {
@@ -29,7 +34,7 @@
     }
   },
   "rules": {
-    "no-console": "warn",
+    "no-console": "off",
     "react/prop-types": "off",
     "react/jsx-uses-react": "off",
     "react/react-in-jsx-scope": "off",
@@ -38,13 +43,23 @@
     "jsx-a11y/interactive-supports-focus": "warn",
     "prettier/prettier": "warn",
     "no-unused-vars": "off",
-    "unused-imports/no-unused-vars": "off",
+    "unused-imports/no-unused-vars": [
+      "warn",
+      {
+        "vars": "all",
+        "varsIgnorePattern": "^_.*?$",
+        "args": "after-used",
+        "argsIgnorePattern": "^_.*?$"
+      }
+    ],
     "unused-imports/no-unused-imports": "warn",
     "@typescript-eslint/no-unused-vars": [
       "warn",
       {
+        "vars": "all", // Check all variables
         "args": "after-used",
         "ignoreRestSiblings": false,
+        "varsIgnorePattern": "^_.*?$", // Ignore variables starting with '_'
         "argsIgnorePattern": "^_.*?$"
       }
     ],
@@ -83,13 +98,14 @@
     ],
     "padding-line-between-statements": [
       "warn",
-      {"blankLine": "always", "prev": "*", "next": "return"},
-      {"blankLine": "always", "prev": ["const", "let", "var"], "next": "*"},
+      { "blankLine": "always", "prev": "*", "next": "return" },
+      { "blankLine": "always", "prev": ["const", "let", "var"], "next": "*" },
       {
         "blankLine": "any",
         "prev": ["const", "let", "var"],
         "next": ["const", "let", "var"]
       }
-    ]
+    ],
+    "@next/next/no-img-element": "off"
   }
 }
