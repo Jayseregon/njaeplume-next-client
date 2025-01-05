@@ -5,74 +5,20 @@ import { useInView } from "react-intersection-observer";
 import { Button, CircularProgress } from "@nextui-org/react";
 
 import { getFreebieZip, fetchProductsData } from "@/lib/bunnyRequest";
+import {
+  ProductCardProps,
+  FreebieCardProps,
+  LazyImageProps,
+  DownloadButtonProps,
+  Product,
+  Freebie,
+} from "@/interfaces/Products";
+import { getUserLocale } from "@/lib/locale";
+import { validatedEnv } from "@/lib/env";
 
 import { useEnv } from "./EnvProvider";
 import { DownloadIcon } from "./icons";
-
-type ProductImageProps = {
-  id: string;
-  image: string;
-  alt_text: string;
-};
-
-type ProductProps = {
-  id: string;
-  name: string;
-  price: string;
-  category: string;
-  fr_category: string;
-  description: string;
-  fr_description: string;
-  products_productimagesmodel: ProductImageProps[];
-};
-
-type ProductCardProps = {
-  product: ProductProps;
-  locale?: string;
-};
-
-type LazyImageProps = {
-  src: string;
-  alt: string;
-};
-
-type FreebiesProps = {
-  id: string;
-  name: string;
-  image: string;
-  alt_text: string;
-  zip_file_name: string;
-};
-
-type FreebieCardProps = {
-  freebie: FreebiesProps;
-  locale?: string;
-};
-
-type DownloadButtonProps = {
-  filePath: string;
-};
-
-// const fetchBunnyFile = async (filePath: string) => {
-//   const {
-//     BUNNY_STORAGE_REGION,
-//     BUNNY_STORAGE_ZONE_NAME,
-//     BUNNY_API_ACCESS_KEY,
-//   } = useEnv();
-//   const fileURL = `https://${BUNNY_STORAGE_REGION}.storage.bunnycdn.com/${BUNNY_STORAGE_ZONE_NAME}/zipfile/${filePath}`;
-//   const headers = new Headers();
-
-//   headers.set("AccessKey", BUNNY_API_ACCESS_KEY ?? "");
-//   const response = await fetch(fileURL, { headers });
-
-//   if (!response.ok) {
-//     throw new Error("Failed to fetch data");
-//   }
-
-//   const blob = await response.blob();
-
-//   return blob;
-// };
+import EnvProvider from "./EnvProvider";
 
 // lazy load image component
 export const LazyImage = ({ src, alt }: LazyImageProps) => {
@@ -146,7 +92,7 @@ export const DownloadButton = ({ filePath }: DownloadButtonProps) => {
       isLoading={loading}
       radius="full"
       size="sm"
-      onClick={handleDownload}
+      onPress={handleDownload}
     >
       <DownloadIcon />
     </Button>
@@ -154,7 +100,21 @@ export const DownloadButton = ({ filePath }: DownloadButtonProps) => {
 };
 
 // product card component
-export const ProductCard = ({ product, locale }: ProductCardProps) => {
+export const ProductCard = ({ product }: ProductCardProps) => {
+  const [locale, setLocale] = useState("en");
+
+  useEffect(() => {
+    (async () => {
+      try {
+        const userLocale = await getUserLocale();
+
+        setLocale(userLocale);
+      } catch {
+        // handle error or ignore
+      }
+    })();
+  }, []);
+
   const { BUNNY_CDN_PULL_ZONE } = useEnv();
 
   return (
@@ -206,9 +166,9 @@ export const FreebieCard = ({ freebie }: FreebieCardProps) => {
 };
 
 // component to display a list of products and freebies
-export const ProductList = ({ locale }: { locale: string }) => {
-  const [products, setProducts] = useState<ProductProps[]>([]);
-  const [freebies, setFreebies] = useState<FreebiesProps[]>([]);
+export const ProductList = () => {
+  const [products, setProducts] = useState<Product[]>([]);
+  const [freebies, setFreebies] = useState<Freebie[]>([]);
   const [loading, setLoading] = useState<boolean>(true);
   const [error, setError] = useState<string | null>(null);
 
@@ -254,7 +214,7 @@ export const ProductList = ({ locale }: { locale: string }) => {
   return (
     <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-5 mx-10 md:gap-10 md:mx-20">
       {products.map((product) => (
-        <ProductCard key={product.id} locale={locale} product={product} />
+        <ProductCard key={product.id} product={product} />
       ))}
       {freebies.map((freebie) => (
         <FreebieCard key={freebie.id} freebie={freebie} />
@@ -262,3 +222,11 @@ export const ProductList = ({ locale }: { locale: string }) => {
     </div>
   );
 };
+
+export function PortfolioProductsPage() {
+  return (
+    <EnvProvider env={validatedEnv}>
+      <ProductList />
+    </EnvProvider>
+  );
+}

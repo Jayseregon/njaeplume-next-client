@@ -11,7 +11,7 @@ import {
   Link,
 } from "@nextui-org/react";
 import { link as linkStyles } from "@nextui-org/theme";
-import React, { useState } from "react";
+import React, { useContext, useState } from "react";
 import NextLink from "next/link";
 import clsx from "clsx";
 import { usePathname } from "next/navigation";
@@ -20,19 +20,16 @@ import { siteConfig } from "@/config/site";
 import { ThemeSwitch } from "@/components/theme-switch";
 import { Logo } from "@/components/icons";
 import { SearchInput } from "@/components/SearchInput";
+import { NonceContext } from "@/app/providers";
 
 import LocaleSwitcher from "./LocaleSwitcher";
 
-interface NavbarProps {
-  nonce?: string;
-  locale?: string;
-}
-
-export const Navbar: React.FC<NavbarProps> = ({ nonce, locale }) => {
+export const Navbar = () => {
   // Navbar state
+  const nonce = useContext(NonceContext);
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const currentPath = usePathname();
-  const isHomepage = currentPath === `/${locale}` ? true : false;
+  const isHomepage = currentPath === `/` ? true : false;
 
   if (isHomepage) {
     return (

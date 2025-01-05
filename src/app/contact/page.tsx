@@ -53,6 +53,7 @@ export default function ContactPage() {
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setLoading(true);
+    setResponse(null);
 
     try {
       const res = await fetch("/api/contact", {
@@ -63,11 +64,19 @@ export default function ContactPage() {
         body: JSON.stringify({ ...formData, recaptchaToken }),
       });
 
+      if (!res.ok) {
+        throw new Error(`Failed with status ${res.status}`);
+      }
+
       const result = await res.json();
 
       setResponse(result);
     } catch (error) {
-      setResponse({ error: "An error occurred while sending the email" });
+      if (error instanceof Error) {
+        setResponse({ error: error.message });
+      } else {
+        setResponse({ error: "An unknown error occurred" });
+      }
     } finally {
       setLoading(false);
       setFormData(initialFormData);
