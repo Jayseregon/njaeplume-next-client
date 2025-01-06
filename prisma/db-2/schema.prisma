@@ -1,0 +1,59 @@
+generator client {
+  provider        = "prisma-client-js"
+  output          = "../../node_modules/@prisma-db-2/client"
+  previewFeatures = ["multiSchema"]
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("NEON_DB_DATABASE_URL")
+  schemas  = ["products"]
+}
+
+// enum Category {
+//   BRUSHES
+//   STICKERS
+//   TEMPLATES
+//   PLANNERS
+//   FREEBIE
+// }
+
+model Product {
+  id                String         @id @default(cuid())
+  sku               String?
+  old_sku           String?
+  name              String?
+  old_name          String?
+  old_price         Float?
+  price             Float?
+  description       String?
+  old_description   String?
+  details           String?
+  old_details       String?
+  category          String?
+  old_category      String?
+  createdAt         DateTime       @default(now())
+  old_date_created  DateTime?
+  updatedAt         DateTime       @updatedAt
+  old_date_updated  DateTime?
+  zip_file_name     String?
+  old_zip_file_name String?
+  slug              String?
+  old_slug          String?
+  old_tags          String?
+  images            ProductImage[]
+
+  @@schema("products")
+}
+
+model ProductImage {
+  id           String  @id @default(uuid())
+  productId    String
+  product      Product @relation(fields: [productId], references: [id], onDelete: Cascade)
+  old_alt_text String?
+  alt_text     String?
+  url          String?
+  old_url      String?
+
+  @@schema("products")
+}
