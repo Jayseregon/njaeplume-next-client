@@ -5,7 +5,6 @@ import { NextUIProvider } from "@nextui-org/react";
 import { useRouter } from "next/navigation";
 import { ThemeProvider as NextThemesProvider } from "next-themes";
 import { ThemeProviderProps } from "next-themes";
-// import { SessionProvider } from "next-auth/react";
 
 // Create the NonceContext
 const NonceContext = React.createContext<string | undefined>(undefined);
@@ -22,7 +21,6 @@ export function Providers({ children, themeProps, nonce }: ProvidersProps) {
   const router = useRouter();
 
   return (
-    // <SessionProvider>
     <NonceContext.Provider value={nonce}>
       <NextUIProvider navigate={router.push}>
         <NextThemesProvider
@@ -35,6 +33,5 @@ export function Providers({ children, themeProps, nonce }: ProvidersProps) {
         </NextThemesProvider>
       </NextUIProvider>
     </NonceContext.Provider>
-    // </SessionProvider>
   );
 }
