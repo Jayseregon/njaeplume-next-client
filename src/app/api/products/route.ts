@@ -5,38 +5,13 @@ const prisma = new PrismaClient();
 
 export async function GET() {
   try {
-    const products = await prisma.products_productdetailsmodel.findMany({
-      select: {
-        id: true,
-        name: true,
-        price: true,
-        category: true,
-        fr_category: true,
-        description: true,
-        fr_description: true,
-        products_productimagesmodel: {
-          select: {
-            id: true,
-            image: true,
-            alt_text: true,
-          },
-        },
+    const products = await prisma.product.findMany({
+      include: {
+        images: true,
       },
     });
 
-    const freebies = await prisma.products_freebiesmodel.findMany({
-      select: {
-        id: true,
-        name: true,
-        image: true,
-        alt_text: true,
-        zip_file_name: true,
-      },
-    });
-
-    const response = { products, freebies };
-
-    return NextResponse.json(response);
+    return NextResponse.json(products);
   } catch (error) {
     console.error(error);
 
@@ -44,8 +19,4 @@ export async function GET() {
   } finally {
     await prisma.$disconnect();
   }
-}
-
-export async function POST() {
-  return new NextResponse("Method Not Allowed", { status: 405 });
 }

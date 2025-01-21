@@ -1,7 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import { Resend } from "resend";
 
-import { EmailTemplate } from "@/src/components/email-templates";
+import { EmailTemplate } from "@/src/components/contact/EmailTemplate";
 
 const RECAPTCHA_SECRET = process.env.RECAPTCHA_SECRET_KEY;
 const resend = new Resend(process.env.RESEND_API_KEY);
