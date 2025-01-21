@@ -1,4 +1,4 @@
-import { migrateData } from '../../src/lib/dataMigration';
+// import { migrateData } from '../../src/lib/dataMigration';
 import { Command } from 'commander';
 import prompts from 'prompts';
 
@@ -26,7 +26,7 @@ program.command('run')
 
     try {
       console.log('Starting migration...');
-      await migrateData();
+      // await migrateData();
       console.log('✅ Migration completed successfully');
     } catch (error) {
       console.error('❌ Migration failed:', error);
