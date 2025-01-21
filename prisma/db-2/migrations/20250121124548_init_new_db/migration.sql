@@ -35,7 +35,7 @@ CREATE TABLE "products"."ProductImage" (
     "productId" TEXT NOT NULL,
     "old_alt_text" TEXT,
     "alt_text" TEXT,
-    "url" TEXT NOT NULL,
+    "url" TEXT,
     "old_url" TEXT,
 
     CONSTRAINT "ProductImage_pkey" PRIMARY KEY ("id")
