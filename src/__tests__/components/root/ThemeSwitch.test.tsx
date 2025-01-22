@@ -40,17 +40,6 @@ describe("ThemeSwitch", () => {
     ).toBeInTheDocument();
   });
 
-  it("applies custom className when provided", () => {
-    // Test 2: Styling customization
-    // Verify custom classes can be applied for styling flexibility
-    const testClass = "test-class";
-
-    render(<ThemeSwitch className={testClass} />);
-    const button = screen.getByRole("button", { name: /toggle theme/i });
-
-    expect(button).toHaveClass(testClass);
-  });
-
   it("applies nonce attribute when provided", () => {
     // Test 3: Security features
     // Verify Content Security Policy nonce is properly applied

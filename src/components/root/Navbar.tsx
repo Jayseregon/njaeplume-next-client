@@ -43,16 +43,10 @@ export default function Navbar() {
       >
         <NavbarContent justify="end" nonce={nonce}>
           <NavbarItem nonce={nonce}>
-            <ThemeSwitch
-              className="text-foreground bg-transparent hover:bg-primary-100"
-              nonce={nonce}
-            />
+            <ThemeSwitch nonce={nonce} />
           </NavbarItem>
           <NavbarItem nonce={nonce}>
-            <LocaleSwitcher
-              className="text-foreground bg-transparent hover:bg-primary-100"
-              nonce={nonce}
-            />
+            <LocaleSwitcher nonce={nonce} />
           </NavbarItem>
         </NavbarContent>
       </NextUINavbar>
@@ -112,25 +106,19 @@ export default function Navbar() {
         {/* avatar menu with theme switch and search */}
         <NavbarContent justify="end" nonce={nonce}>
           <NavbarItem className="hidden md:flex" nonce={nonce}>
-            <SearchInput />
+            <SearchInput nonce={nonce} />
           </NavbarItem>
           <NavbarItem nonce={nonce}>
-            <ThemeSwitch
-              className="text-foreground bg-transparent hover:bg-primary-100"
-              nonce={nonce}
-            />
+            <ThemeSwitch nonce={nonce} />
           </NavbarItem>
           <NavbarItem nonce={nonce}>
-            <LocaleSwitcher
-              className="text-foreground bg-transparent hover:bg-primary-100"
-              nonce={nonce}
-            />
+            <LocaleSwitcher nonce={nonce} />
           </NavbarItem>
         </NavbarContent>
 
         {/* menu definition when toggled */}
         <NavbarMenu nonce={nonce}>
-          <SearchInput alwaysExpanded={true} />
+          <SearchInput alwaysExpanded={true} nonce={nonce} />
           <div className="mx-4 mt-2 flex flex-col gap-3">
             {siteConfig.navItems.map((item, index) => (
               <NavbarMenuItem key={`${item}-${index}`} nonce={nonce}>

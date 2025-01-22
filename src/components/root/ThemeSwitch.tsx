@@ -1,12 +1,11 @@
-import React, { useEffect, useState } from "react";
-import { Button } from "@nextui-org/react";
+import React, { JSX, useEffect, useState } from "react";
 import { useTheme } from "next-themes";
 import { Sun, Moon } from "lucide-react";
 import { motion } from "framer-motion";
 
-import { ThemeSwitchProps } from "@/src/interfaces/UI";
+import { Button } from "@/components/ui/button";
 
-export const ThemeSwitch = ({ className, nonce }: ThemeSwitchProps) => {
+export const ThemeSwitch = ({ nonce }: { nonce?: string }): JSX.Element => {
   const { theme, setTheme } = useTheme();
   const [mounted, setMounted] = useState(false);
 
@@ -21,19 +20,16 @@ export const ThemeSwitch = ({ className, nonce }: ThemeSwitchProps) => {
 
   // Only render the button after the component has mounted
   if (!mounted) {
-    return null;
+    return <></>;
   }
 
   return (
     <Button
       aria-label="Toggle theme"
-      className={className}
-      color={undefined}
-      isIconOnly={true}
       nonce={nonce}
-      size="sm"
-      variant={undefined}
-      onPress={toggleTheme}
+      size="icon"
+      variant={"ghost"}
+      onClick={toggleTheme}
     >
       <motion.div
         key={theme} // This ensures the animation runs on theme change

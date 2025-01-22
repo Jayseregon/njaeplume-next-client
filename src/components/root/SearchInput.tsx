@@ -1,14 +1,20 @@
 import { useState, useRef, useEffect } from "react";
-import { Input, Kbd } from "@nextui-org/react";
 
+import { Input } from "@/components/ui/input";
+import { Button } from "@/components/ui/button";
 import { SearchIcon } from "@/components/icons";
 
-export const SearchInput = ({ alwaysExpanded = false }) => {
+export const SearchInput = ({
+  alwaysExpanded = false,
+  nonce,
+}: {
+  alwaysExpanded?: boolean;
+  nonce?: string;
+}) => {
   // Search state
   const searchInputRef = useRef<HTMLInputElement>(null);
   const [isSearchExpanded, setIsSearchExpanded] = useState(false);
 
-  // Expand search input if alwaysExpanded is true (inside toggle menu)
   useEffect(() => {
     if (alwaysExpanded) {
       setIsSearchExpanded(true);
@@ -25,6 +31,7 @@ export const SearchInput = ({ alwaysExpanded = false }) => {
   useEffect(() => {
     const handleClickOutside = (event: { target: any }) => {
       if (
+        !alwaysExpanded &&
         searchInputRef.current &&
         !searchInputRef.current.contains(event.target)
       ) {
@@ -37,34 +44,28 @@ export const SearchInput = ({ alwaysExpanded = false }) => {
     return () => {
       document.removeEventListener("mousedown", handleClickOutside);
     };
-  }, []);
+  }, [alwaysExpanded]);
 
   return (
     <div ref={searchInputRef}>
       {isSearchExpanded || alwaysExpanded ? (
         <Input
           aria-label="Search"
-          classNames={{
-            inputWrapper: "bg-default-100",
-            input: "text-sm",
-          }}
-          endContent={
-            <Kbd className="hidden lg:inline-block" keys={["command"]}>
-              K
-            </Kbd>
-          }
-          labelPlacement="outside"
+          className="text-sm mt-1 block w-full bg-neutral-50 dark:bg-neutral-200 text-foreground dark:text-background border border-foreground rounded-md py-2 px-3 focus:outline-none focus:ring-primary-400 focus:border-primary-400"
           placeholder="Search..."
-          startContent={
-            <SearchIcon className="text-base text-default-400 pointer-events-none flex-shrink-0" />
-          }
           type="search"
         />
       ) : (
-        <SearchIcon className="cursor-pointer" onClick={toggleSearch} />
+        <Button
+          aria-label="Toggle Search"
+          nonce={nonce}
+          size="icon"
+          variant={"ghost"}
+          onClick={toggleSearch}
+        >
+          <SearchIcon />
+        </Button>
       )}
     </div>
   );
 };
-
-export default SearchInput;
