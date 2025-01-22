@@ -11,10 +11,6 @@ export const siteConfig = {
       label: "Portfolio",
       href: "/portfolio",
     },
-    // {
-    //   label: "Themes",
-    //   href: "/themes",
-    // },
     {
       label: "Contact",
       href: "/contact",

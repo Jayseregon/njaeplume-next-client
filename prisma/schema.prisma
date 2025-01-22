@@ -1,74 +1,58 @@
 generator client {
-  provider = "prisma-client-js"
+  provider        = "prisma-client-js"
+  previewFeatures = ["multiSchema"]
 }
 
 datasource db {
   provider = "postgresql"
-  url      = env("DATABASE_URL")
+  url      = env("DATABASE_URL_AIVEN")
+  schemas  = ["products"]
 }
 
-model products_freebiesmodel {
-  id            String   @id @db.Uuid
-  name          String   @db.VarChar(200)
-  slug          String?  @unique @db.VarChar(200)
-  image         String?  @db.VarChar(100)
-  alt_text      String?  @db.VarChar(100)
-  date_created  DateTime @db.Timestamptz(6)
-  date_updated  DateTime @db.Timestamptz(6)
-  zip_file_name String?  @db.VarChar(255)
+// enum Category {
+//   BRUSHES
+//   STICKERS
+//   TEMPLATES
+//   PLANNERS
+//   FREEBIE
+// }
 
-  @@index([slug], map: "products_freebiesmodel_slug_d590f308_like")
+model Product {
+  id                String         @id @default(cuid())
+  sku               String?
+  old_sku           String?
+  name              String?
+  old_name          String?
+  old_price         Float?
+  price             Float?
+  description       String?
+  old_description   String?
+  details           String?
+  old_details       String?
+  category          String?
+  old_category      String?
+  createdAt         DateTime       @default(now())
+  old_date_created  DateTime?
+  updatedAt         DateTime       @updatedAt
+  old_date_updated  DateTime?
+  zip_file_name     String?
+  old_zip_file_name String?
+  slug              String?
+  old_slug          String?
+  old_tags          String?
+  images            ProductImage[]
+
+  @@schema("products")
 }
 
-model products_productdetailsmodel {
-  id                                        String                                      @id @db.Uuid
-  sku                                       String?                                     @db.VarChar(50)
-  name                                      String                                      @db.VarChar(200)
-  price                                     Decimal                                     @db.Decimal(10, 2)
-  sale_price                                Decimal?                                    @db.Decimal(10, 2)
-  description                               String?
-  details                                   String?
-  category                                  String?                                     @db.VarChar(50)
-  date_created                              DateTime                                    @db.Timestamptz(6)
-  date_updated                              DateTime                                    @db.Timestamptz(6)
-  zip_file_name                             String?                                     @db.VarChar(255)
-  slug                                      String?                                     @unique @db.VarChar(200)
-  fr_category                               String?                                     @db.VarChar(50)
-  fr_description                            String?
-  fr_details                                String?
-  products_productdetailsmodel_product_tags products_productdetailsmodel_product_tags[]
-  products_productimagesmodel               products_productimagesmodel[]
+model ProductImage {
+  id           String  @id @default(uuid())
+  productId    String
+  product      Product @relation(fields: [productId], references: [id], onDelete: Cascade)
+  old_alt_text String?
+  alt_text     String?
+  url          String?
+  old_url      String?
 
-  @@index([slug], map: "products_productdetailsmodel_slug_8514e193_like")
-}
-
-/// This model has constraints using non-default deferring rules and requires additional setup for migrations. Visit https://pris.ly/d/constraint-deferring for more info.
-model products_productdetailsmodel_product_tags {
-  id                           BigInt                       @id @default(autoincrement())
-  productdetailsmodel_id       String                       @db.Uuid
-  tags_id                      String                       @db.VarChar(50)
-  products_productdetailsmodel products_productdetailsmodel @relation(fields: [productdetailsmodel_id], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "products_productdeta_productdetailsmodel__50938f9c_fk_products_")
-
-  @@unique([productdetailsmodel_id, tags_id], map: "products_productdetailsm_productdetailsmodel_id_t_24a9471a_uniq")
-  @@index([productdetailsmodel_id], map: "products_productdetailsmod_productdetailsmodel_id_50938f9c")
-  @@index([tags_id], map: "products_productdetailsmodel_product_tags_tag_id_84f6c640")
-}
-
-/// This model has constraints using non-default deferring rules and requires additional setup for migrations. Visit https://pris.ly/d/constraint-deferring for more info.
-model products_productimagesmodel {
-  id                           String                       @id @db.Uuid
-  image                        String?                      @db.VarChar(100)
-  alt_text                     String?                      @db.VarChar(100)
-  product_id                   String                       @db.Uuid
-  products_productdetailsmodel products_productdetailsmodel @relation(fields: [product_id], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "products_productimag_product_id_5587dbfd_fk_products_")
-
-  @@index([product_id], map: "products_productimagesmodel_product_id_5587dbfd")
-}
-
-model products_tags {
-  name String @unique @db.VarChar(255)
-  slug String @id @db.VarChar(50)
-
-  @@index([name], map: "products_tags_name_8cf31b52_like")
-  @@index([slug], map: "products_tags_slug_d1042cda_like")
+  @@schema("products")
 }
