@@ -17,10 +17,10 @@ import clsx from "clsx";
 import { usePathname } from "next/navigation";
 
 import { siteConfig } from "@/config/site";
-import { ThemeSwitch } from "@/src/components/ui/ThemeSwitch";
 import { Logo } from "@/components/icons";
-import { SearchInput } from "@/src/components/ui/SearchInput";
 import { NonceContext } from "@/app/providers";
+import { SearchInput } from "@/src/components/root/SearchInput";
+import { ThemeSwitch } from "@/src/components/root/ThemeSwitch";
 
 import LocaleSwitcher from "./LocaleSwitcher";
 

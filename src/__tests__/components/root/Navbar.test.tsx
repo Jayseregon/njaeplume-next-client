@@ -2,7 +2,7 @@ import { render, screen } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 import { usePathname } from "next/navigation";
 
-import Navbar from "@/src/components/ui/Navbar";
+import Navbar from "@/src/components/root/Navbar";
 import { siteConfig } from "@/config/site";
 
 /**

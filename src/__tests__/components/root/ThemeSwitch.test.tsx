@@ -1,7 +1,7 @@
 import { render, screen } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 
-import { ThemeSwitch } from "@/src/components/ui/ThemeSwitch";
+import { ThemeSwitch } from "@/src/components/root/ThemeSwitch";
 
 /**
  * Mock Setup Section
