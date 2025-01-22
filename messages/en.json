@@ -5,6 +5,9 @@
     "redirect": "In the mean time, you can still visit our Portfolio containing all previous creations.",
     "code": "Currently in development"
   },
+  "Utils" : {
+    "LoadingButton": "Please wait"
+  },
   "Footer": {
     "copyright1": "NJAE Plume G.P.",
     "copyright2": "All rights reserved",

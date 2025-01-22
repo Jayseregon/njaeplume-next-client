@@ -1,26 +1,26 @@
 "use client";
 
-import { Snippet, Button, ButtonGroup } from "@nextui-org/react";
 import { useTranslations } from "next-intl";
 import Image from "next/image";
 import Link from "next/link";
 import { useContext } from "react";
 
+import { Button } from "@/components/ui/button";
 import { PortfolioIcon } from "@/components/icons";
-import { siteConfig } from "@/config/site";
+import { getNavItemByKey } from "@/config/site";
 import { title, subtitle } from "@/components/typography";
 import NJAEPlumeMain from "@/public/site/njae_main_logo_title.png";
 import NJAEHeadLeft from "@/public/site/landing_page_head_left.png";
 import NJAEHeadRight from "@/public/site/landing_page_head_right.png";
+
+import { LoadingButton } from "../components/root/LoadingButton";
 
 import { NonceContext } from "./providers";
 
 export default function RootPage() {
   const nonce = useContext(NonceContext);
   const t = useTranslations("HomePage");
-  const portfolio = siteConfig.navItems.find(
-    (item) => item.label === "Portfolio",
-  );
+  const portfolio = getNavItemByKey("portfolio");
 
   return (
     <div className="flex flex-col items-center w-full">
@@ -51,16 +51,6 @@ export default function RootPage() {
       <div className="flex flex-col items-center justify-center max-w-7xl gap-4">
         <div className="inline-block text-center justify-center">
           <h1 className={title({ color: "pink", size: "lg" })}>{t("title")}</h1>
-          <div className="py-5">
-            <Snippet
-              hideCopyButton
-              hideSymbol
-              nonce={nonce || undefined}
-              variant="flat"
-            >
-              <span>{t("code")}</span>
-            </Snippet>
-          </div>
           <div className={subtitle({ class: "mt-4" })}>
             {t("subtitle")}
             <br />
@@ -70,23 +60,15 @@ export default function RootPage() {
 
         <div className="py-1" />
 
-        <ButtonGroup className="gap-4" nonce={nonce || undefined}>
-          <Link
-            passHref
-            href={portfolio?.href || "portfolio"}
-            nonce={nonce || undefined}
-          >
-            <Button
-              color="primary"
-              nonce={nonce || undefined}
-              radius="full"
-              startContent={<PortfolioIcon />}
-              variant="bordered"
-            >
-              {portfolio?.label || "Portfolio"}
-            </Button>
-          </Link>
-        </ButtonGroup>
+        {portfolio && portfolio.href ? (
+          <Button asChild>
+            <Link href={portfolio.href}>
+              <PortfolioIcon /> {portfolio.label}
+            </Link>
+          </Button>
+        ) : (
+          <LoadingButton />
+        )}
 
         <div className="py-5" />
       </div>

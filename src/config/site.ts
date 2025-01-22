@@ -8,13 +8,19 @@ export const siteConfig = {
   icon: "/favicon.ico",
   navItems: [
     {
+      key: "portfolio",
       label: "Portfolio",
       href: "/portfolio",
     },
     {
+      key: "contact",
       label: "Contact",
       href: "/contact",
     },
   ],
   links: {},
 };
+
+export function getNavItemByKey(key: string) {
+  return siteConfig.navItems.find((item) => item.key === key);
+}
