@@ -3,6 +3,7 @@ export interface FooterProps {
 }
 
 export interface LocaleSwitcherProps {
+  className?: string;
   nonce?: string;
 }
 

@@ -49,7 +49,10 @@ export default function Navbar() {
             />
           </NavbarItem>
           <NavbarItem nonce={nonce}>
-            <LocaleSwitcher nonce={nonce} />
+            <LocaleSwitcher
+              className="text-foreground bg-transparent hover:bg-primary-100"
+              nonce={nonce}
+            />
           </NavbarItem>
         </NavbarContent>
       </NextUINavbar>
@@ -118,7 +121,10 @@ export default function Navbar() {
             />
           </NavbarItem>
           <NavbarItem nonce={nonce}>
-            <LocaleSwitcher nonce={nonce} />
+            <LocaleSwitcher
+              className="text-foreground bg-transparent hover:bg-primary-100"
+              nonce={nonce}
+            />
           </NavbarItem>
         </NavbarContent>
 
