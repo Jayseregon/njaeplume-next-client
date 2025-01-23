@@ -9,7 +9,7 @@ import { headers } from "next/headers";
 import Head from "next/head";
 import { getLocale, getMessages } from "next-intl/server";
 
-import Navbar from "@/components/root/Navbar";
+import Navbar from "@/components/root/navbar/Navbar";
 import Footer from "@/components/root/Footer";
 import { siteConfig } from "@/config/site";
 import {

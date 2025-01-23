@@ -5,9 +5,9 @@ import { usePathname } from "next/navigation";
 
 import { NonceContext } from "@/app/providers";
 
-import { ThemeSwitch } from "./ThemeSwitch";
-import LocaleSwitcher from "./LocaleSwitcher";
-import { NavbarContent } from "./NavbarContent";
+import { ThemeSwitch } from "@/components/root/ThemeSwitch";
+import LocaleSwitcher from "@/components/root/LocaleSwitcher";
+import { NavbarContent } from "@/components/root/navbar/NavbarContent";
 
 export default function Navbar() {
   const nonce = useContext(NonceContext);
@@ -30,7 +30,10 @@ export default function Navbar() {
 
   return (
     <nav className="sticky top-0 w-full bg-background">
-      <NavbarContent currentPath={currentPath} nonce={nonce} />
+      <NavbarContent
+        currentPath={currentPath}
+        nonce={nonce}
+      />
     </nav>
   );
 }

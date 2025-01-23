@@ -2,9 +2,9 @@
 
 import React from "react";
 
-import { NavbarCenter } from "@/components/root/NavbarCenter";
-import { NavbarRight } from "@/components/root/NavbarRight";
-import { MobileMenu } from "@/components/root/MobileMenu";
+import { NavbarCenter } from "@/components/root/navbar/NavbarCenter";
+import { NavbarRight } from "@/components/root/navbar/NavbarRight";
+import { MobileMenu } from "@/components/root/navbar/MobileMenu";
 import { NavbarContentProps } from "@/src/interfaces/Root";
 
 import { Brand } from "./Brand";
@@ -17,7 +17,10 @@ export function NavbarContent({ nonce, currentPath }: NavbarContentProps) {
       </div>
       <NavbarCenter currentPath={currentPath} />
       <NavbarRight nonce={nonce} />
-      <MobileMenu currentPath={currentPath} nonce={nonce} />
+      <MobileMenu
+        currentPath={currentPath}
+        nonce={nonce}
+      />
     </div>
   );
 }

@@ -4,9 +4,9 @@ import React from "react";
 
 import { NavbarRightProps } from "@/src/interfaces/Root";
 
-import { SearchInput } from "./SearchInput";
-import { ThemeSwitch } from "./ThemeSwitch";
-import LocaleSwitcher from "./LocaleSwitcher";
+import { SearchInput } from "@/components/root/SearchInput";
+import { ThemeSwitch } from "@/components/root/ThemeSwitch";
+import LocaleSwitcher from "@/components/root/LocaleSwitcher";
 
 export function NavbarRight({ nonce }: NavbarRightProps) {
   return (
