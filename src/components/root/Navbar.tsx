@@ -1,144 +1,125 @@
 "use client";
 
-import {
-  Navbar as NextUINavbar,
-  NavbarContent,
-  NavbarMenu,
-  NavbarMenuToggle,
-  NavbarBrand,
-  NavbarItem,
-  NavbarMenuItem,
-  Link,
-} from "@nextui-org/react";
-import { link as linkStyles } from "@nextui-org/theme";
 import React, { useContext, useState } from "react";
-import NextLink from "next/link";
 import clsx from "clsx";
 import { usePathname } from "next/navigation";
+import { Menu } from "lucide-react";
+import NextLink from "next/link";
 
-import { siteConfig } from "@/config/site";
-import { Logo } from "@/components/icons";
+import {
+  NavigationMenu,
+  NavigationMenuList,
+  NavigationMenuItem,
+  NavigationMenuLink,
+} from "@/components/ui/navigation-menu";
+import {
+  Sheet,
+  SheetContent,
+  SheetHeader,
+  SheetTitle,
+  SheetTrigger,
+} from "@/components/ui/sheet";
+import { Button } from "@/components/ui/button";
 import { NonceContext } from "@/app/providers";
+import { siteConfig } from "@/config/site";
 import { SearchInput } from "@/src/components/root/SearchInput";
 import { ThemeSwitch } from "@/src/components/root/ThemeSwitch";
 
 import LocaleSwitcher from "./LocaleSwitcher";
+import { Brand } from "./Brand";
 
 export default function Navbar() {
-  // Navbar state
   const nonce = useContext(NonceContext);
-  const [isMenuOpen, setIsMenuOpen] = useState(false);
   const currentPath = usePathname();
-  const isHomepage = currentPath === `/` ? true : false;
+  const [openMobileMenu, setOpenMobileMenu] = useState(false);
+  const isHomepage = currentPath === "/";
 
   if (isHomepage) {
     return (
-      <NextUINavbar
-        className="bg-background"
-        isMenuOpen={isMenuOpen}
-        maxWidth="2xl"
-        nonce={nonce}
-        position="sticky"
-        onMenuOpenChange={setIsMenuOpen}
-      >
-        <NavbarContent justify="end" nonce={nonce}>
-          <NavbarItem nonce={nonce}>
+      <nav className="sticky top-0 w-full bg-background">
+        <div className="container max-w-screen-2xl mx-auto flex h-16 items-center px-0">
+          <div className="flex-1" />
+          <div className="flex items-center gap-4">
             <ThemeSwitch nonce={nonce} />
-          </NavbarItem>
-          <NavbarItem nonce={nonce}>
             <LocaleSwitcher nonce={nonce} />
-          </NavbarItem>
-        </NavbarContent>
-      </NextUINavbar>
-    );
-  } else {
-    return (
-      // brand definition
-      <NextUINavbar
-        className="bg-background"
-        isMenuOpen={isMenuOpen}
-        maxWidth="2xl"
-        nonce={nonce}
-        position="sticky"
-        onMenuOpenChange={setIsMenuOpen}
-      >
-        <NavbarContent nonce={nonce}>
-          <NavbarBrand as="li" className="gap-3 max-w-fit" nonce={nonce}>
-            <NextLink
-              className="flex justify-start items-center gap-4"
-              href="/"
-              nonce={nonce}
-            >
-              <Logo nonce={nonce} />
-              <p className="font-bold text-inherit">{siteConfig.name}</p>
-            </NextLink>
-          </NavbarBrand>
-        </NavbarContent>
-        {/* navbar menu  */}
-        <NavbarContent justify="center" nonce={nonce}>
-          {/* toggle menu */}
-
-          <NavbarMenuToggle
-            aria-label={isMenuOpen ? "Close Menu" : "Open Menu"}
-            className="md:hidden"
-            nonce={nonce}
-          />
-
-          {/* or list items menu */}
-          <ul className="hidden md:flex items-start justify-start gap-16">
-            {siteConfig.navItems.map((item) => (
-              <NavbarItem key={item.href} nonce={nonce}>
-                <NextLink
-                  className={clsx(
-                    linkStyles({ color: "foreground" }),
-                    "data-[active=true]:text-primary data-[active=true]:font-medium",
-                  )}
-                  color="foreground"
-                  href={item.href}
-                  nonce={nonce}
-                >
-                  {item.label}
-                </NextLink>
-              </NavbarItem>
-            ))}
-          </ul>
-        </NavbarContent>
-        {/* avatar menu with theme switch and search */}
-        <NavbarContent justify="end" nonce={nonce}>
-          <NavbarItem className="hidden md:flex" nonce={nonce}>
-            <SearchInput nonce={nonce} />
-          </NavbarItem>
-          <NavbarItem nonce={nonce}>
-            <ThemeSwitch nonce={nonce} />
-          </NavbarItem>
-          <NavbarItem nonce={nonce}>
-            <LocaleSwitcher nonce={nonce} />
-          </NavbarItem>
-        </NavbarContent>
-
-        {/* menu definition when toggled */}
-        <NavbarMenu nonce={nonce}>
-          <SearchInput alwaysExpanded={true} nonce={nonce} />
-          <div className="mx-4 mt-2 flex flex-col gap-3">
-            {siteConfig.navItems.map((item, index) => (
-              <NavbarMenuItem key={`${item}-${index}`} nonce={nonce}>
-                <Link
-                  className="w-full"
-                  color="foreground"
-                  href={item.href}
-                  nonce={nonce}
-                  size="lg"
-                  onPress={() => {
-                    setIsMenuOpen((prev) => !prev);
-                  }}
-                >
-                  {item.label}
-                </Link>
-              </NavbarMenuItem>
-            ))}
           </div>
-        </NavbarMenu>
-      </NextUINavbar>
+        </div>
+      </nav>
     );
   }
+
+  return (
+    <nav className="sticky top-0 w-full bg-background">
+      <div className="container max-w-screen-2xl mx-auto flex h-16 items-center px-0">
+        {/* Left section - Brand */}
+        <div className="flex-none">
+          <Brand />
+        </div>
+
+        {/* Center section - Navigation */}
+        <div className="hidden md:flex flex-1 justify-center">
+          <NavigationMenu className="border-0 shadow-none bg-background">
+            <NavigationMenuList className="flex justify-center space-x-6">
+              {siteConfig.navItems.map((item) => (
+                <NavigationMenuItem key={item.href}>
+                  <NavigationMenuLink
+                    asChild
+                    className={clsx(
+                      "px-4 py-2 hover:text-primary",
+                      currentPath === item.href && "text-primary font-medium",
+                    )}
+                  >
+                    <NextLink href={item.href}>{item.label}</NextLink>
+                  </NavigationMenuLink>
+                </NavigationMenuItem>
+              ))}
+            </NavigationMenuList>
+          </NavigationMenu>
+        </div>
+
+        {/* Right section - Search & Switches */}
+        <div className="hidden md:flex items-center gap-4">
+          <SearchInput nonce={nonce} />
+          <ThemeSwitch nonce={nonce} />
+          <LocaleSwitcher nonce={nonce} />
+        </div>
+
+        {/* Mobile menu button */}
+        <div className="md:hidden ml-auto">
+          <Sheet open={openMobileMenu} onOpenChange={setOpenMobileMenu}>
+            <SheetTrigger asChild>
+              <Button size="icon" variant="ghost">
+                <Menu className="h-6 w-6" />
+              </Button>
+            </SheetTrigger>
+            <SheetContent className="w-3/4">
+              <SheetHeader>
+                <SheetTitle>Menu</SheetTitle>
+              </SheetHeader>
+              <div className="mt-4 flex flex-col gap-3">
+                <SearchInput alwaysExpanded={true} nonce={nonce} />
+                {siteConfig.navItems.map((item) => (
+                  <NextLink
+                    key={item.href}
+                    className={clsx(
+                      "px-4 py-2 hover:text-primary",
+                      currentPath === item.href && "text-primary font-medium",
+                    )}
+                    href={item.href}
+                    onClick={() => setOpenMobileMenu(false)}
+                  >
+                    {item.label}
+                  </NextLink>
+                ))}
+                <div className="flex items-center gap-3 px-4 mt-2">
+                  <ThemeSwitch nonce={nonce} />
+                  <LocaleSwitcher nonce={nonce} />
+                </div>
+              </div>
+            </SheetContent>
+          </Sheet>
+        </div>
+      </div>
+    </nav>
+  );
 }

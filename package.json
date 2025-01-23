@@ -1,6 +1,6 @@
 {
   "name": "njaeplume-next-client",
-  "version": "2.3.2",
+  "version": "2.3.4",
   "private": true,
   "type": "module",
   "scripts": {
@@ -16,6 +16,10 @@
     "@nextui-org/react": "^2.6.11",
     "@nextui-org/theme": "2.4.5",
     "@prisma/client": "^6.2.1",
+    "@radix-ui/react-dialog": "^1.1.5",
+    "@radix-ui/react-dropdown-menu": "^2.1.5",
+    "@radix-ui/react-menubar": "^1.1.5",
+    "@radix-ui/react-navigation-menu": "^1.2.4",
     "@radix-ui/react-slot": "^1.1.1",
     "@react-aria/ssr": "3.9.7",
     "@react-aria/visually-hidden": "3.8.19",
