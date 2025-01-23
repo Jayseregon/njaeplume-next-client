@@ -3,7 +3,6 @@
 import React from "react";
 
 import { NavbarRightProps } from "@/src/interfaces/Root";
-
 import { SearchInput } from "@/components/root/SearchInput";
 import { ThemeSwitch } from "@/components/root/ThemeSwitch";
 import LocaleSwitcher from "@/components/root/LocaleSwitcher";
