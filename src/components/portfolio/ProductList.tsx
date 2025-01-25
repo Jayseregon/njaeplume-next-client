@@ -2,6 +2,8 @@ import { getProducts } from "@/actions/prisma/action";
 import { ProductCard } from "@/components/portfolio/ProductCard";
 import ErrorBoundary from "@/src/components/root/ErrorBoundary";
 
+import { ErrorDefaultDisplay } from "../root/ErrorDefaultDisplay";
+
 export default async function ProductList() {
   const products = await getProducts();
 
@@ -14,14 +16,7 @@ export default async function ProductList() {
   }
 
   return (
-    <ErrorBoundary
-      fallback={
-        <div className="text-center p-4">
-          <h2 className="text-xl font-bold">Something went wrong</h2>
-          <p>We were not able to load our products. Please try again later.</p>
-        </div>
-      }
-    >
+    <ErrorBoundary fallback={<ErrorDefaultDisplay />}>
       <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-5 mx-10 md:gap-10 md:mx-20">
         {products.map((product) => (
           <ProductCard key={product.id} product={product} />

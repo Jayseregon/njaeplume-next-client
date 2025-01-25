@@ -6,7 +6,11 @@
     "code": "En cours de développement"
   },
   "Utils": {
-    "LoadingButton": "Veuillez patienter"
+    "LoadingButton": "Veuillez patienter",
+    "ErrorDefaultDisplay": {
+      "title": "Quelque chose s'est mal passé!",
+      "message": "Veuillez réessayer plus tard."
+    }
   },
   "Footer": {
     "copyright1": "NJAE Plume S.E.N.C.",

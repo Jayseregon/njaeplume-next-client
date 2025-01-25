@@ -6,7 +6,11 @@
     "code": "Currently in development"
   },
   "Utils" : {
-    "LoadingButton": "Please wait"
+    "LoadingButton": "Please wait", 
+    "ErrorDefaultDisplay": {
+      "title": "Something went wrong!",
+      "message": "Please try again later."
+    } 
   },
   "Footer": {
     "copyright1": "NJAE Plume G.P.",
