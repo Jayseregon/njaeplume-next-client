@@ -1,6 +1,6 @@
 import { getProducts } from "@/actions/prisma/action";
 import { ProductCard } from "@/components/portfolio/ProductCard";
-import ErrorBoundary from "@/components/ErrorBoundary";
+import ErrorBoundary from "@/src/components/root/ErrorBoundary";
 
 export default async function ProductList() {
   const products = await getProducts();

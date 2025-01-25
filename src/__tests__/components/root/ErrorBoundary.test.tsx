@@ -1,7 +1,7 @@
 import { render } from "@testing-library/react";
 
 import "@testing-library/jest-dom";
-import ErrorBoundary from "@/src/components/ErrorBoundary";
+import ErrorBoundary from "@/src/components/root/ErrorBoundary";
 
 // Suppress console.error for error boundary tests
 beforeAll(() => {

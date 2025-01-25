@@ -12,8 +12,7 @@ import { title, subtitle } from "@/components/typography";
 import NJAEPlumeMain from "@/public/site/njae_main_logo_title.png";
 import NJAEHeadLeft from "@/public/site/landing_page_head_left.png";
 import NJAEHeadRight from "@/public/site/landing_page_head_right.png";
-
-import { LoadingButton } from "../components/root/LoadingButton";
+import { LoadingButton } from "@/components/root/LoadingButton";
 
 import { NonceContext } from "./providers";
 
@@ -61,7 +60,7 @@ export default function RootPage() {
         <div className="py-1" />
 
         {portfolio && portfolio.href ? (
-          <Button asChild>
+          <Button asChild className="w-1/4" variant="form">
             <Link href={portfolio.href}>
               <PortfolioIcon /> {portfolio.label}
             </Link>

@@ -32,15 +32,15 @@ jest.mock("@/components/ui/sheet", () => ({
     <div data-testid="sheet-title">{children}</div>
   ),
   SheetTrigger: ({ children }: any) => (
-    <button data-testid="sheet-trigger">{children}</button>
+    <div data-testid="sheet-trigger">{children}</div>
   ),
 }));
 
 jest.mock("@/components/ui/button", () => ({
   Button: ({ children, ...props }: any) => (
-    <button data-testid="mobile-menu-button" {...props}>
+    <div data-testid="mobile-menu-button" {...props}>
       {children}
-    </button>
+    </div>
   ),
 }));
 

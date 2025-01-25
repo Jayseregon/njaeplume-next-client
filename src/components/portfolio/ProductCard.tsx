@@ -1,7 +1,7 @@
 import Image from "next/image";
 
 import { Card, CardHeader, CardContent } from "@/components/ui/card";
-import ErrorBoundary from "@/components/ErrorBoundary";
+import ErrorBoundary from "@/src/components/root/ErrorBoundary";
 import { Product } from "@/interfaces/Products";
 
 export const ProductCard = ({ product }: { product: Product }) => {
