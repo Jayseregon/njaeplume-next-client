@@ -9,9 +9,6 @@ import { Button } from "@/components/ui/button";
 import { PortfolioIcon } from "@/components/icons";
 import { getNavItemByKey } from "@/config/site";
 import { title, subtitle } from "@/components/typography";
-import NJAEPlumeMain from "@/public/site/njae_main_logo_title.png";
-import NJAEHeadLeft from "@/public/site/landing_page_head_left.png";
-import NJAEHeadRight from "@/public/site/landing_page_head_right.png";
 import { LoadingButton } from "@/components/root/LoadingButton";
 
 import { NonceContext } from "./providers";
@@ -27,22 +24,25 @@ export default function RootPage() {
         <Image
           alt="NJAE PLume homepage left image"
           className="relative -left-10 w-1/5 md:w-1/4"
+          height={200}
           nonce={nonce || undefined}
-          src={NJAEHeadLeft}
+          src="/site/landing_page_head_left.webp"
           width={200}
         />
         <Image
           alt="NJAE PLume homepage logo"
           className="w-3/5 md:w-2/4"
+          height={500}
           nonce={nonce || undefined}
-          src={NJAEPlumeMain}
+          src="/site/njae_main_logo_title.webp"
           width={500}
         />
         <Image
           alt="NJAE PLume homepage right image"
           className="relative -right-6 w-1/5 md:w-1/4"
+          height={200}
           nonce={nonce || undefined}
-          src={NJAEHeadRight}
+          src="/site/landing_page_head_right.webp"
           width={200}
         />
       </div>
