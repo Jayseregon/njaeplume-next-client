@@ -37,14 +37,7 @@ const config: import("tailwindcss").Config = {
       },
     },
   },
-  variants: {
-    extend: {
-      fontStyle: ["responsive", "hover", "focus", "active"],
-      fontWeight: ["responsive", "hover", "focus", "active"],
-    },
-  },
   darkMode: "class",
-  safelist: [],
   plugins: [require("@tailwindcss/typography"), require("tailwindcss-animate")],
 } satisfies Config;
 

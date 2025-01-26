@@ -109,7 +109,7 @@ export default async function RootLayout({
               <Navbar />
 
               <main
-                className="container mx-auto max-w-full px-6 flex-grow"
+                className="container mx-auto max-w-full px-6 grow"
                 nonce={nonce || undefined}
               >
                 {children}

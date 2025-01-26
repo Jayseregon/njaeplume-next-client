@@ -84,7 +84,7 @@ describe("NavbarContent", () => {
 
     expect(container).toHaveClass(
       "container",
-      "max-w-screen-2xl",
+      "max-w-(--breakpoint-2xl)",
       "mx-auto",
       "flex",
       "h-16",

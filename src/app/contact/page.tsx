@@ -141,7 +141,7 @@ export default function ContactPage() {
           </div>
 
           <Button
-            className="w-full bg-foreground text-background py-2 px-4 rounded-md hover:bg-warning-500 focus:outline-none"
+            className="w-full bg-foreground text-background py-2 px-4 rounded-md hover:bg-warning-500 focus:outline-hidden"
             disabled={pending || !recaptchaToken}
             nonce={nonce}
             type="submit"

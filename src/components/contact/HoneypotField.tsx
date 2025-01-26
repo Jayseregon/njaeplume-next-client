@@ -15,7 +15,7 @@ export const HoneypotField = ({ t, value, onChange }: HoneypotProps) => {
       </Label>
       <Input
         className="mt-1 block w-full bg-white text-black border border-foreground rounded-md py-2 px-3 
-                   focus:outline-none focus:ring-primary-400 focus:border-primary-400"
+                   focus:outline-hidden focus:ring-primary-400 focus:border-primary-400"
         id="honeypot"
         name="honeypot"
         type="text"

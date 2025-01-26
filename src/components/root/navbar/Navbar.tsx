@@ -16,7 +16,7 @@ export default function Navbar() {
   if (isHomepage) {
     return (
       <nav className="sticky top-0 w-full bg-background">
-        <div className="container max-w-screen-2xl mx-auto flex h-16 items-center px-0">
+        <div className="container max-w-(--breakpoint-2xl) mx-auto flex h-16 items-center px-0">
           <div className="flex-1" />
           <div className="flex items-center gap-4">
             <ThemeSwitch nonce={nonce} />

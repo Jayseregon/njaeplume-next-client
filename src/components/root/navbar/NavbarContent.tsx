@@ -12,7 +12,7 @@ import { Brand } from "./Brand";
 export function NavbarContent({ nonce, currentPath }: NavbarContentProps) {
   return (
     <div
-      className="container max-w-screen-2xl mx-auto flex h-16 items-center px-0"
+      className="container max-w-(--breakpoint-2xl) mx-auto flex h-16 items-center px-0"
       data-current-path={currentPath}
       data-nonce={nonce}
       data-testid="navbar-content"

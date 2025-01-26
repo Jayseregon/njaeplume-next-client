@@ -51,7 +51,7 @@ export const SearchInput = ({
       {isSearchExpanded || alwaysExpanded ? (
         <Input
           aria-label="Search"
-          className="text-sm mt-1 block w-full bg-neutral-50 dark:bg-neutral-200 text-foreground dark:text-background border border-foreground rounded-md py-2 px-3 focus:outline-none focus:ring-primary-400 focus:border-primary-400"
+          className="text-sm mt-1 block w-full bg-neutral-50 dark:bg-neutral-200 text-foreground dark:text-background border border-foreground rounded-md py-2 px-3 focus:outline-hidden focus:ring-primary-400 focus:border-primary-400"
           placeholder="Search..."
           type="search"
         />
