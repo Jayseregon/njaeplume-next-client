@@ -56,16 +56,6 @@ describe("LocaleSwitcher", () => {
     expect(screen.getByText("EN")).toBeInTheDocument();
   });
 
-  it("applies custom className when provided", () => {
-    const testClass = "test-class";
-
-    render(<LocaleSwitcher className={testClass} />);
-
-    const button = screen.getByRole("button", { name: /toggle language/i });
-
-    expect(button).toHaveClass(testClass);
-  });
-
   it("applies nonce attribute when provided", () => {
     const testNonce = "test-nonce-123";
 

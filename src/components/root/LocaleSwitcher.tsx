@@ -1,16 +1,16 @@
 "use client";
 import { useLocale } from "next-intl";
-import { Button } from "@nextui-org/react";
 import { motion } from "framer-motion";
 import { useState, useEffect, JSX } from "react";
 
+import { Button } from "@/components/ui/button";
 import { setUserLocale } from "@/lib/locale";
-import { LocaleSwitcherProps } from "@/src/interfaces/UI";
 
 export default function LocaleSwitcher({
-  className,
   nonce,
-}: LocaleSwitcherProps): JSX.Element {
+}: {
+  nonce?: string;
+}): JSX.Element {
   const locale = useLocale();
   const [mounted, setMounted] = useState(false);
 
@@ -33,13 +33,10 @@ export default function LocaleSwitcher({
   return (
     <Button
       aria-label="Toggle language"
-      className={className}
-      color={undefined}
-      isIconOnly={true}
       nonce={nonce}
-      size="sm"
-      variant={undefined}
-      onPress={toggleLocale}
+      size="icon"
+      variant={"ghost"}
+      onClick={toggleLocale}
     >
       <motion.div
         key={locale}
