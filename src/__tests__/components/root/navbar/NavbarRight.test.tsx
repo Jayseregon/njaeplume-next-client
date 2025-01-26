@@ -61,7 +61,7 @@ describe("NavbarRight", () => {
 
     const wrapper = container.firstChild as HTMLElement;
 
-    expect(wrapper).toHaveClass("hidden", "md:flex", "items-center", "gap-4");
+    expect(wrapper).toHaveClass("hidden", "md:flex", "items-center", "gap-1");
   });
 
   it("renders in the correct order", () => {

@@ -17,7 +17,7 @@ export default async function ProductList() {
 
   return (
     <ErrorBoundary fallback={<ErrorDefaultDisplay />}>
-      <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-5 mx-10 md:gap-10 md:mx-20">
+      <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-5 mx-10 md:gap-10 md:mx-20">
         {products.map((product) => (
           <ProductCard key={product.id} product={product} />
         ))}

@@ -18,7 +18,7 @@ export default function Navbar() {
       <nav className="sticky top-0 w-full bg-background">
         <div className="container max-w-(--breakpoint-2xl) mx-auto flex h-16 items-center px-0">
           <div className="flex-1" />
-          <div className="flex items-center gap-4">
+          <div className="flex items-center gap-1 pr-2 md:pr-0">
             <ThemeSwitch nonce={nonce} />
             <LocaleSwitcher nonce={nonce} />
           </div>

@@ -19,6 +19,8 @@ import LocaleSwitcher from "@/components/root/LocaleSwitcher";
 import { siteConfig } from "@/config/site";
 import { MobileMenuProps } from "@/src/interfaces/Root";
 
+import { Brand } from "./Brand";
+
 export function MobileMenu({ nonce, currentPath }: MobileMenuProps) {
   const [openMobileMenu, setOpenMobileMenu] = useState(false);
 
@@ -32,7 +34,9 @@ export function MobileMenu({ nonce, currentPath }: MobileMenuProps) {
         </SheetTrigger>
         <SheetContent className="w-3/4">
           <SheetHeader>
-            <SheetTitle>Menu</SheetTitle>
+            <SheetTitle>
+              <Brand withMargin={false} />
+            </SheetTitle>
           </SheetHeader>
           <div className="mt-4 flex flex-col gap-3">
             <SearchInput alwaysExpanded={true} nonce={nonce} />
@@ -49,7 +53,7 @@ export function MobileMenu({ nonce, currentPath }: MobileMenuProps) {
                 {item.label}
               </NextLink>
             ))}
-            <div className="flex items-center gap-3 px-4 mt-2">
+            <div className="flex items-center gap-1 mt-2">
               <ThemeSwitch nonce={nonce} />
               <LocaleSwitcher nonce={nonce} />
             </div>

@@ -86,7 +86,7 @@ jest.mock("next/link", () => ({
   default: ({ children, href, onClick, className }: any) => (
     <a
       className={className}
-      data-testid="nav-link"
+      data-testid={href === "/" ? "brand-link" : "nav-link"}
       href={href}
       onClick={onClick}
     >
@@ -97,7 +97,7 @@ jest.mock("next/link", () => ({
 
 describe("MobileMenu", () => {
   const mockProps = {
-    currentPath: siteConfig.navItems[0].href, // Use an actual path from config
+    currentPath: siteConfig.navItems[0].href,
     nonce: "test-nonce-123",
   };
 

@@ -9,7 +9,7 @@ import LocaleSwitcher from "@/components/root/LocaleSwitcher";
 
 export function NavbarRight({ nonce }: NavbarRightProps) {
   return (
-    <div className="hidden md:flex items-center gap-4">
+    <div className="hidden md:flex items-center gap-1">
       <SearchInput nonce={nonce} />
       <ThemeSwitch nonce={nonce} />
       <LocaleSwitcher nonce={nonce} />
