@@ -13,14 +13,14 @@ export const TextInput = ({
   return (
     <div>
       <Label
-        className="block text-sm font-medium text-start"
+        className="block text-sm font-medium text-start text-foreground"
         htmlFor={fieldTarget}
       >
         {t(fieldTarget)}
       </Label>
       <Textarea
         required
-        className="mt-1 block w-full bg-white text-black border border-foreground rounded-md py-2 px-3 focus:outline-none focus:ring-primary-400 focus:border-primary-400"
+        className="mt-1 block w-full bg-neutral-50 dark:bg-neutral-200 text-foreground dark:text-background border border-foreground rounded-md py-2 px-3 focus:outline-none focus:ring-primary-400 focus:border-primary-400"
         id={fieldTarget}
         name={fieldTarget}
         value={value}

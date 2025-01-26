@@ -17,6 +17,7 @@ import { TextInput } from "@/src/components/contact/TextInput";
 import { HoneypotField } from "@/src/components/contact/HoneypotField";
 import ErrorBoundary from "@/src/components/root/ErrorBoundary";
 import { ErrorDefaultDisplay } from "@/src/components/root/ErrorDefaultDisplay";
+import { PageTitle } from "@/src/components/root/PageTitle";
 
 const initialState = {
   success: false,
@@ -66,8 +67,10 @@ export default function ContactPage() {
   return (
     <ErrorBoundary fallback={<ErrorDefaultDisplay />}>
       <div nonce={nonce}>
-        <h1 className="text-5xl font-bold mb-5">{t("title")}</h1>
-        <EmailIcon size={65} />
+        <PageTitle title={t("title")} />
+        <div className="text-foreground">
+          <EmailIcon size={65} />
+        </div>
         <form action={formAction} className="space-y-4" nonce={nonce}>
           <div
             className="grid grid-cols-1 sm:grid-cols-2 gap-5 w-full"
