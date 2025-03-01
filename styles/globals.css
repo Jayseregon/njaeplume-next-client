@@ -36,7 +36,7 @@
 
   .dark {
     /* Dark mode colors */
-    --color-background: 41 37 36;     /* rgb(41 37 36) */
+    --color-background: 41 37 36;     /* #292524 */
     --color-foreground: 218 182 165;  /* #DAB6A5 */
     --color-primary: 130 90 203;      /* #825ACB */
     --color-secondary: 85 83 154;     /* #55539A */

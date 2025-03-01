@@ -1,11 +1,11 @@
 import type { NextRequest } from "next/server";
 
 import { NextResponse } from "next/server";
+import { clerkMiddleware, createRouteMatcher } from "@clerk/nextjs/server";
 
-// New CSP middleware function
-function cspMiddleware(req: NextRequest): NextResponse {
+// Helper to apply CSP headers to any response
+function applyCsp(response: NextResponse, _req: NextRequest): NextResponse {
   const nonce = Buffer.from(crypto.randomUUID()).toString("base64");
-
   const cspHeader = `
     default-src 'self';
     script-src 'self' 'nonce-${nonce}' 'strict-dynamic' https://www.google.com https://www.gstatic.com https://vercel.live;
@@ -23,39 +23,44 @@ function cspMiddleware(req: NextRequest): NextResponse {
     .replace(/\s{2,}/g, " ")
     .trim();
 
-  const requestHeaders = new Headers(req.headers);
-
-  requestHeaders.set("x-nonce", nonce);
-
-  const response = NextResponse.next({
-    request: {
-      headers: requestHeaders,
-    },
-  });
-
   response.headers.set("Content-Security-Policy", cspHeader);
+  response.headers.set("x-nonce", nonce);
 
   return response;
 }
 
-// Combined middleware function
-export async function middleware(req: NextRequest) {
-  // const { pathname } = req.nextUrl;
+const isAdminCastleRoute = createRouteMatcher(["/castle(.*)"]);
 
-  // Apply your existing CSP middleware in production
+export default clerkMiddleware(async (auth, req) => {
+  // Role protection logic
+  let response;
+
+  if (
+    isAdminCastleRoute(req) &&
+    (await auth()).sessionClaims?.metadata?.role !== "castleAdmin"
+  ) {
+    const url = new URL("/", req.url);
+
+    response = NextResponse.redirect(url);
+  } else {
+    response = NextResponse.next();
+  }
+  // Apply CSP in production on all responses
   const isDev = process.env.NODE_ENV === "development";
 
   if (!isDev) {
-    return cspMiddleware(req);
-  } else {
-    return NextResponse.next();
+    return applyCsp(response, req);
   }
-}
+
+  return response;
+});
 
 export const config = {
   matcher: [
-    "/", // Root for CSP
-    "/((?!_next/static|_vercel|.*\\..*).*)", // Exclude Next.js static routes and other specified patterns
-    "/((?!api|_next/static|_next/image|_next/data|static|favicon.ico|favicon.png|favicon.webp).*)", // Exclude API routes, static assets, etc.
+    "/", // Root
+    "/((?!_next/static|_vercel|.*\\..*).*)",
+    "/((?!api|_next/static|_next/image|_next/data|static|favicon.ico|favicon.png|favicon.webp).*)",
+    "/((?!_next|[^?]*\\.(?:html?|css|js(?!on)|jpe?g|webp|png|gif|svg|ttf|woff2?|ico|csv|docx?|xlsx?|zip|webmanifest)).*)",
+    "/(api|trpc)(.*)",
   ],
 };
