@@ -1,19 +1,17 @@
-"use client";
-
-import { useContext } from "react";
-
-import { ErrorDefaultDisplay } from "@/src/components/root/ErrorDefaultDisplay";
+import { ProductsTable } from "@/components/castle/ProductsTable";
 import { PageTitle } from "@/src/components/root/PageTitle";
+import { getProducts } from "@/actions/prisma/action";
 import ErrorBoundary from "@/src/components/root/ErrorBoundary";
-import { NonceContext } from "@/src/app/providers";
+import { ErrorDefaultDisplay } from "@/src/components/root/ErrorDefaultDisplay";
 
-export default function ProductsPage() {
-  const nonce = useContext(NonceContext);
+export default async function ProductsPage() {
+  const products = await getProducts();
 
   return (
     <ErrorBoundary fallback={<ErrorDefaultDisplay />}>
-      <div nonce={nonce}>
-        <PageTitle title="Products Page" />
+      <div className="space-y-6">
+        <PageTitle title="Products Management" />
+        <ProductsTable products={products} />
       </div>
     </ErrorBoundary>
   );
