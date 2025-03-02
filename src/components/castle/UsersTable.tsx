@@ -23,11 +23,7 @@ import { Button } from "@/components/ui/button";
 import { setRole, removeRole } from "@/actions/clerk/action";
 import { SerializableUser } from "@/interfaces/Castle";
 
-interface UsersTableProps {
-  users: SerializableUser[];
-}
-
-export const UsersTable = ({ users }: UsersTableProps) => {
+export const UsersTable = ({ users }: { users: SerializableUser[] }) => {
   const router = useRouter();
   const [isSubmitting, setIsSubmitting] = useState<Record<string, boolean>>({});
 
@@ -83,7 +79,8 @@ export const UsersTable = ({ users }: UsersTableProps) => {
       <Table className="w-full mx-auto">
         <TableHeader>
           <TableRow>
-            <TableHead className="text-center">Name</TableHead>
+            <TableHead className="text-center">First Name</TableHead>
+            <TableHead className="text-center">Last Name</TableHead>
             <TableHead className="text-center">Email</TableHead>
             <TableHead className="text-center">Current Role</TableHead>
             <TableHead className="text-center">Actions</TableHead>
@@ -92,9 +89,8 @@ export const UsersTable = ({ users }: UsersTableProps) => {
         <TableBody>
           {users.map((user) => (
             <TableRow key={user.id} className="text-center">
-              <TableCell className="font-medium">
-                {user.firstName} {user.lastName}
-              </TableCell>
+              <TableCell className="font-medium">{user.firstName}</TableCell>
+              <TableCell className="font-medium">{user.lastName}</TableCell>
               <TableCell>
                 {user.emailAddresses.find(
                   (email) => email.id === user.primaryEmailAddressId,
@@ -129,7 +125,7 @@ export const UsersTable = ({ users }: UsersTableProps) => {
           ))}
           {users.length === 0 && (
             <TableRow className="text-center">
-              <TableCell className="text-center py-6" colSpan={4}>
+              <TableCell className="text-center py-6" colSpan={5}>
                 No users found
               </TableCell>
             </TableRow>
