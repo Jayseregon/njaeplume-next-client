@@ -1,17 +1,30 @@
-// import { useTranslations } from "next-intl";
+import { clerkClient } from "@clerk/nextjs/server";
 
-import { PageTitle } from "@/src/components/root/PageTitle";
+import { UsersTable } from "@/components/castle/UsersTable";
+import {
+  SerializableUser,
+  serializeAndValidateClerkUsers,
+} from "@/interfaces/Castle";
 
-export default function CastlePage() {
-  // const t = useTranslations("Portfolio");
+export default async function CastlePage() {
+  const client = await clerkClient();
+  const clerkUsers = await client.users.getUserList({ limit: 100 });
+
+  // Serialize and validate users data
+  const users: SerializableUser[] = serializeAndValidateClerkUsers(
+    clerkUsers.data,
+  );
 
   return (
-    <div>
-      <PageTitle title={"Welcome to the Castle"} />
-      <div className="py-5" />
+    <div className="space-y-6">
       <div>
-        <p>Upcoming page for the admin dashboard.</p>
+        <h1 className="text-2xl font-bold tracking-tight">User Management</h1>
+        <p className="text-muted-foreground mt-2">
+          Manage user roles and permissions across the platform.
+        </p>
       </div>
+
+      <UsersTable users={users} />
     </div>
   );
 }

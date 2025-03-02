@@ -4,7 +4,14 @@ import { useTranslations } from "next-intl";
 import Image from "next/image";
 import Link from "next/link";
 import { useContext } from "react";
-import { SignInButton, SignedIn, SignedOut, UserButton } from "@clerk/nextjs";
+import {
+  SignInButton,
+  SignedIn,
+  SignedOut,
+  UserButton,
+  useUser,
+} from "@clerk/nextjs";
+import { LayoutDashboard } from "lucide-react";
 
 import { Button } from "@/components/ui/button";
 import { PortfolioIcon } from "@/components/icons";
@@ -17,6 +24,7 @@ import { NonceContext } from "./providers";
 export default function RootPage() {
   const nonce = useContext(NonceContext);
   const t = useTranslations("HomePage");
+  const { isSignedIn, user } = useUser();
   const portfolio = getNavItemByKey("portfolio");
 
   return (
@@ -68,6 +76,13 @@ export default function RootPage() {
           </Button>
         ) : (
           <LoadingButton />
+        )}
+        {isSignedIn && user?.publicMetadata?.role === "castleAdmin" && (
+          <Button asChild className="w-1/4" variant="form">
+            <Link href="/castle">
+              <LayoutDashboard /> Castle
+            </Link>
+          </Button>
         )}
 
         <div className="py-5" />
