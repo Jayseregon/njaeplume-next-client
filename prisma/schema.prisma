@@ -9,27 +9,34 @@ datasource db {
   schemas  = ["products"]
 }
 
-// enum Category {
-//   BRUSHES
-//   STICKERS
-//   TEMPLATES
-//   PLANNERS
-//   FREEBIE
-// }
+enum Category {
+  brushes
+  stickers
+  templates
+  planners
+  freebies
+
+  @@schema("products")
+}
+
+model Tag {
+  id       String    @id @default(cuid())
+  name     String    @unique
+  slug     String    @unique
+  products Product[] @relation("ProductToTag")
+
+  @@schema("products")
+}
 
 model Product {
   id                String         @id @default(cuid())
-  sku               String?
-  old_sku           String?
   name              String?
   old_name          String?
   old_price         Float?
   price             Float?
   description       String?
   old_description   String?
-  details           String?
-  old_details       String?
-  category          String?
+  category          Category?
   old_category      String?
   createdAt         DateTime       @default(now())
   old_date_created  DateTime?
@@ -40,6 +47,7 @@ model Product {
   slug              String?
   old_slug          String?
   old_tags          String?
+  tags              Tag[]          @relation("ProductToTag")
   images            ProductImage[]
 
   @@schema("products")

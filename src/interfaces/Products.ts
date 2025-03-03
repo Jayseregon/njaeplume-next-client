@@ -1,16 +1,26 @@
+export enum Category {
+  brushes = "brushes",
+  stickers = "stickers",
+  templates = "templates",
+  planners = "planners",
+  freebies = "freebies",
+}
+
+export interface Tag {
+  id: string;
+  name: string;
+  slug: string;
+}
+
 export interface Product {
   id: string;
-  sku: string | null;
-  old_sku: string | null;
   name: string | null;
   old_name: string | null;
   price: number | null;
   old_price: number | null;
   description: string | null;
   old_description: string | null;
-  details: string | null;
-  old_details: string | null;
-  category: string | null;
+  category: Category | null;
   old_category: string | null;
   createdAt: Date;
   old_date_created: Date | null;
@@ -21,6 +31,7 @@ export interface Product {
   slug: string | null;
   old_slug: string | null;
   old_tags: string | null;
+  tags: Tag[];
   images: ProductImage[];
 }
 

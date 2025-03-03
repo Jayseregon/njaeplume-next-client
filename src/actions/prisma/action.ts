@@ -6,7 +6,7 @@ const prisma = new PrismaClient();
 export async function getProducts() {
   try {
     return await prisma.product.findMany({
-      include: { images: true },
+      include: { images: true, tags: true },
     });
   } finally {
     await prisma.$disconnect();
