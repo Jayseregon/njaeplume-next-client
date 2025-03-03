@@ -14,23 +14,14 @@ export interface Tag {
 
 export interface Product {
   id: string;
-  name: string | null;
-  old_name: string | null;
-  price: number | null;
-  old_price: number | null;
-  description: string | null;
-  old_description: string | null;
-  category: Category | null;
-  old_category: string | null;
+  name: string;
+  price: number;
+  description: string;
+  category: Category;
   createdAt: Date;
-  old_date_created: Date | null;
   updatedAt: Date;
-  old_date_updated: Date | null;
-  zip_file_name: string | null;
-  old_zip_file_name: string | null;
-  slug: string | null;
-  old_slug: string | null;
-  old_tags: string | null;
+  zip_file_name: string;
+  slug: string;
   tags: Tag[];
   images: ProductImage[];
 }
@@ -38,8 +29,6 @@ export interface Product {
 export interface ProductImage {
   id: string;
   productId: string;
-  url: string | null;
-  old_url: string | null;
-  alt_text: string | null;
-  old_alt_text: string | null;
+  url: string;
+  alt_text: string;
 }

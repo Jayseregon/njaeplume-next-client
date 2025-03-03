@@ -52,34 +52,34 @@ export const ProductsTable = ({ products }: { products: Product[] }) => {
         </TableHeader>
         <TableBody>
           {products.map((product) => (
-            <TableRow key={product.id} className="text-start">
-              <TableCell className="font-medium">
-                {product.id || "N/A"}
-              </TableCell>
+            <TableRow
+              key={product.id}
+              className="text-start">
+              <TableCell className="font-medium">{product.id}</TableCell>
 
-              <TableCell>{product.name || "N/A"}</TableCell>
+              <TableCell>{product.name}</TableCell>
               <TableCell>{`$${(product.price || 0).toFixed(2)}`}</TableCell>
-              <TableCell>{product.category || "N/A"}</TableCell>
+              <TableCell>{product.category}</TableCell>
 
               <TableCell className="overflow-hidden text-ellipsis max-w-sm">
-                {product.description || "N/A"}
+                {product.description}
               </TableCell>
-              <TableCell>{product.zip_file_name || "N/A"}</TableCell>
-              <TableCell>{product.slug || "N/A"}</TableCell>
+              <TableCell>{product.zip_file_name}</TableCell>
+              <TableCell>{product.slug}</TableCell>
               <TableCell className="overflow-hidden text-ellipsis max-w-sm">
-                {product.tags && product.tags.length > 0 ? (
+                {product.tags && product.tags.length > 0 && (
                   <div className="flex flex-row gap-0.5">
                     {(product.id && randomizedProductTags[product.id]
                       ? randomizedProductTags[product.id]
                       : product.tags.slice(0, 5)
                     ).map((tag) => (
-                      <Badge key={tag.id} variant="primary">
+                      <Badge
+                        key={tag.id}
+                        variant="primary">
                         {tag.name}
                       </Badge>
                     ))}
                   </div>
-                ) : (
-                  "N/A"
                 )}
               </TableCell>
 
@@ -89,7 +89,9 @@ export const ProductsTable = ({ products }: { products: Product[] }) => {
           ))}
           {products.length === 0 && (
             <TableRow className="text-center">
-              <TableCell className="text-center py-6" colSpan={10}>
+              <TableCell
+                className="text-center py-6"
+                colSpan={10}>
                 No products found
               </TableCell>
             </TableRow>
