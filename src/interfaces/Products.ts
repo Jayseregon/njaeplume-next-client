@@ -1,10 +1,4 @@
-export enum Category {
-  brushes = "brushes",
-  stickers = "stickers",
-  templates = "templates",
-  planners = "planners",
-  freebies = "freebies",
-}
+import { Category } from "@prisma/client";
 
 export interface Tag {
   id: string;

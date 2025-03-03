@@ -8,8 +8,8 @@ export const ProductCard = ({ product }: { product: Product }) => {
   return (
     <Card className="rounded-2xl pt-3">
       <CardHeader>
-        <h3 className="text-xl pb-1 font-bold">{product.old_name}</h3>
-        <p className="italic text-sm pb-2">{product.old_category}</p>
+        <h3 className="text-xl pb-1 font-bold">{product.name}</h3>
+        <p className="italic text-sm pb-2">{product.category}</p>
       </CardHeader>
       <CardContent>
         <div className="pb-8">
@@ -27,14 +27,14 @@ export const ProductCard = ({ product }: { product: Product }) => {
               >
                 <Image
                   alt={
-                    product.images[0].old_alt_text ||
+                    product.images[0].alt_text ||
                     "default product image alt text"
                   }
                   className="w-full h-auto object-contain"
                   height={600}
                   priority={false}
                   sizes="(max-width: 768px) 100vw, 50vw"
-                  src={`https://njaeink-remote-pull.b-cdn.net/${product.images[0].old_url}`}
+                  src={`https://njaeink-remote-pull.b-cdn.net/${product.images[0].url}`}
                   width={800}
                 />
               </div>

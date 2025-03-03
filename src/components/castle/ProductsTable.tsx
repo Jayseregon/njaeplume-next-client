@@ -52,9 +52,7 @@ export const ProductsTable = ({ products }: { products: Product[] }) => {
         </TableHeader>
         <TableBody>
           {products.map((product) => (
-            <TableRow
-              key={product.id}
-              className="text-start">
+            <TableRow key={product.id} className="text-start">
               <TableCell className="font-medium">{product.id}</TableCell>
 
               <TableCell>{product.name}</TableCell>
@@ -73,9 +71,7 @@ export const ProductsTable = ({ products }: { products: Product[] }) => {
                       ? randomizedProductTags[product.id]
                       : product.tags.slice(0, 5)
                     ).map((tag) => (
-                      <Badge
-                        key={tag.id}
-                        variant="primary">
+                      <Badge key={tag.id} variant="primary">
                         {tag.name}
                       </Badge>
                     ))}
@@ -89,9 +85,7 @@ export const ProductsTable = ({ products }: { products: Product[] }) => {
           ))}
           {products.length === 0 && (
             <TableRow className="text-center">
-              <TableCell
-                className="text-center py-6"
-                colSpan={10}>
+              <TableCell className="text-center py-6" colSpan={10}>
                 No products found
               </TableCell>
             </TableRow>
