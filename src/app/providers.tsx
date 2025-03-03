@@ -20,7 +20,7 @@ export interface ProvidersProps {
 
 export function Providers({ children, themeProps, nonce }: ProvidersProps) {
   return (
-    <ClerkProvider>
+    <ClerkProvider nonce={nonce}>
       <NonceContext.Provider value={nonce}>
         <NextThemesProvider
           defaultTheme="dark"
