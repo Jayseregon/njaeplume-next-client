@@ -9,7 +9,7 @@ import { headers } from "next/headers";
 import Head from "next/head";
 import { getLocale, getMessages } from "next-intl/server";
 
-import Navbar from "@/components/root/Navbar";
+import Navbar from "@/components/root/navbar/Navbar";
 import Footer from "@/components/root/Footer";
 import { siteConfig } from "@/config/site";
 import {
@@ -19,6 +19,7 @@ import {
   fontDisplay,
   fontSansAlt,
 } from "@/config/fonts";
+import { Toaster } from "@/components/ui/sonner";
 
 import { Providers } from "./providers";
 
@@ -109,7 +110,7 @@ export default async function RootLayout({
               <Navbar />
 
               <main
-                className="container mx-auto max-w-full px-6 flex-grow"
+                className="container mx-auto max-w-full px-6 grow"
                 nonce={nonce || undefined}
               >
                 {children}
@@ -119,6 +120,7 @@ export default async function RootLayout({
             </div>
           </NextIntlClientProvider>
         </Providers>
+        <Toaster />
       </body>
     </html>
   );

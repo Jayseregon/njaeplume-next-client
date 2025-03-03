@@ -2,9 +2,7 @@ import React, { JSX } from "react";
 import { useTranslations } from "next-intl";
 import Link from "next/link";
 
-import { FooterProps } from "@/src/interfaces/UI";
-
-export default function Footer({ nonce }: FooterProps): JSX.Element {
+export default function Footer({ nonce }: { nonce?: string }): JSX.Element {
   const t = useTranslations("Footer");
 
   return (
@@ -12,19 +10,6 @@ export default function Footer({ nonce }: FooterProps): JSX.Element {
       className="w-full flex text-xs text-center antialiased items-center justify-center py-3 text-foreground/50 text-wrap"
       nonce={nonce || undefined}
     >
-      {/* <div>
-        &copy; {new Date().getFullYear()} {t("copyright")}
-        {t("google1")}
-        <Link className="underline" href={t("gpp_href")}>
-          {t("gpp")}
-        </Link>{" "}
-        {t("gtxt1")}
-        <Link className="underline" href={t("gts_href")}>
-          {t("gts")}
-        </Link>{" "}
-        {t("gtxt2")}
-      </div> */}
-
       <div>
         <p>
           <span>

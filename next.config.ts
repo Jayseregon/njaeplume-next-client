@@ -30,7 +30,7 @@ const permissionsPolicy = `
   wake-lock=(), 
   web-share=(), 
   xr-spatial-tracking=()
-`.replace(/[\n\s]+/g, '');
+`.replace(/[\n\s]+/g, "");
 
 const nextConfig: NextConfig = {
   output: "standalone",

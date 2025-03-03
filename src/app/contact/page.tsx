@@ -1,114 +1,93 @@
 "use client";
 
-import { useState } from "react";
+import { useActionState, useContext, useState } from "react";
+import { useFormStatus } from "react-dom";
 import ReCAPTCHA from "react-google-recaptcha";
 import { useTranslations } from "next-intl";
 
+import { NonceContext } from "@/src/app/providers";
+import { Button } from "@/src/components/ui/button";
 import { EmailIcon } from "@/src/components/icons";
-import {
-  FieldInput,
-  TextInput,
-  HoneypotField,
-  ErrorDisplay,
-  SuccessDisplay,
-} from "@/src/components/contact/contactFormElements";
+import { ContactFormData } from "@/src/interfaces/Contact";
+import { sendContactEmail } from "@/src/actions/resend/action";
+import { SuccessDisplay } from "@/src/components/contact/SuccessDisplay";
+import { ErrorDisplay } from "@/src/components/contact/ErrorDisplay";
+import { FieldInput } from "@/src/components/contact/FieldInput";
+import { TextInput } from "@/src/components/contact/TextInput";
+import { HoneypotField } from "@/src/components/contact/HoneypotField";
+import ErrorBoundary from "@/src/components/root/ErrorBoundary";
+import { ErrorDefaultDisplay } from "@/src/components/root/ErrorDefaultDisplay";
+import { PageTitle } from "@/src/components/root/PageTitle";
 
-interface FormData {
-  firstName: string;
-  lastName: string;
-  subject: string;
-  email: string;
-  message: string;
-  honeypot?: string;
-}
-
-const initialFormData: FormData = {
-  firstName: "",
-  lastName: "",
-  subject: "",
-  email: "",
-  message: "",
-  honeypot: "",
+const initialState = {
+  success: false,
+  error: undefined,
 };
 
 export default function ContactPage() {
+  const nonce = useContext(NonceContext);
   const t = useTranslations("Contact");
-  const [formData, setFormData] = useState<FormData>(initialFormData);
-  const [loading, setLoading] = useState(false);
-  const [response, setResponse] = useState<{
-    error?: string;
-    success?: boolean;
-  } | null>(null);
+  const [contactForm, setContactForm] = useState<ContactFormData>({
+    firstName: "",
+    lastName: "",
+    subject: "",
+    email: "",
+    message: "",
+    honeypot: "",
+    recaptchaToken: "",
+  });
+  const { pending } = useFormStatus();
   const [recaptchaToken, setRecaptchaToken] = useState<string | null>(null);
+  const [state, formAction] = useActionState(sendContactEmail, initialState);
 
+  // Update local form state
   const handleChange = (
     e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>,
   ) => {
-    setFormData({
-      ...formData,
+    setContactForm({
+      ...contactForm,
       [e.target.name]: e.target.value,
     });
   };
 
-  const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault();
-    setLoading(true);
-    setResponse(null);
-
-    try {
-      const res = await fetch("/api/contact", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({ ...formData, recaptchaToken }),
-      });
-
-      if (!res.ok) {
-        throw new Error(`Failed with status ${res.status}`);
-      }
-
-      const result = await res.json();
-
-      setResponse(result);
-    } catch (error) {
-      if (error instanceof Error) {
-        setResponse({ error: error.message });
-      } else {
-        setResponse({ error: "An unknown error occurred" });
-      }
-    } finally {
-      setLoading(false);
-      setFormData(initialFormData);
-    }
-  };
-
-  if (response) {
+  if (state?.success) {
     return (
-      <div className="mt-4">
-        {response.error ? <ErrorDisplay t={t} /> : <SuccessDisplay t={t} />}
+      <div className="mt-4" nonce={nonce}>
+        <SuccessDisplay t={t} />
       </div>
     );
-  } else {
+  } else if (state?.error) {
     return (
-      <div className="max-w-fit mx-auto p-4">
-        <h1 className="text-5xl font-bold mb-5">{t("title")}</h1>
-        <EmailIcon size={65} />
+      <div className="mt-4" nonce={nonce}>
+        <ErrorDisplay t={t} />
+      </div>
+    );
+  }
 
-        <form className="space-y-4" onSubmit={handleSubmit}>
-          <div className="grid grid-cols-1 sm:grid-cols-2 gap-5">
+  return (
+    <ErrorBoundary fallback={<ErrorDefaultDisplay />}>
+      <div nonce={nonce}>
+        <PageTitle title={t("title")} />
+        <div className="text-foreground">
+          <EmailIcon size={65} />
+        </div>
+        <form action={formAction} className="space-y-4" nonce={nonce}>
+          <div
+            className="grid grid-cols-1 sm:grid-cols-2 gap-5 w-full"
+            nonce={nonce}
+          >
             <FieldInput
               fieldTarget="firstName"
               t={t}
               type="text"
-              value={formData.firstName}
+              value={contactForm.firstName}
               onChange={handleChange}
             />
             <FieldInput
               fieldTarget="lastName"
               t={t}
               type="text"
-              value={formData.lastName}
+              value={contactForm.lastName}
               onChange={handleChange}
             />
           </div>
@@ -117,7 +96,7 @@ export default function ContactPage() {
             fieldTarget="email"
             t={t}
             type="email"
-            value={formData.email}
+            value={contactForm.email}
             onChange={handleChange}
           />
 
@@ -125,39 +104,53 @@ export default function ContactPage() {
             fieldTarget="subject"
             t={t}
             type="text"
-            value={formData.subject}
+            value={contactForm.subject}
             onChange={handleChange}
           />
 
           <TextInput
             fieldTarget="message"
             t={t}
-            value={formData.message}
+            value={contactForm.message}
             onChange={handleChange}
           />
 
           <HoneypotField
             t={t}
-            value={formData.honeypot}
+            value={contactForm.honeypot ?? ""}
             onChange={handleChange}
           />
 
-          <div className="flex justify-center py-4">
+          <input
+            name="recaptchaToken"
+            type="hidden"
+            value={recaptchaToken ?? ""}
+            onChange={handleChange}
+          />
+
+          <div
+            className="flex justify-center py-4 mx-auto"
+            id="recaptcha"
+            nonce={nonce}
+          >
             <ReCAPTCHA
+              nonce={nonce}
               sitekey={process.env.NEXT_PUBLIC_RECAPTCHA_SITE_KEY ?? ""}
               onChange={setRecaptchaToken}
             />
           </div>
 
-          <button
-            className="w-full bg-foreground text-background py-2 px-4 rounded-md hover:bg-warning-500 focus:outline-none"
-            disabled={loading || !recaptchaToken}
+          <Button
+            className="w-full bg-foreground text-background py-2 px-4 rounded-md hover:bg-warning-500 focus:outline-hidden"
+            disabled={pending || !recaptchaToken}
+            nonce={nonce}
             type="submit"
+            variant="form"
           >
-            {loading ? t("btn_pending") : t("btn")}
-          </button>
+            {pending ? t("btn_pending") : t("btn")}
+          </Button>
         </form>
       </div>
-    );
-  }
+    </ErrorBoundary>
+  );
 }

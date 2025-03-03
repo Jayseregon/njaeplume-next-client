@@ -37,3 +37,22 @@ export interface EmailTemplateProps {
   email: string;
   message: string;
 }
+
+export interface FormData {
+  firstName: string;
+  lastName: string;
+  subject: string;
+  email: string;
+  message: string;
+  honeypot?: string;
+}
+
+export interface ContactFormData {
+  firstName: string;
+  lastName: string;
+  subject: string;
+  email: string;
+  message: string;
+  honeypot?: string | null;
+  recaptchaToken: string;
+}

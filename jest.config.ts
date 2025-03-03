@@ -56,7 +56,7 @@ const config: Config = {
   // dependencyExtractor: undefined,
 
   // Make calling deprecated APIs throw helpful error messages
-  // errorOnDeprecated: false,
+  errorOnDeprecated: true,
 
   // The default configuration for fake timers
   // fakeTimers: {
@@ -103,13 +103,6 @@ const config: Config = {
     "^@/interfaces/(.*)$": "<rootDir>/src/interfaces/$1",
     "^@/lib/(.*)$": "<rootDir>/src/lib/$1",
     "^@/(.*)$": "<rootDir>/src/$1",
-    "^@nextui-org/react$": "<rootDir>/src/__tests__/__mocks__/nextui.tsx",
-    "^@nextui-org/button$": "<rootDir>/src/__tests__/__mocks__/nextui.tsx",
-    "^@nextui-org/navbar$": "<rootDir>/src/__tests__/__mocks__/nextui.tsx",
-    "^@nextui-org/link$": "<rootDir>/src/__tests__/__mocks__/nextui.tsx",
-    "^@nextui-org/dropdown$": "<rootDir>/src/__tests__/__mocks__/nextui.tsx",
-    // "^@lottiefiles/dotlottie-react$": "<rootDir>/src/__tests__/__mocks__/lottie.tsx",
-    // "^next-auth/react$": "<rootDir>/src/__tests__/__mocks__/next-auth-react.tsx",
     "^@/src/(.*)$": "<rootDir>/src/$1",
     "^framer-motion$": "<rootDir>/src/__tests__/__mocks__/framer-motion.tsx",
   },
@@ -130,7 +123,14 @@ const config: Config = {
   // projects: undefined,
 
   // Use this configuration option to add custom reporters to Jest
-  // reporters: undefined,
+  reporters: [
+    ["default", { summaryThreshold: 1 }],
+    ["jest-summary-reporter", {
+      failuresOnly: true,
+      summaryOnly: true,
+      title: "Summary of all failing tests"
+    }]
+  ],
 
   // Automatically reset mock state before every test
   // resetMocks: false,
@@ -206,12 +206,11 @@ const config: Config = {
     // "/node_modules/(?!(@nextui-org|@radix-ui|framer-motion|next-auth|@auth|@lottiefiles|@auth/core)/)",
   ],
 
-
   // An array of regexp pattern strings that are matched against all modules before the module loader will automatically return a mock for them
   // unmockedModulePathPatterns: undefined,
 
   // Indicates whether each individual test should be reported during the run
-  // verbose: undefined,
+  verbose: false,
 
   // An array of regexp patterns that are matched against all source file paths before re-running tests in watch mode
   watchPathIgnorePatterns: [
