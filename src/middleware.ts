@@ -9,14 +9,15 @@ function applyCsp(response: NextResponse, _req: NextRequest): NextResponse {
   const cspHeader = `
     default-src 'self';
     script-src 'self' 'nonce-${nonce}' https://www.google.com https://www.gstatic.com https://vercel.live https://*.clerk.accounts.dev;
-    style-src 'self' 'nonce-${nonce}';
-    img-src 'self' blob: data: https://njaeink-remote-pull.b-cdn.net;
+    style-src 'self' 'nonce-${nonce}' 'unsafe-inline';
+    img-src 'self' blob: data: https://njaeink-remote-pull.b-cdn.net https://img.clerk.com;
     font-src 'self';
     object-src 'none';
     base-uri 'self';
     form-action 'self';
     frame-src 'self' https://www.google.com https://vercel.live;
-    connect-src 'self' https://ny.storage.bunnycdn.com https://*.clerk.accounts.dev;
+    worker-src 'self' blob:;
+    connect-src 'self' https://ny.storage.bunnycdn.com https://*.clerk.accounts.dev https://clerk-telemetry.com;
     frame-ancestors 'none';
     upgrade-insecure-requests;
   `
