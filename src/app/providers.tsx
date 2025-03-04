@@ -5,6 +5,7 @@ import {
   ThemeProvider as NextThemesProvider,
   ThemeProviderProps,
 } from "next-themes";
+import { ClerkProvider } from "@clerk/nextjs";
 
 // Create the NonceContext
 const NonceContext = React.createContext<string | undefined>(undefined);
@@ -19,15 +20,17 @@ export interface ProvidersProps {
 
 export function Providers({ children, themeProps, nonce }: ProvidersProps) {
   return (
-    <NonceContext.Provider value={nonce}>
-      <NextThemesProvider
-        defaultTheme="dark"
-        enableSystem={false}
-        nonce={nonce}
-        {...themeProps}
-      >
-        {children}
-      </NextThemesProvider>
-    </NonceContext.Provider>
+    <ClerkProvider nonce={nonce}>
+      <NonceContext.Provider value={nonce}>
+        <NextThemesProvider
+          defaultTheme="dark"
+          enableSystem={false}
+          nonce={nonce}
+          {...themeProps}
+        >
+          {children}
+        </NextThemesProvider>
+      </NonceContext.Provider>
+    </ClerkProvider>
   );
 }

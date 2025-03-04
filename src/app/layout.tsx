@@ -19,6 +19,7 @@ import {
   fontDisplay,
   fontSansAlt,
 } from "@/config/fonts";
+import { Toaster } from "@/components/ui/sonner";
 
 import { Providers } from "./providers";
 
@@ -119,6 +120,7 @@ export default async function RootLayout({
             </div>
           </NextIntlClientProvider>
         </Providers>
+        <Toaster />
       </body>
     </html>
   );

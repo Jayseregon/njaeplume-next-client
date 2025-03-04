@@ -19,8 +19,33 @@ export const siteConfig = {
     },
   ],
   links: {},
+  // Add castle routes for admin area
+  castleNavItems: [
+    {
+      key: "castle",
+      label: "Castle",
+      href: "/castle",
+      icon: "Cat",
+    },
+    {
+      key: "customers",
+      label: "Customers",
+      href: "/castle/customers",
+      icon: "Users",
+    },
+    {
+      key: "products",
+      label: "Products",
+      href: "/castle/products",
+      icon: "Package",
+    },
+  ],
 };
 
 export function getNavItemByKey(key: string) {
   return siteConfig.navItems.find((item) => item.key === key);
+}
+
+export function getCastleNavItemByKey(key: string) {
+  return siteConfig.castleNavItems.find((item) => item.key === key);
 }
