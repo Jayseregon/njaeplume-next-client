@@ -17,7 +17,7 @@ function applyCsp(response: NextResponse, _req: NextRequest): NextResponse {
     form-action 'self';
     frame-src 'self' https://www.google.com https://vercel.live;
     worker-src 'self' blob:;
-    connect-src 'self' https://ny.storage.bunnycdn.com https://*.clerk.accounts.dev https://clerk-telemetry.com;
+    connect-src 'self' https://ny.storage.bunnycdn.com https://*.clerk.accounts.dev https://clerk-telemetry.com https://clerk.njaeplume.com;
     frame-ancestors 'none';
     upgrade-insecure-requests;
   `
