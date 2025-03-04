@@ -8,7 +8,7 @@ function applyCsp(response: NextResponse, _req: NextRequest): NextResponse {
   const nonce = Buffer.from(crypto.randomUUID()).toString("base64");
   const cspHeader = `
     default-src 'self';
-    script-src 'self' 'nonce-${nonce}' https://www.google.com https://www.gstatic.com https://vercel.live https://*.clerk.accounts.dev;
+    script-src 'self' 'nonce-${nonce}' https://www.google.com https://www.gstatic.com https://vercel.live https://*.clerk.accounts.dev https://clerk.njaeplume.com;
     style-src 'self' 'nonce-${nonce}' 'unsafe-inline';
     img-src 'self' blob: data: https://njaeink-remote-pull.b-cdn.net https://img.clerk.com;
     font-src 'self';
