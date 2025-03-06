@@ -13,12 +13,15 @@ import {
 import { Badge } from "@/components/ui/badge";
 import { Product } from "@/interfaces/Products";
 import { formatDate, getRandomSubset } from "@/src/lib/utils";
+import { useProductStore } from "@/src/stores/productStore";
 
 export const ProductsTable = ({ products }: { products: Product[] }) => {
   // Store randomized tags for each product
   const [randomizedProductTags, setRandomizedProductTags] = useState<
     Record<string | number, any[]>
   >({});
+
+  const { setSelectedProduct, openDialog } = useProductStore();
 
   // Generate random tags only on client-side after initial render
   useEffect(() => {
@@ -32,6 +35,11 @@ export const ProductsTable = ({ products }: { products: Product[] }) => {
 
     setRandomizedProductTags(randomizedTags);
   }, [products]);
+
+  const handleRowClick = (product: Product) => {
+    setSelectedProduct(product);
+    openDialog();
+  };
 
   return (
     <div className="rounded-md border">
@@ -52,7 +60,11 @@ export const ProductsTable = ({ products }: { products: Product[] }) => {
         </TableHeader>
         <TableBody>
           {products.map((product) => (
-            <TableRow key={product.id} className="text-start">
+            <TableRow
+              key={product.id}
+              className="text-start cursor-pointer hover:bg-neutral-50 dark:hover:bg-neutral-900"
+              onClick={() => handleRowClick(product)}
+            >
               <TableCell className="font-medium">{product.id}</TableCell>
 
               <TableCell>{product.name}</TableCell>

@@ -5,6 +5,12 @@ export function sanitizeFileName(fileName: string): string {
     .replace(/^-+|-+$/g, "");
 }
 
+export function slugifyProductName(fileName: string, category: string): string {
+  const fullName = `${fileName} ${category}`;
+
+  return sanitizeFileName(fullName);
+}
+
 export async function verifyRecaptcha(
   token: string,
   recaptchaKey: string,
@@ -22,4 +28,40 @@ export async function verifyRecaptcha(
   const data = await response.json();
 
   return data.success;
+}
+
+/**
+ * Generate a safe file name for a product image
+ */
+export function getProductImageFileName(
+  file: File,
+  productName: string,
+): string {
+  const extension = file.name.split(".").pop() || "jpg";
+  const sanitizedName = sanitizeFileName(productName);
+
+  return `${sanitizedName}-${Date.now()}.${extension}`;
+}
+
+/**
+ * Generate a safe file name for a product zip file
+ */
+export function getProductZipFileName(productName: string): string {
+  const sanitizedName = sanitizeFileName(productName);
+
+  return `${sanitizedName}-${Date.now()}.zip`;
+}
+
+/**
+ * Create a file preview URL for client-side display
+ */
+export function createFilePreview(file: File): string {
+  return URL.createObjectURL(file);
+}
+
+/**
+ * Clean up a file preview URL when no longer needed
+ */
+export function revokeFilePreview(url: string): void {
+  URL.revokeObjectURL(url);
 }

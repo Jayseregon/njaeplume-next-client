@@ -39,6 +39,12 @@ export const siteConfig = {
       href: "/castle/products",
       icon: "Package",
     },
+    {
+      key: "new-product",
+      label: "New Product",
+      href: "/castle/new-product",
+      icon: "Package",
+    },
   ],
 };
 

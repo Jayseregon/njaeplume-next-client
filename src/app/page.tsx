@@ -88,7 +88,7 @@ export default function RootPage() {
         <div className="py-5" />
         <div>
           <SignedOut>
-            <SignInButton forceRedirectUrl="/" fallbackRedirectUrl="/" />
+            <SignInButton fallbackRedirectUrl="/" forceRedirectUrl="/" />
           </SignedOut>
           <SignedIn>
             <UserButton />

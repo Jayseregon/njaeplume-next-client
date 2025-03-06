@@ -35,32 +35,27 @@ const isDev = process.env.NODE_ENV === "development";
 
 const isAdminCastleRoute = createRouteMatcher(["/castle(.*)"]);
 
-export default clerkMiddleware(
-  async (auth, req) => {
-    // Role protection logic
-    let response;
+export default clerkMiddleware(async (auth, req) => {
+  // Role protection logic
+  let response;
 
-    if (
-      isAdminCastleRoute(req) &&
-      (await auth()).sessionClaims?.metadata?.role !== "castleAdmin"
-    ) {
-      console.log("Unauthed route: ", req.url);
-      const url = new URL("/", req.url);
+  if (
+    isAdminCastleRoute(req) &&
+    (await auth()).sessionClaims?.metadata?.role !== "castleAdmin"
+  ) {
+    const url = new URL("/", req.url);
 
-      response = NextResponse.redirect(url);
-    } else {
-      console.log("Authed route: ", req.url);
-      response = NextResponse.next();
-    }
+    response = NextResponse.redirect(url);
+  } else {
+    response = NextResponse.next();
+  }
 
-    if (!isDev) {
-      return applyCsp(response, req);
-    }
+  if (!isDev) {
+    return applyCsp(response, req);
+  }
 
-    return response;
-  },
-  { debug: true }
-);
+  return response;
+});
 
 export const config = {
   matcher: [
