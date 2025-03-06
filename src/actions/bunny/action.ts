@@ -1,13 +1,13 @@
 "use server";
 
-import { Category } from "@prisma/client";
+import { Category, PrismaClient } from "@prisma/client";
 
 import { ProductFormState, UploadResponse } from "@/src/interfaces/Products";
 import { sanitizeFileName } from "@/src/lib/actionHelpers";
 
-import { createProduct } from "../prisma/action";
+import { createProduct, deleteProduct } from "../prisma/action";
 
-// Single consolidated upload function for server-side file uploads
+// Single upload function for server-side file uploads
 export async function uploadFileToBunny(
   file: File,
   folder: string,
@@ -58,6 +58,55 @@ export async function uploadFileToBunny(
     };
   } catch (error) {
     console.error("Upload error:", error);
+
+    return {
+      success: false,
+      error: error instanceof Error ? error.message : "Unknown server error",
+    };
+  }
+}
+
+// Function to delete a file from Bunny.net storage
+export async function deleteFileFromBunny(
+  path: string,
+): Promise<{ success: boolean; error?: string }> {
+  try {
+    if (!path) {
+      throw new Error("Missing file path");
+    }
+
+    // Get storage configuration
+    const storageZone = process.env.BUNNY_PUBLIC_ASSETS_STORAGE_ZONE;
+    const accessKey = process.env.BUNNY_PUBLIC_ASSETS_PWD;
+
+    if (!storageZone || !accessKey) {
+      throw new Error("Missing Bunny.net configuration");
+    }
+
+    // Construct the endpoint according to Bunny.net documentation
+    const endpoint = `https://storage.bunnycdn.com/${storageZone}/${path}`;
+
+    // Make the API request to Bunny.net to delete the file
+    const response = await fetch(endpoint, {
+      method: "DELETE",
+      headers: {
+        AccessKey: accessKey,
+      },
+    });
+
+    if (!response.ok) {
+      const errorText = await response.text();
+
+      throw new Error(
+        `Bunny.net delete failed: ${response.status} ${errorText}`,
+      );
+    }
+
+    return {
+      success: true,
+    };
+  } catch (error) {
+    console.error("Delete error:", error);
 
     return {
       success: false,
@@ -159,6 +208,61 @@ export async function createProductWithUploads(
 
     return {
       status: "error",
+      error: error instanceof Error ? error.message : "Unknown error occurred",
+    };
+  }
+}
+
+// delete a product and all its associated files
+export async function deleteProductWithFiles(
+  productId: string,
+): Promise<{ success: boolean; error?: string }> {
+  try {
+    // 1. Get the product details to know which files to delete
+    const prisma = new PrismaClient();
+
+    const product = await prisma.product.findUnique({
+      where: { id: productId },
+      include: { images: true },
+    });
+
+    if (!product) {
+      throw new Error("Product not found");
+    }
+
+    // 2. Delete the zip file from Bunny
+    const zipFileDeleteResult = await deleteFileFromBunny(
+      product.zip_file_name,
+    );
+
+    if (!zipFileDeleteResult.success) {
+      console.error(`Failed to delete zip file: ${zipFileDeleteResult.error}`);
+      // Continue execution even if file deletion fails
+    }
+
+    // 3. Delete all image files from Bunny
+    for (const image of product.images) {
+      const imageDeleteResult = await deleteFileFromBunny(image.url);
+
+      if (!imageDeleteResult.success) {
+        console.error(
+          `Failed to delete image ${image.url}: ${imageDeleteResult.error}`,
+        );
+        // Continue execution even if individual image deletions fail
+      }
+    }
+
+    // 4. Delete the product from the database
+    // This will cascade delete the product images due to onDelete: Cascade
+    await deleteProduct(productId);
+    await prisma.$disconnect();
+
+    return { success: true };
+  } catch (error) {
+    console.error("Product deletion error:", error);
+
+    return {
+      success: false,
       error: error instanceof Error ? error.message : "Unknown error occurred",
     };
   }

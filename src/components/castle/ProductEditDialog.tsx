@@ -6,6 +6,7 @@ import { useRouter } from "next/navigation";
 
 import { useProductStore } from "@/src/stores/productStore";
 import { updateProduct } from "@/actions/prisma/action";
+import { deleteProductWithFiles } from "@/src/actions/bunny/action";
 import {
   Dialog,
   DialogContent,
@@ -81,6 +82,27 @@ export const ProductEditDialog = () => {
       router.refresh(); // Refresh the page to get updated data
     } catch (error) {
       console.error("Failed to update product:", error);
+    } finally {
+      setIsSubmitting(false);
+    }
+  };
+
+  const handleDelete = async () => {
+    if (!selectedProduct?.id) return;
+
+    setIsSubmitting(true);
+    try {
+      const result = await deleteProductWithFiles(selectedProduct.id);
+
+      if (result.success) {
+        closeDialog();
+        router.refresh(); // Refresh the page to get updated data
+      } else {
+        alert(`Failed to delete product: ${result.error}`);
+      }
+    } catch (error) {
+      console.error("Failed to delete product:", error);
+      alert("An error occurred while deleting the product.");
     } finally {
       setIsSubmitting(false);
     }
@@ -187,13 +209,28 @@ export const ProductEditDialog = () => {
             </div>
           </div>
 
-          <DialogFooter>
-            <Button type="button" variant="outline" onClick={closeDialog}>
-              Cancel
+          <DialogFooter className="flex justify-between">
+            <Button
+              disabled={isSubmitting}
+              type="button"
+              variant="destructive"
+              onClick={handleDelete}
+            >
+              {isSubmitting ? "Deleting..." : "Delete Product"}
             </Button>
-            <Button disabled={isSubmitting} type="submit">
-              {isSubmitting ? "Saving..." : "Save changes"}
-            </Button>
+            <div>
+              <Button
+                className="mr-2"
+                type="button"
+                variant="outline"
+                onClick={closeDialog}
+              >
+                Cancel
+              </Button>
+              <Button disabled={isSubmitting} type="submit">
+                {isSubmitting ? "Saving..." : "Save changes"}
+              </Button>
+            </div>
           </DialogFooter>
         </form>
       </DialogContent>
