@@ -128,42 +128,29 @@ export async function createProductWithUploads(
     const category = formData.get("category") as Category;
 
     // Extract file data
-    const zipFile = formData.get("zipFile") as File;
+    const zipFilePath = formData.get("zipFilePath") as string;
     const imageFiles = formData.getAll("imageFiles") as File[];
     const imageAltTexts = JSON.parse(
       formData.get("imageAltTexts") as string,
     ) as string[];
 
-    if (!zipFile || imageFiles.length === 0) {
+    if (!zipFilePath || imageFiles.length === 0) {
       return {
         status: "error",
         error: "Please upload at least one image and a zip file",
       };
     }
 
-    // 1. Upload zip file
-    const sanitizedProductName = sanitizeFileName(name);
-    const zipFileName = `${sanitizedProductName}-${Date.now()}.zip`;
+    // Skip the zip file upload since it's already uploaded directly
+    // Just use the provided path
 
-    const zipUpload = await uploadFileToBunny(
-      zipFile,
-      "product-files",
-      zipFileName,
-    );
-
-    if (!zipUpload.success || !zipUpload.path) {
-      return {
-        status: "error",
-        error: zipUpload.error || "Failed to upload zip file",
-      };
-    }
-
-    // 2. Upload images
+    // Upload images
     const uploadedImages: { url: string; alt_text: string }[] = [];
 
     for (let i = 0; i < imageFiles.length; i++) {
       const file = imageFiles[i];
       const extension = file.name.split(".").pop() || "jpg";
+      const sanitizedProductName = sanitizeFileName(name);
       const imageFileName = `${sanitizedProductName}-${i}-${Date.now()}.${extension}`;
 
       const imageUpload = await uploadFileToBunny(
@@ -187,13 +174,13 @@ export async function createProductWithUploads(
       };
     }
 
-    // 3. Create product in database
+    // Create product in database
     const product = await createProduct({
       name,
       price,
       description,
       category,
-      zip_file_name: zipUpload.path,
+      zip_file_name: zipFilePath,
       tagIds: [], // You can extend this to handle tags
       images: uploadedImages,
     });

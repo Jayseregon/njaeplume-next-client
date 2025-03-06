@@ -6,9 +6,10 @@ import {
   useRef,
   startTransition,
   useEffect,
+  useCallback,
 } from "react";
 import { Category } from "@prisma/client";
-import { Trash2 } from "lucide-react";
+import { Trash2, Upload } from "lucide-react";
 
 import { PageTitle } from "@/src/components/root/PageTitle";
 import ErrorBoundary from "@/src/components/root/ErrorBoundary";
@@ -26,6 +27,7 @@ import {
 } from "@/src/components/ui/select";
 import { Card, CardContent } from "@/src/components/ui/card";
 import { createProductWithUploads } from "@/src/actions/bunny/action";
+import { generateBunnyUploadUrl } from "@/src/actions/bunny/directUploadAction";
 import { createFilePreview, revokeFilePreview } from "@/src/lib/actionHelpers";
 import { ProductFormState } from "@/src/interfaces/Products";
 
@@ -43,6 +45,11 @@ export default function NewProductPage() {
     null,
   );
   const [formReset, setFormReset] = useState(false);
+
+  // Direct upload state
+  const [isUploadingZip, setIsUploadingZip] = useState(false);
+  const [uploadProgress, setUploadProgress] = useState(0);
+  const [uploadedZipPath, setUploadedZipPath] = useState<string | null>(null);
 
   // Form action state
   const [formState, formAction, isPending] = useActionState(
@@ -73,6 +80,8 @@ export default function NewProductPage() {
       setImageAltTexts([]);
       setImagePreviews([]);
       setSelectedCategory(null);
+      setUploadedZipPath(null);
+      setUploadProgress(0);
 
       // Reset form
       if (formRef.current) {
@@ -85,33 +94,54 @@ export default function NewProductPage() {
   }, [formState.status, formReset]); // Only depend on formState.status and formReset, not imagePreviews
 
   // Handle form submission with file uploads
-  const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
+  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
 
     // Client-side validation
-    if (productImages.length === 0 || !productZip) {
-      alert("Please upload at least one image and a zip file");
+    if (productImages.length === 0) {
+      alert("Please upload at least one image");
 
       return;
     }
 
-    const form = e.currentTarget;
-    const formData = new FormData(form);
+    try {
+      // If zip is not uploaded yet, upload it directly to Bunny first
+      if (!uploadedZipPath && productZip) {
+        const uploadSuccessful = await uploadZipFileToBunny();
 
-    // Add files to form data
-    formData.set("zipFile", productZip);
+        if (!uploadSuccessful) return;
+      }
 
-    // Add images and alt texts
-    formData.delete("imageFiles");
-    productImages.forEach((image) => {
-      formData.append("imageFiles", image);
-    });
-    formData.set("imageAltTexts", JSON.stringify(imageAltTexts));
+      // If we don't have a zip path at this point, something went wrong
+      if (!uploadedZipPath) {
+        alert("Please upload a zip file");
 
-    // Submit form within a transition to avoid blocking UI
-    startTransition(() => {
-      formAction(formData);
-    });
+        return;
+      }
+
+      const form = e.currentTarget;
+      const formData = new FormData(form);
+
+      // Instead of the actual file, we pass the path of the uploaded zip
+      formData.set("zipFilePath", uploadedZipPath);
+
+      // Add images to form data
+      formData.delete("imageFiles");
+      productImages.forEach((image) => {
+        formData.append("imageFiles", image);
+      });
+      formData.set("imageAltTexts", JSON.stringify(imageAltTexts));
+
+      // Submit form within a transition to avoid blocking UI
+      startTransition(() => {
+        formAction(formData);
+      });
+    } catch (error) {
+      console.error("Form submission error:", error);
+      alert(
+        `Form submission failed: ${error instanceof Error ? error.message : "Unknown error"}`,
+      );
+    }
   };
 
   // Handle image uploads
@@ -135,6 +165,88 @@ export default function NewProductPage() {
       setProductZip(e.target.files[0]);
     }
   };
+
+  // Handle direct upload of zip file to Bunny
+  const uploadZipFileToBunny = useCallback(async () => {
+    if (!productZip || !formRef.current) {
+      alert("Please select a zip file first");
+
+      return false;
+    }
+
+    try {
+      setIsUploadingZip(true);
+      setUploadProgress(0);
+
+      // Get product name from the form
+      const formData = new FormData(formRef.current);
+      const productName = formData.get("name") as string;
+
+      if (!productName) {
+        alert("Please enter a product name first");
+        setIsUploadingZip(false);
+
+        return false;
+      }
+
+      // Generate upload URL from server
+      const urlResult = await generateBunnyUploadUrl(productName);
+
+      if (!urlResult.success || !urlResult.uploadUrl) {
+        throw new Error(urlResult.error || "Failed to get upload URL");
+      }
+
+      // Upload the file directly to Bunny with progress tracking
+      const xhr = new XMLHttpRequest();
+
+      xhr.open("PUT", urlResult.uploadUrl, true);
+      xhr.setRequestHeader(
+        "AccessKey",
+        process.env.NEXT_PUBLIC_BUNNY_PUBLIC_ACCESS_KEY || "",
+      );
+      xhr.setRequestHeader("Content-Type", "application/octet-stream");
+
+      xhr.upload.onprogress = (event) => {
+        if (event.lengthComputable) {
+          const percentComplete = Math.round(
+            (event.loaded / event.total) * 100,
+          );
+
+          setUploadProgress(percentComplete);
+        }
+      };
+
+      // Create a promise to handle the XHR request
+      const uploadPromise = new Promise<boolean>((resolve, reject) => {
+        xhr.onload = () => {
+          if (xhr.status >= 200 && xhr.status < 300) {
+            setUploadedZipPath(urlResult.filePath || "");
+            resolve(true);
+          } else {
+            reject(new Error(`Upload failed with status ${xhr.status}`));
+          }
+        };
+
+        xhr.onerror = () => {
+          reject(new Error("Upload failed due to network error"));
+        };
+      });
+
+      xhr.send(productZip);
+      await uploadPromise;
+
+      return true;
+    } catch (error) {
+      console.error("Error uploading zip file:", error);
+      alert(
+        `Upload failed: ${error instanceof Error ? error.message : "Unknown error"}`,
+      );
+
+      return false;
+    } finally {
+      setIsUploadingZip(false);
+    }
+  }, [productZip]);
 
   // Handle alt text changes
   const handleAltTextChange = (index: number, value: string) => {
@@ -250,16 +362,62 @@ export default function NewProductPage() {
                 {/* Zip file upload */}
                 <div className="grid gap-2">
                   <Label htmlFor="productZip">Zip File</Label>
-                  <Input
-                    required
-                    accept=".zip"
-                    id="productZip"
-                    type="file"
-                    onChange={handleZipUpload}
-                  />
-                  {productZip && (
-                    <p className="text-sm text-green-600">
-                      File selected: {productZip.name}
+                  <div className="flex gap-2">
+                    <Input
+                      accept=".zip"
+                      disabled={isUploadingZip || !!uploadedZipPath}
+                      id="productZip"
+                      required={!uploadedZipPath}
+                      type="file"
+                      onChange={handleZipUpload}
+                    />
+                    {productZip && !uploadedZipPath && (
+                      <Button
+                        className="whitespace-nowrap"
+                        disabled={isUploadingZip}
+                        type="button"
+                        onClick={uploadZipFileToBunny}
+                      >
+                        <Upload className="mr-2 h-4 w-4" />
+                        Upload Now
+                      </Button>
+                    )}
+                  </div>
+
+                  {isUploadingZip && (
+                    <div className="space-y-2">
+                      <div className="flex justify-between text-xs">
+                        <span>Uploading...</span>
+                        <span>{uploadProgress}%</span>
+                      </div>
+                      <div className="h-2 w-full bg-gray-200 rounded-full overflow-hidden">
+                        <div
+                          className="h-full bg-blue-600 transition-all duration-300"
+                          style={{ width: `${uploadProgress}%` }}
+                        />
+                      </div>
+                    </div>
+                  )}
+
+                  {uploadedZipPath && (
+                    <p className="text-sm text-green-600 flex items-center gap-1">
+                      <span className="bg-green-100 p-1 rounded-full">
+                        <svg
+                          className="h-4 w-4"
+                          fill="none"
+                          stroke="currentColor"
+                          viewBox="0 0 24 24"
+                          xmlns="http://www.w3.org/2000/svg"
+                        >
+                          <path
+                            d="M5 13l4 4L19 7"
+                            strokeLinecap="round"
+                            strokeLinejoin="round"
+                            strokeWidth={2}
+                          />
+                        </svg>
+                      </span>
+                      File uploaded successfully
                     </p>
                   )}
                 </div>
@@ -330,7 +488,7 @@ export default function NewProductPage() {
               {/* Submit button */}
               <Button
                 className="w-full"
-                disabled={isPending}
+                disabled={isPending || isUploadingZip}
                 type="submit"
                 variant="form"
               >
