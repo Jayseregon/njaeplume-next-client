@@ -31,19 +31,6 @@ export async function verifyRecaptcha(
 }
 
 /**
- * Generate a safe file name for a product image
- */
-export function getProductImageFileName(
-  file: File,
-  productName: string,
-): string {
-  const extension = file.name.split(".").pop() || "jpg";
-  const sanitizedName = sanitizeFileName(productName);
-
-  return `${sanitizedName}-${Date.now()}.${extension}`;
-}
-
-/**
  * Generate a safe file name for a product zip file
  */
 export function getProductZipFileName(productName: string): string {

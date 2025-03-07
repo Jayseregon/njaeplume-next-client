@@ -2,70 +2,11 @@
 
 import { Category, PrismaClient } from "@prisma/client";
 
-import { ProductFormState, UploadResponse } from "@/src/interfaces/Products";
+import { ProductFormState } from "@/src/interfaces/Products";
 import { GenerateUploadUrlResult } from "@/src/interfaces/Products";
 import { getProductZipFileName } from "@/src/lib/actionHelpers";
 
 import { createProduct, deleteProduct } from "../prisma/action";
-
-// Single upload function for server-side file uploads
-export async function uploadFileToBunny(
-  file: File,
-  folder: string,
-  fileName: string,
-): Promise<UploadResponse> {
-  try {
-    if (!file || !folder || !fileName) {
-      throw new Error("Missing required file upload parameters");
-    }
-
-    // Get storage configuration
-    const storageZone = process.env.BUNNY_PUBLIC_ASSETS_STORAGE_ZONE;
-    const accessKey = process.env.BUNNY_PUBLIC_ASSETS_PWD;
-
-    if (!storageZone || !accessKey) {
-      throw new Error("Missing Bunny.net configuration");
-    }
-
-    // Construct the path according to Bunny.net documentation
-    const path = `${folder}/${fileName}`;
-    const endpoint = `https://storage.bunnycdn.com/${storageZone}/${path}`;
-
-    // Get file buffer from the uploaded file
-    const arrayBuffer = await file.arrayBuffer();
-    const buffer = Buffer.from(arrayBuffer);
-
-    // Make the API request to Bunny.net
-    const response = await fetch(endpoint, {
-      method: "PUT",
-      headers: {
-        AccessKey: accessKey,
-        "Content-Type": "application/octet-stream",
-      },
-      body: buffer,
-    });
-
-    if (!response.ok) {
-      const errorText = await response.text();
-
-      throw new Error(
-        `Bunny.net upload failed: ${response.status} ${errorText}`,
-      );
-    }
-
-    return {
-      success: true,
-      path,
-    };
-  } catch (error) {
-    console.error("Upload error:", error);
-
-    return {
-      success: false,
-      error: error instanceof Error ? error.message : "Unknown server error",
-    };
-  }
-}
 
 // Function to delete a file from Bunny.net storage
 export async function deleteFileFromBunny(
@@ -254,7 +195,7 @@ export async function deleteProductWithFiles(
 // Generate a direct upload URL for Bunny storage
 export async function generateBunnyUploadUrl(
   fileName: string,
-  folder: string = "product-files",
+  folder: string,
 ): Promise<GenerateUploadUrlResult> {
   try {
     const storageZone = process.env.BUNNY_PUBLIC_ASSETS_STORAGE_ZONE;
@@ -328,7 +269,6 @@ export async function verifyBunnyUpload(
     // No authentication needed for public pull zones
     const response = await fetch(fileUrl, {
       method: "HEAD",
-      // No auth headers needed for public pull zone
     });
 
     if (!response.ok) {

@@ -9,7 +9,7 @@ import {
   useCallback,
 } from "react";
 import { Category } from "@prisma/client";
-import { Trash2, Upload, X } from "lucide-react";
+import { CircleCheckBig, Hourglass, Trash2, Upload, X } from "lucide-react";
 
 import { PageTitle } from "@/src/components/root/PageTitle";
 import ErrorBoundary from "@/src/components/root/ErrorBoundary";
@@ -396,7 +396,10 @@ export default function NewProductPage() {
       }
 
       // Generate upload URL with authentication headers from server
-      const urlResult = await generateBunnyUploadUrl(productName);
+      const urlResult = await generateBunnyUploadUrl(
+        productName,
+        "product-files",
+      );
 
       if (
         !urlResult.success ||
@@ -494,30 +497,6 @@ export default function NewProductPage() {
     setProductImages((prev) => prev.filter((_, i) => i !== index));
   };
 
-  // Upload a specific image
-  const uploadSingleImage = async (index: number) => {
-    const image = productImages[index];
-
-    if (image.status === "success") return; // Already uploaded
-
-    // Fix: Access input element correctly
-    const nameInput = formRef.current?.querySelector(
-      "#name",
-    ) as HTMLInputElement;
-
-    if (!nameInput?.value) {
-      alert("Please enter a product name first");
-
-      return;
-    }
-
-    try {
-      await uploadImageToBunny(image.file, nameInput.value, index);
-    } catch (error) {
-      console.error(`Error uploading image ${index}:`, error);
-    }
-  };
-
   // Status messages for the UI
   const getSubmitButtonText = () => {
     if (isPending) {
@@ -535,20 +514,9 @@ export default function NewProductPage() {
     switch (status) {
       case "pending":
         return (
-          <Button
-            className="h-8 px-2"
-            size="sm"
-            type="button"
-            variant="outline"
-            onClick={() =>
-              uploadSingleImage(
-                productImages.findIndex((img) => img.status === "pending"),
-              )
-            }
-          >
-            <Upload className="h-4 w-4 mr-1" />
-            Upload
-          </Button>
+          <span className="text-orange-600 flex items-center gap-1 text-xs">
+            <Hourglass size={16} /> To Upload
+          </span>
         );
       case "uploading":
         return (
@@ -565,27 +533,13 @@ export default function NewProductPage() {
       case "success":
         return (
           <span className="text-green-600 flex items-center gap-1 text-xs">
-            <svg
-              className="h-4 w-4"
-              fill="none"
-              stroke="currentColor"
-              viewBox="0 0 24 24"
-              xmlns="http://www.w3.org/2000/svg"
-            >
-              <path
-                d="M5 13l4 4L19 7"
-                strokeLinecap="round"
-                strokeLinejoin="round"
-                strokeWidth={2}
-              />
-            </svg>
-            Uploaded
+            <CircleCheckBig size={16} /> Uploaded
           </span>
         );
       case "error":
         return (
           <span className="text-red-600 flex items-center gap-1 text-xs">
-            <X className="h-4 w-4" />
+            <X className="h-4 w-4" size={16} />
             Failed
           </span>
         );
@@ -685,7 +639,7 @@ export default function NewProductPage() {
                         onClick={uploadZipFileToBunny}
                       >
                         <Upload className="mr-2 h-4 w-4" />
-                        Upload Now
+                        Upload Zip
                       </Button>
                     )}
                   </div>
@@ -707,22 +661,7 @@ export default function NewProductPage() {
 
                   {uploadedZipPath && (
                     <p className="text-sm text-green-600 flex items-center gap-1">
-                      <span className="bg-green-100 p-1 rounded-full">
-                        <svg
-                          className="h-4 w-4"
-                          fill="none"
-                          stroke="currentColor"
-                          viewBox="0 0 24 24"
-                          xmlns="http://www.w3.org/2000/svg"
-                        >
-                          <path
-                            d="M5 13l4 4L19 7"
-                            strokeLinecap="round"
-                            strokeLinejoin="round"
-                            strokeWidth={2}
-                          />
-                        </svg>
-                      </span>
+                      <CircleCheckBig size={16} />
                       File uploaded successfully
                     </p>
                   )}
@@ -730,31 +669,43 @@ export default function NewProductPage() {
 
                 {/* Image uploads */}
                 <div className="grid gap-2">
-                  <div className="flex justify-between items-center">
-                    <Label htmlFor="productImages">Images</Label>
-                    {productImages.length > 0 && (
-                      <Button
-                        disabled={
-                          isUploadingImages ||
-                          productImages.every((img) => img.status === "success")
-                        }
-                        size="sm"
-                        type="button"
-                        variant="outline"
-                        onClick={uploadAllImages}
-                      >
-                        <Upload className="h-3.5 w-3.5 mr-1" />
-                        Upload All Images
-                      </Button>
-                    )}
+                  <Label htmlFor="productImages">Images</Label>
+                  <div className="flex justify-between gap-2 items-center">
+                    <Input
+                      multiple
+                      accept="image/*"
+                      disabled={
+                        productImages.length > 0 &&
+                        productImages.every((img) => img.status === "success")
+                      }
+                      id="productImages"
+                      type="file"
+                      onChange={handleImageUpload}
+                    />
+                    {productImages.length > 0 &&
+                      !productImages.every(
+                        (img) => img.status === "success",
+                      ) && (
+                        <Button
+                          className="whitespace-nowrap"
+                          disabled={isUploadingImages}
+                          type="button"
+                          onClick={uploadAllImages}
+                        >
+                          <Upload className="mr-2 h-4 w-4" />
+                          Upload Images
+                        </Button>
+                      )}
                   </div>
-                  <Input
-                    multiple
-                    accept="image/*"
-                    id="productImages"
-                    type="file"
-                    onChange={handleImageUpload}
-                  />
+
+                  {/* Add success message when all images are uploaded */}
+                  {productImages.length > 0 &&
+                    productImages.every((img) => img.status === "success") && (
+                      <p className="text-sm text-green-600 flex items-center gap-1">
+                        <CircleCheckBig size={16} />
+                        All images uploaded successfully
+                      </p>
+                    )}
                 </div>
 
                 {/* Image previews with upload status */}

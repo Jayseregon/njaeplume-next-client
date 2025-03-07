@@ -35,11 +35,6 @@ const permissionsPolicy = `
 const nextConfig: NextConfig = {
   output: "standalone",
   pageExtensions: ["js", "jsx", "md", "mdx", "ts", "tsx"],
-  experimental: {
-    serverActions: {
-      bodySizeLimit: "5mb",
-    },
-  },
   images: {
     remotePatterns: [
       {

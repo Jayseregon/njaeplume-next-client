@@ -27,12 +27,6 @@ export interface ProductImage {
   alt_text: string;
 }
 
-export interface UploadResponse {
-  success: boolean;
-  path?: string;
-  error?: string;
-}
-
 // State interface for the form
 export interface ProductFormState {
   status: "idle" | "uploading" | "creating" | "success" | "error";
