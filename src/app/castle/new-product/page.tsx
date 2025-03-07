@@ -26,8 +26,11 @@ import {
   SelectValue,
 } from "@/src/components/ui/select";
 import { Card, CardContent } from "@/src/components/ui/card";
-import { createProductWithUploads } from "@/src/actions/bunny/action";
-import { generateBunnyUploadUrl } from "@/src/actions/bunny/directUploadAction";
+import {
+  createProductWithUploads,
+  generateBunnyUploadUrl,
+  verifyBunnyUpload,
+} from "@/src/actions/bunny/action";
 import { createFilePreview, revokeFilePreview } from "@/src/lib/actionHelpers";
 import { ProductFormState } from "@/src/interfaces/Products";
 
@@ -189,10 +192,14 @@ export default function NewProductPage() {
         return false;
       }
 
-      // Generate upload URL from server
+      // Generate upload URL with authentication headers from server
       const urlResult = await generateBunnyUploadUrl(productName);
 
-      if (!urlResult.success || !urlResult.uploadUrl) {
+      if (
+        !urlResult.success ||
+        !urlResult.uploadUrl ||
+        !urlResult.authHeaders
+      ) {
         throw new Error(urlResult.error || "Failed to get upload URL");
       }
 
@@ -200,11 +207,11 @@ export default function NewProductPage() {
       const xhr = new XMLHttpRequest();
 
       xhr.open("PUT", urlResult.uploadUrl, true);
-      xhr.setRequestHeader(
-        "AccessKey",
-        process.env.NEXT_PUBLIC_BUNNY_PUBLIC_ACCESS_KEY || "",
-      );
-      xhr.setRequestHeader("Content-Type", "application/octet-stream");
+
+      // Apply all authentication headers from the server
+      Object.entries(urlResult.authHeaders).forEach(([key, value]) => {
+        xhr.setRequestHeader(key, value);
+      });
 
       xhr.upload.onprogress = (event) => {
         if (event.lengthComputable) {
@@ -220,6 +227,7 @@ export default function NewProductPage() {
       const uploadPromise = new Promise<boolean>((resolve, reject) => {
         xhr.onload = () => {
           if (xhr.status >= 200 && xhr.status < 300) {
+            // Save the file path for later use in form submission
             setUploadedZipPath(urlResult.filePath || "");
             resolve(true);
           } else {
@@ -234,6 +242,23 @@ export default function NewProductPage() {
 
       xhr.send(productZip);
       await uploadPromise;
+
+      // After upload is complete, wait a bit longer before verifying
+      // This helps ensure the file has time to propagate to the CDN
+      await new Promise((resolve) => setTimeout(resolve, 2000));
+
+      // Verify the upload was successful, but don't block on the result
+      try {
+        const verificationResult = await verifyBunnyUpload(urlResult.filePath!);
+
+        if (verificationResult.error) {
+          console.log(`Verification note: ${verificationResult.error}`);
+          // This is just informational, not an error
+        }
+      } catch (error) {
+        console.warn("Verification warning:", error);
+        // Continue anyway since the upload to storage worked
+      }
 
       return true;
     } catch (error) {

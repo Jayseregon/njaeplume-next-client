@@ -40,3 +40,12 @@ export interface ProductFormState {
   productId?: string;
   error?: string;
 }
+
+export interface GenerateUploadUrlResult {
+  success: boolean;
+  uploadUrl?: string;
+  filePath?: string;
+  authHeaders?: Record<string, string>;
+  error?: string;
+  expiresAt?: number;
+}
