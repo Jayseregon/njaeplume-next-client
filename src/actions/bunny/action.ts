@@ -3,7 +3,6 @@
 import { Category, PrismaClient } from "@prisma/client";
 
 import { ProductFormState, UploadResponse } from "@/src/interfaces/Products";
-import { sanitizeFileName } from "@/src/lib/actionHelpers";
 import { GenerateUploadUrlResult } from "@/src/interfaces/Products";
 import { getProductZipFileName } from "@/src/lib/actionHelpers";
 
@@ -117,7 +116,7 @@ export async function deleteFileFromBunny(
   }
 }
 
-// Main action for creating a product with file uploads
+// Main action for creating a product with uploaded files
 export async function createProductWithUploads(
   prevState: ProductFormState,
   formData: FormData,
@@ -129,53 +128,48 @@ export async function createProductWithUploads(
     const description = formData.get("description") as string;
     const category = formData.get("category") as Category;
 
-    // Extract file data
+    // Extract file paths
     const zipFilePath = formData.get("zipFilePath") as string;
-    const imageFiles = formData.getAll("imageFiles") as File[];
-    const imageAltTexts = JSON.parse(
-      formData.get("imageAltTexts") as string,
-    ) as string[];
+    const imageDataStr = formData.get("imageData") as string;
 
-    if (!zipFilePath || imageFiles.length === 0) {
+    if (!imageDataStr || !zipFilePath) {
       return {
         status: "error",
-        error: "Please upload at least one image and a zip file",
+        error:
+          "Missing file information. Please upload at least one image and a zip file.",
       };
     }
 
-    // Skip the zip file upload since it's already uploaded directly
-    // Just use the provided path
+    // Parse the image data from JSON
+    const imageData = JSON.parse(imageDataStr) as {
+      path: string;
+      alt_text: string;
+    }[];
 
-    // Upload images
-    const uploadedImages: { url: string; alt_text: string }[] = [];
-
-    for (let i = 0; i < imageFiles.length; i++) {
-      const file = imageFiles[i];
-      const extension = file.name.split(".").pop() || "jpg";
-      const sanitizedProductName = sanitizeFileName(name);
-      const imageFileName = `${sanitizedProductName}-${i}-${Date.now()}.${extension}`;
-
-      const imageUpload = await uploadFileToBunny(
-        file,
-        "product-images",
-        imageFileName,
-      );
-
-      if (imageUpload.success && imageUpload.path) {
-        uploadedImages.push({
-          url: imageUpload.path,
-          alt_text: imageAltTexts[i] || name,
-        });
-      }
-    }
-
-    if (uploadedImages.length === 0) {
+    if (!imageData.length) {
       return {
         status: "error",
-        error: "Failed to upload product images",
+        error: "Please upload at least one image",
       };
     }
 
+    // Validate all image paths are present
+    const missingPaths = imageData.filter((img) => !img.path);
+
+    if (missingPaths.length > 0) {
+      return {
+        status: "error",
+        error: "Some images were not uploaded correctly. Please try again.",
+      };
+    }
+
+    // Convert path property to url property to match the expected interface
+    const imageObjects = imageData.map((img) => ({
+      url: img.path, // Map 'path' to 'url' to match the expected interface
+      alt_text: img.alt_text,
+    }));
+
+    // All files are already uploaded, so we just create the product with the paths
     // Create product in database
     const product = await createProduct({
       name,
@@ -184,7 +178,7 @@ export async function createProductWithUploads(
       category,
       zip_file_name: zipFilePath,
       tagIds: [], // You can extend this to handle tags
-      images: uploadedImages,
+      images: imageObjects, // Use the mapped image data with correct property names
     });
 
     return {

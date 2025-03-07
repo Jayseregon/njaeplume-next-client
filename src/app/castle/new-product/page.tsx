@@ -9,7 +9,7 @@ import {
   useCallback,
 } from "react";
 import { Category } from "@prisma/client";
-import { Trash2, Upload } from "lucide-react";
+import { Trash2, Upload, X } from "lucide-react";
 
 import { PageTitle } from "@/src/components/root/PageTitle";
 import ErrorBoundary from "@/src/components/root/ErrorBoundary";
@@ -37,22 +37,31 @@ import { ProductFormState } from "@/src/interfaces/Products";
 // Initial state for the form
 const initialState: ProductFormState = { status: "idle" };
 
+interface ImageUploadState {
+  file: File;
+  preview: string;
+  altText: string;
+  status: "pending" | "uploading" | "success" | "error";
+  progress: number;
+  path?: string;
+  error?: string;
+}
+
 export default function NewProductPage() {
   // Form and file state
   const formRef = useRef<HTMLFormElement>(null);
-  const [productImages, setProductImages] = useState<File[]>([]);
+  const [productImages, setProductImages] = useState<ImageUploadState[]>([]);
   const [productZip, setProductZip] = useState<File | null>(null);
-  const [imageAltTexts, setImageAltTexts] = useState<string[]>([]);
-  const [imagePreviews, setImagePreviews] = useState<string[]>([]);
+  const [formReset, setFormReset] = useState(false);
   const [selectedCategory, setSelectedCategory] = useState<Category | null>(
     null,
   );
-  const [formReset, setFormReset] = useState(false);
 
   // Direct upload state
   const [isUploadingZip, setIsUploadingZip] = useState(false);
   const [uploadProgress, setUploadProgress] = useState(0);
   const [uploadedZipPath, setUploadedZipPath] = useState<string | null>(null);
+  const [isUploadingImages, setIsUploadingImages] = useState(false);
 
   // Form action state
   const [formState, formAction, isPending] = useActionState(
@@ -64,7 +73,7 @@ export default function NewProductPage() {
   useEffect(() => {
     return () => {
       // Revoke all object URLs to avoid memory leaks
-      imagePreviews.forEach((preview) => revokeFilePreview(preview));
+      productImages.forEach((image) => revokeFilePreview(image.preview));
     };
   }, []); // Empty dependency array since this runs only on unmount
 
@@ -75,13 +84,11 @@ export default function NewProductPage() {
       setFormReset(true);
 
       // Clean up all previews
-      imagePreviews.forEach((preview) => revokeFilePreview(preview));
+      productImages.forEach((image) => revokeFilePreview(image.preview));
 
       // Reset state in a single batch
       setProductImages([]);
       setProductZip(null);
-      setImageAltTexts([]);
-      setImagePreviews([]);
       setSelectedCategory(null);
       setUploadedZipPath(null);
       setUploadProgress(0);
@@ -94,9 +101,9 @@ export default function NewProductPage() {
       // Reset the flag when form status changes from success
       setFormReset(false);
     }
-  }, [formState.status, formReset]); // Only depend on formState.status and formReset, not imagePreviews
+  }, [formState.status, formReset, productImages]);
 
-  // Handle form submission with file uploads
+  // Handle form submission with file paths
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
 
@@ -105,6 +112,26 @@ export default function NewProductPage() {
       alert("Please upload at least one image");
 
       return;
+    }
+
+    // Check if all images are uploaded
+    const pendingImages = productImages.filter(
+      (img) => img.status !== "success",
+    );
+
+    if (pendingImages.length > 0) {
+      // If there are pending images, try to upload them first
+      const confirmed = window.confirm(
+        "Some images haven't been uploaded yet. Would you like to upload them now?",
+      );
+
+      if (confirmed) {
+        await uploadAllImages();
+
+        return; // Return and wait for uploads to complete
+      } else {
+        return; // User cancelled
+      }
     }
 
     try {
@@ -125,15 +152,16 @@ export default function NewProductPage() {
       const form = e.currentTarget;
       const formData = new FormData(form);
 
-      // Instead of the actual file, we pass the path of the uploaded zip
+      // Instead of the actual files, pass the paths of the uploaded files
       formData.set("zipFilePath", uploadedZipPath);
 
-      // Add images to form data
-      formData.delete("imageFiles");
-      productImages.forEach((image) => {
-        formData.append("imageFiles", image);
-      });
-      formData.set("imageAltTexts", JSON.stringify(imageAltTexts));
+      // Add image paths and alt texts
+      const imageData = productImages.map((img) => ({
+        path: img.path,
+        alt_text: img.altText,
+      }));
+
+      formData.set("imageData", JSON.stringify(imageData));
 
       // Submit form within a transition to avoid blocking UI
       startTransition(() => {
@@ -147,18 +175,72 @@ export default function NewProductPage() {
     }
   };
 
+  // Upload all pending images
+  const uploadAllImages = async () => {
+    setIsUploadingImages(true);
+
+    try {
+      // Filter images that need to be uploaded
+      const imagesToUpload = productImages
+        .map((img, index) => ({ ...img, index }))
+        .filter((img) => img.status !== "success");
+
+      if (imagesToUpload.length === 0) {
+        return true;
+      }
+
+      // Upload each image sequentially
+      for (const image of imagesToUpload) {
+        // Update status to uploading
+        updateImageStatus(image.index, "uploading", 0);
+
+        // Get product name from form for file naming
+        // Fix: Access input element correctly
+        const nameInput = formRef.current?.querySelector(
+          "#name",
+        ) as HTMLInputElement;
+        const productName = nameInput?.value || "product";
+
+        // Upload the image
+        const success = await uploadImageToBunny(
+          image.file,
+          productName,
+          image.index,
+        );
+
+        if (!success) {
+          updateImageStatus(image.index, "error", 0, "Failed to upload image");
+
+          return false;
+        }
+      }
+
+      return true;
+    } catch (error) {
+      console.error("Error uploading images:", error);
+
+      return false;
+    } finally {
+      setIsUploadingImages(false);
+    }
+  };
+
   // Handle image uploads
   const handleImageUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
     if (e.target.files && e.target.files.length > 0) {
       const newImages = Array.from(e.target.files);
 
-      // Generate previews for new images
-      const newPreviews = newImages.map((file) => createFilePreview(file));
+      // Create upload states for new images
+      const newImageStates = newImages.map((file) => ({
+        file,
+        preview: createFilePreview(file),
+        altText: "",
+        status: "pending" as const,
+        progress: 0,
+      }));
 
       // Update state
-      setProductImages((prev) => [...prev, ...newImages]);
-      setImageAltTexts((prev) => [...prev, ...newImages.map(() => "")]);
-      setImagePreviews((prev) => [...prev, ...newPreviews]);
+      setProductImages((prev) => [...prev, ...newImageStates]);
     }
   };
 
@@ -166,6 +248,124 @@ export default function NewProductPage() {
   const handleZipUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
     if (e.target.files && e.target.files[0]) {
       setProductZip(e.target.files[0]);
+    }
+  };
+
+  // Update image upload status
+  const updateImageStatus = (
+    index: number,
+    status: ImageUploadState["status"],
+    progress: number = 0,
+    error?: string,
+    path?: string,
+  ) => {
+    setProductImages((prev) => {
+      const updated = [...prev];
+
+      updated[index] = {
+        ...updated[index],
+        status,
+        progress,
+        ...(error && { error }),
+        ...(path && { path }),
+      };
+
+      return updated;
+    });
+  };
+
+  // Upload a single image to Bunny
+  const uploadImageToBunny = async (
+    imageFile: File,
+    productName: string,
+    imageIndex: number,
+  ): Promise<boolean> => {
+    try {
+      // Generate upload URL with authentication headers from server
+      const urlResult = await generateBunnyUploadUrl(
+        `${productName}-image-${imageIndex}`,
+        "product-images",
+      );
+
+      if (
+        !urlResult.success ||
+        !urlResult.uploadUrl ||
+        !urlResult.authHeaders
+      ) {
+        throw new Error(urlResult.error || "Failed to get upload URL");
+      }
+
+      // Upload the file directly to Bunny with progress tracking
+      const xhr = new XMLHttpRequest();
+
+      xhr.open("PUT", urlResult.uploadUrl, true);
+
+      // Apply all authentication headers from the server
+      Object.entries(urlResult.authHeaders).forEach(([key, value]) => {
+        xhr.setRequestHeader(key, value);
+      });
+
+      xhr.upload.onprogress = (event) => {
+        if (event.lengthComputable) {
+          const percentComplete = Math.round(
+            (event.loaded / event.total) * 100,
+          );
+
+          updateImageStatus(imageIndex, "uploading", percentComplete);
+        }
+      };
+
+      // Create a promise to handle the XHR request
+      const uploadPromise = new Promise<boolean>((resolve, reject) => {
+        xhr.onload = () => {
+          if (xhr.status >= 200 && xhr.status < 300) {
+            // Save the file path and update status
+            updateImageStatus(
+              imageIndex,
+              "success",
+              100,
+              undefined,
+              urlResult.filePath,
+            );
+            resolve(true);
+          } else {
+            updateImageStatus(
+              imageIndex,
+              "error",
+              0,
+              `Upload failed with status ${xhr.status}`,
+            );
+            reject(new Error(`Upload failed with status ${xhr.status}`));
+          }
+        };
+
+        xhr.onerror = () => {
+          updateImageStatus(
+            imageIndex,
+            "error",
+            0,
+            "Network error during upload",
+          );
+          reject(new Error("Upload failed due to network error"));
+        };
+      });
+
+      xhr.send(imageFile);
+      await uploadPromise;
+
+      // After upload is complete, verify on the server side
+      try {
+        await verifyBunnyUpload(urlResult.filePath!);
+      } catch (error) {
+        console.warn("Image verification warning:", error);
+        // Continue anyway since the upload probably worked
+      }
+
+      return true;
+    } catch (error) {
+      console.error("Error uploading image:", error);
+
+      return false;
     }
   };
 
@@ -182,8 +382,11 @@ export default function NewProductPage() {
       setUploadProgress(0);
 
       // Get product name from the form
-      const formData = new FormData(formRef.current);
-      const productName = formData.get("name") as string;
+      // Fix: Access input element correctly
+      const nameInput = formRef.current.querySelector(
+        "#name",
+      ) as HTMLInputElement;
+      const productName = nameInput?.value;
 
       if (!productName) {
         alert("Please enter a product name first");
@@ -243,21 +446,11 @@ export default function NewProductPage() {
       xhr.send(productZip);
       await uploadPromise;
 
-      // After upload is complete, wait a bit longer before verifying
-      // This helps ensure the file has time to propagate to the CDN
-      await new Promise((resolve) => setTimeout(resolve, 2000));
-
-      // Verify the upload was successful, but don't block on the result
+      // After upload is complete, verify on the server side
       try {
-        const verificationResult = await verifyBunnyUpload(urlResult.filePath!);
-
-        if (verificationResult.error) {
-          console.log(`Verification note: ${verificationResult.error}`);
-          // This is just informational, not an error
-        }
+        await verifyBunnyUpload(urlResult.filePath!);
       } catch (error) {
         console.warn("Verification warning:", error);
-        // Continue anyway since the upload to storage worked
       }
 
       return true;
@@ -275,10 +468,13 @@ export default function NewProductPage() {
 
   // Handle alt text changes
   const handleAltTextChange = (index: number, value: string) => {
-    setImageAltTexts((prev) => {
+    setProductImages((prev) => {
       const updated = [...prev];
 
-      updated[index] = value;
+      updated[index] = {
+        ...updated[index],
+        altText: value,
+      };
 
       return updated;
     });
@@ -292,23 +488,108 @@ export default function NewProductPage() {
   // Remove an image
   const removeImage = (index: number) => {
     // Clean up the preview URL to prevent memory leaks
-    revokeFilePreview(imagePreviews[index]);
+    revokeFilePreview(productImages[index].preview);
 
     // Update state by removing the image at the specified index
     setProductImages((prev) => prev.filter((_, i) => i !== index));
-    setImageAltTexts((prev) => prev.filter((_, i) => i !== index));
-    setImagePreviews((prev) => prev.filter((_, i) => i !== index));
+  };
+
+  // Upload a specific image
+  const uploadSingleImage = async (index: number) => {
+    const image = productImages[index];
+
+    if (image.status === "success") return; // Already uploaded
+
+    // Fix: Access input element correctly
+    const nameInput = formRef.current?.querySelector(
+      "#name",
+    ) as HTMLInputElement;
+
+    if (!nameInput?.value) {
+      alert("Please enter a product name first");
+
+      return;
+    }
+
+    try {
+      await uploadImageToBunny(image.file, nameInput.value, index);
+    } catch (error) {
+      console.error(`Error uploading image ${index}:`, error);
+    }
   };
 
   // Status messages for the UI
   const getSubmitButtonText = () => {
     if (isPending) {
-      return formState.status === "uploading"
-        ? "Uploading Files..."
-        : "Creating Product...";
+      return "Creating Product...";
     }
 
     return "Create Product";
+  };
+
+  // Get image upload status indicator
+  const getImageStatusIndicator = (
+    status: ImageUploadState["status"],
+    progress: number,
+  ) => {
+    switch (status) {
+      case "pending":
+        return (
+          <Button
+            className="h-8 px-2"
+            size="sm"
+            type="button"
+            variant="outline"
+            onClick={() =>
+              uploadSingleImage(
+                productImages.findIndex((img) => img.status === "pending"),
+              )
+            }
+          >
+            <Upload className="h-4 w-4 mr-1" />
+            Upload
+          </Button>
+        );
+      case "uploading":
+        return (
+          <div className="flex items-center gap-2">
+            <div className="h-1.5 w-16 bg-gray-200 rounded-full overflow-hidden">
+              <div
+                className="h-full bg-blue-600 transition-all duration-300"
+                style={{ width: `${progress}%` }}
+              />
+            </div>
+            <span className="text-xs text-muted-foreground">{progress}%</span>
+          </div>
+        );
+      case "success":
+        return (
+          <span className="text-green-600 flex items-center gap-1 text-xs">
+            <svg
+              className="h-4 w-4"
+              fill="none"
+              stroke="currentColor"
+              viewBox="0 0 24 24"
+              xmlns="http://www.w3.org/2000/svg"
+            >
+              <path
+                d="M5 13l4 4L19 7"
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                strokeWidth={2}
+              />
+            </svg>
+            Uploaded
+          </span>
+        );
+      case "error":
+        return (
+          <span className="text-red-600 flex items-center gap-1 text-xs">
+            <X className="h-4 w-4" />
+            Failed
+          </span>
+        );
+    }
   };
 
   return (
@@ -449,7 +730,24 @@ export default function NewProductPage() {
 
                 {/* Image uploads */}
                 <div className="grid gap-2">
-                  <Label htmlFor="productImages">Images</Label>
+                  <div className="flex justify-between items-center">
+                    <Label htmlFor="productImages">Images</Label>
+                    {productImages.length > 0 && (
+                      <Button
+                        disabled={
+                          isUploadingImages ||
+                          productImages.every((img) => img.status === "success")
+                        }
+                        size="sm"
+                        type="button"
+                        variant="outline"
+                        onClick={uploadAllImages}
+                      >
+                        <Upload className="h-3.5 w-3.5 mr-1" />
+                        Upload All Images
+                      </Button>
+                    )}
+                  </div>
                   <Input
                     multiple
                     accept="image/*"
@@ -459,7 +757,7 @@ export default function NewProductPage() {
                   />
                 </div>
 
-                {/* Image previews */}
+                {/* Image previews with upload status */}
                 {productImages.length > 0 && (
                   <div className="border rounded-md p-4">
                     <h3 className="font-medium mb-2">Selected Images</h3>
@@ -470,17 +768,23 @@ export default function NewProductPage() {
                             <img
                               alt={`Preview ${index}`}
                               className="h-full w-full object-cover"
-                              src={imagePreviews[index]}
+                              src={image.preview}
                             />
                           </div>
                           <div className="flex-1">
                             <Input
                               placeholder="Alt text"
-                              value={imageAltTexts[index] || ""}
+                              value={image.altText}
                               onChange={(e) =>
                                 handleAltTextChange(index, e.target.value)
                               }
                             />
+                          </div>
+                          <div className="w-24">
+                            {getImageStatusIndicator(
+                              image.status,
+                              image.progress,
+                            )}
                           </div>
                           <Button
                             size="icon"
@@ -513,7 +817,7 @@ export default function NewProductPage() {
               {/* Submit button */}
               <Button
                 className="w-full"
-                disabled={isPending || isUploadingZip}
+                disabled={isPending || isUploadingZip || isUploadingImages}
                 type="submit"
                 variant="form"
               >
