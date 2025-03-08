@@ -14,16 +14,7 @@ import { PageTitle } from "@/src/components/root/PageTitle";
 import ErrorBoundary from "@/src/components/root/ErrorBoundary";
 import { ErrorDefaultDisplay } from "@/src/components/root/ErrorDefaultDisplay";
 import { Button } from "@/src/components/ui/button";
-import { Input } from "@/src/components/ui/input";
-import { Textarea } from "@/src/components/ui/textarea";
 import { Label } from "@/src/components/ui/label";
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "@/src/components/ui/select";
 import { Card, CardContent } from "@/src/components/ui/card";
 import { createProductWithUploads } from "@/src/actions/bunny/action";
 import { ProductFormState } from "@/src/interfaces/Products";
@@ -32,6 +23,8 @@ import { useImageUpload } from "@/src/hooks/useImageUpload";
 import { useZipFileUpload } from "@/src/hooks/useZipFileUpload";
 import { ProductImageUploader } from "@/src/components/product/ProductImageUploader";
 import { ProductZipUploader } from "@/src/components/product/ProductZipUploader";
+import { FormField } from "@/src/components/product/FormField";
+import { CategoryField } from "@/src/components/product/CategoryField";
 
 // Initial state for the form
 const initialState: ProductFormState = { status: "idle" };
@@ -201,77 +194,48 @@ export default function NewProductPage() {
               {/* Product details */}
               <div className="space-y-4">
                 {/* Name field */}
-                <div className="flex flex-col gap-2">
-                  <Label className="text-foreground" htmlFor="name">
-                    Name
-                  </Label>
-                  <Input
-                    required
-                    id="name"
-                    name="name"
-                    placeholder="This is a new product..."
-                  />
-                </div>
+                <FormField
+                  id="name"
+                  inputProps={{
+                    placeholder: "This is a new product...",
+                  }}
+                  inputType="text"
+                  label="Name"
+                  name="name"
+                />
 
                 <div className="grid grid-cols-2 gap-4">
                   {/* Price field */}
-                  <div className="flex flex-col gap-2">
-                    <Label className="text-foreground" htmlFor="price">
-                      Price
-                    </Label>
-                    <Input
-                      required
-                      id="price"
-                      name="price"
-                      placeholder="0.00"
-                      step="0.01"
-                      type="number"
-                    />
-                  </div>
+                  <FormField
+                    containerClassName="flex flex-col gap-2"
+                    id="price"
+                    inputProps={{
+                      placeholder: "0.00",
+                      step: "0.01",
+                    }}
+                    inputType="number"
+                    label="Price"
+                    name="price"
+                  />
 
-                  {/* Category field */}
-                  <div className="flex flex-col gap-2">
-                    <Label className="text-foreground" htmlFor="category">
-                      Category
-                    </Label>
-                    <Input
-                      id="category"
-                      name="category"
-                      type="hidden"
-                      value={selectedCategory || ""}
-                    />
-                    <Select
-                      required
-                      value={selectedCategory || ""}
-                      onValueChange={handleCategoryChange}
-                    >
-                      <SelectTrigger id="category">
-                        <SelectValue placeholder="What will it be?" />
-                      </SelectTrigger>
-                      <SelectContent>
-                        {Object.values(Category).map((category) => (
-                          <SelectItem key={category} value={category}>
-                            {category}
-                          </SelectItem>
-                        ))}
-                      </SelectContent>
-                    </Select>
-                  </div>
+                  {/* Category field using the new component */}
+                  <CategoryField
+                    selectedCategory={selectedCategory}
+                    onChange={handleCategoryChange}
+                  />
                 </div>
 
                 {/* Description field */}
-                <div className="flex flex-col gap-2">
-                  <Label className="text-foreground" htmlFor="description">
-                    Description
-                  </Label>
-                  <Textarea
-                    required
-                    id="description"
-                    name="description"
-                    placeholder="Here comes the description..."
-                    rows={5}
-                  />
-                </div>
+                <FormField
+                  id="description"
+                  inputProps={{
+                    placeholder: "Here comes the description...",
+                    rows: 5,
+                  }}
+                  inputType="textarea"
+                  label="Description"
+                  name="description"
+                />
 
                 {/* Tags field */}
                 <div className="flex flex-col gap-2">

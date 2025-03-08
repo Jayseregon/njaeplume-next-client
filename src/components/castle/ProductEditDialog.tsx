@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { Category, Tag } from "@prisma/client";
+import { Tag } from "@prisma/client";
 import { useRouter } from "next/navigation";
 import { Save, Trash2 } from "lucide-react";
 import { toast } from "sonner";
@@ -17,16 +17,7 @@ import {
   DialogFooter,
 } from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { Textarea } from "@/components/ui/textarea";
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "@/components/ui/select";
 import { TagInput } from "@/src/components/product/TagInput";
 import { useImageUpload } from "@/src/hooks/useImageUpload";
 import { useZipFileUpload } from "@/src/hooks/useZipFileUpload";
@@ -34,6 +25,8 @@ import { ProductImageUploader } from "@/src/components/product/ProductImageUploa
 import { ProductZipUploader } from "@/src/components/product/ProductZipUploader";
 import { slugifyProductName } from "@/src/lib/actionHelpers";
 import { SimpleSpinner } from "@/components/root/SimpleSpinner";
+import { FormField } from "@/src/components/product/FormField";
+import { CategoryField } from "@/src/components/product/CategoryField";
 
 export const ProductEditDialog = () => {
   const router = useRouter();
@@ -230,70 +223,54 @@ export const ProductEditDialog = () => {
             onSubmit={handleSubmit}
           >
             <div className="grid gap-4">
-              <div className="flex flex-col gap-2">
-                <Label className="text-foreground" htmlFor="name">
-                  Name
-                </Label>
-                <Input
-                  id="name"
-                  name="name"
-                  value={formData.name || ""}
-                  onChange={handleChange}
-                />
-              </div>
+              {/* Name field */}
+              <FormField
+                id="name"
+                inputProps={{
+                  value: formData.name || "",
+                  onChange: handleChange,
+                }}
+                inputType="text"
+                label="Name"
+                name="name"
+              />
 
               <div className="grid grid-cols-2 gap-4">
-                <div className="flex flex-col gap-2">
-                  <Label className="text-foreground" htmlFor="price">
-                    Price
-                  </Label>
-                  <Input
-                    className="col-span-3"
-                    id="price"
-                    name="price"
-                    step="0.01"
-                    type="number"
-                    value={formData.price || 0}
-                    onChange={handlePriceChange}
-                  />
-                </div>
+                {/* Price field */}
+                <FormField
+                  className="col-span-3"
+                  id="price"
+                  inputProps={{
+                    step: "0.01",
+                    value: formData.price || 0,
+                    onChange: handlePriceChange,
+                  }}
+                  inputType="number"
+                  label="Price"
+                  name="price"
+                />
 
-                <div className="flex flex-col gap-2">
-                  <Label className="text-foreground" htmlFor="category">
-                    Category
-                  </Label>
-                  <Select
-                    value={formData.category}
-                    onValueChange={handleCategoryChange}
-                  >
-                    <SelectTrigger className="col-span-3">
-                      <SelectValue placeholder="Select category" />
-                    </SelectTrigger>
-                    <SelectContent>
-                      {Object.values(Category).map((category) => (
-                        <SelectItem key={category} value={category}>
-                          {category}
-                        </SelectItem>
-                      ))}
-                    </SelectContent>
-                  </Select>
-                </div>
+                {/* Category field using the new component with readOnly prop */}
+                <CategoryField
+                  readOnly={true}
+                  selectedCategory={formData.category}
+                  onChange={handleCategoryChange}
+                />
               </div>
 
               {/* Description Field */}
-              <div className="flex flex-col gap-2">
-                <Label className="text-foreground" htmlFor="description">
-                  Description
-                </Label>
-                <Textarea
-                  className="col-span-3"
-                  id="description"
-                  name="description"
-                  rows={5}
-                  value={formData.description || ""}
-                  onChange={handleChange}
-                />
-              </div>
+              <FormField
+                className="col-span-3"
+                id="description"
+                inputProps={{
+                  rows: 5,
+                  value: formData.description || "",
+                  onChange: handleChange,
+                }}
+                inputType="textarea"
+                label="Description"
+                name="description"
+              />
 
               {/* Tags Field */}
               <div className="flex flex-col gap-2">
@@ -308,13 +285,12 @@ export const ProductEditDialog = () => {
                 </div>
               </div>
 
-              {/* Zip file section using our component */}
+              {/* Rest of the form remains unchanged */}
               <ProductZipUploader
                 productName={formData.name || "product"}
                 zipUploadHook={zipUploadHook}
               />
 
-              {/* Images section using our component */}
               <ProductImageUploader
                 imageUploadHook={imageUploadHook}
                 productName={formData.name || "product"}
@@ -323,6 +299,7 @@ export const ProductEditDialog = () => {
           </form>
         </div>
 
+        {/* Dialog footer remains unchanged */}
         <DialogFooter className="flex w-full items-center">
           <div className="mr-auto">
             <Button
