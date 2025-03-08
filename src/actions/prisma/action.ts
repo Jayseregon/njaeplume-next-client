@@ -3,7 +3,7 @@
 import { PrismaClient, Category } from "@prisma/client";
 
 import { Product } from "@/src/interfaces/Products";
-import { slugifyProductName } from "@/src/lib/actionHelpers";
+import { slugifyProductName, normalizeTagName } from "@/src/lib/actionHelpers";
 
 const prisma = new PrismaClient();
 
@@ -82,6 +82,45 @@ export async function createProduct(data: {
       include: {
         tags: true,
         images: true,
+      },
+    });
+  } finally {
+    await prisma.$disconnect();
+  }
+}
+
+export async function getTags() {
+  try {
+    return await prisma.tag.findMany({
+      orderBy: { name: "asc" },
+    });
+  } finally {
+    await prisma.$disconnect();
+  }
+}
+
+export async function createTagIfNotExists(tagName: string) {
+  try {
+    const normalized = normalizeTagName(tagName);
+
+    if (!normalized) return null;
+
+    // First try to find existing tag
+    const existingTag = await prisma.tag.findFirst({
+      where: {
+        OR: [{ name: normalized.name }, { slug: normalized.slug }],
+      },
+    });
+
+    if (existingTag) {
+      return existingTag;
+    }
+
+    // Create new tag if it doesn't exist
+    return await prisma.tag.create({
+      data: {
+        name: normalized.name,
+        slug: normalized.slug,
       },
     });
   } finally {

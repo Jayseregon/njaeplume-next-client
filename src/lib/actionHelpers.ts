@@ -52,3 +52,26 @@ export function createFilePreview(file: File): string {
 export function revokeFilePreview(url: string): void {
   URL.revokeObjectURL(url);
 }
+
+/**
+ * Normalize tag name and generate a URL-safe slug
+ */
+export function normalizeTagName(
+  tagName: string,
+): { name: string; slug: string } | null {
+  const normalizedName = tagName.trim().toLowerCase();
+
+  if (!normalizedName) return null;
+
+  const slug = normalizedName
+    .replace(/\s+/g, "-")
+    .replace(/[^\w\-]+/g, "")
+    .replace(/\-\-+/g, "-")
+    .replace(/^-+/, "")
+    .replace(/-+$/, "");
+
+  return {
+    name: normalizedName,
+    slug,
+  };
+}

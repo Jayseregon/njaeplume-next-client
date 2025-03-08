@@ -73,6 +73,10 @@ export async function createProductWithUploads(
     const zipFilePath = formData.get("zipFilePath") as string;
     const imageDataStr = formData.get("imageData") as string;
 
+    // Extract tag IDs
+    const tagIdsStr = formData.get("tagIds") as string;
+    const tagIds = tagIdsStr ? tagIdsStr.split(",") : [];
+
     if (!imageDataStr || !zipFilePath) {
       return {
         status: "error",
@@ -118,7 +122,7 @@ export async function createProductWithUploads(
       description,
       category,
       zip_file_name: zipFilePath,
-      tagIds: [], // You can extend this to handle tags
+      tagIds: tagIds, // Pass the tag IDs for association
       images: imageObjects, // Use the mapped image data with correct property names
     });
 

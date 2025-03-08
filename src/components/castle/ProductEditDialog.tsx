@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { Category } from "@prisma/client";
+import { Category, Tag } from "@prisma/client";
 import { useRouter } from "next/navigation";
 
 import { useProductStore } from "@/src/stores/productStore";
@@ -25,11 +25,13 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
+import { TagInput } from "@/src/components/product/TagInput";
 
 export const ProductEditDialog = () => {
   const router = useRouter();
   const { selectedProduct, isDialogOpen, closeDialog } = useProductStore();
   const [formData, setFormData] = useState<any>({});
+  const [selectedTags, setSelectedTags] = useState<Tag[]>([]);
   const [isSubmitting, setIsSubmitting] = useState(false);
 
   // Update form data when selected product changes
@@ -44,6 +46,7 @@ export const ProductEditDialog = () => {
         zip_file_name: selectedProduct.zip_file_name,
         slug: selectedProduct.slug,
       });
+      setSelectedTags(selectedProduct.tags || []);
     }
   }, [selectedProduct]);
 
@@ -71,13 +74,21 @@ export const ProductEditDialog = () => {
     }));
   };
 
+  const handleTagsChange = (tags: Tag[]) => {
+    setSelectedTags(tags);
+  };
+
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!formData.id) return;
 
     setIsSubmitting(true);
     try {
-      await updateProduct(formData);
+      // Include tags in the update data
+      await updateProduct({
+        ...formData,
+        tags: selectedTags,
+      });
       closeDialog();
       router.refresh(); // Refresh the page to get updated data
     } catch (error) {
@@ -112,7 +123,7 @@ export const ProductEditDialog = () => {
 
   return (
     <Dialog open={isDialogOpen} onOpenChange={closeDialog}>
-      <DialogContent aria-describedby={undefined} className="sm:max-w-[600px]">
+      <DialogContent aria-describedby={undefined} className="sm:max-w-[800px]">
         <form onSubmit={handleSubmit}>
           <DialogHeader>
             <DialogTitle>Edit Product</DialogTitle>
@@ -168,6 +179,19 @@ export const ProductEditDialog = () => {
               </Select>
             </div>
 
+            {/* Add Tags Field */}
+            <div className="grid grid-cols-4 items-start gap-4">
+              <Label className="text-right pt-2" htmlFor="tags">
+                Tags
+              </Label>
+              <div className="col-span-3">
+                <TagInput
+                  selectedTags={selectedTags}
+                  onChange={handleTagsChange}
+                />
+              </div>
+            </div>
+
             <div className="grid grid-cols-4 items-center gap-4">
               <Label className="text-right" htmlFor="slug">
                 Slug
@@ -194,8 +218,8 @@ export const ProductEditDialog = () => {
               />
             </div>
 
-            <div className="grid grid-cols-4 items-center gap-4">
-              <Label className="text-right" htmlFor="description">
+            <div className="grid grid-cols-4 items-start gap-4">
+              <Label className="text-right pt-2" htmlFor="description">
                 Description
               </Label>
               <Textarea

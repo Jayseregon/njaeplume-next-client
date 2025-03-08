@@ -8,7 +8,7 @@ import {
   useEffect,
   useCallback,
 } from "react";
-import { Category } from "@prisma/client";
+import { Category, Tag } from "@prisma/client";
 import { CircleCheckBig, Hourglass, Trash2, Upload, X } from "lucide-react";
 
 import { PageTitle } from "@/src/components/root/PageTitle";
@@ -35,6 +35,7 @@ import {
 } from "@/src/actions/bunny/action";
 import { createFilePreview, revokeFilePreview } from "@/src/lib/actionHelpers";
 import { ProductFormState } from "@/src/interfaces/Products";
+import { TagInput } from "@/src/components/product/TagInput";
 
 // Initial state for the form
 const initialState: ProductFormState = { status: "idle" };
@@ -58,6 +59,7 @@ export default function NewProductPage() {
   const [selectedCategory, setSelectedCategory] = useState<Category | null>(
     null,
   );
+  const [selectedTags, setSelectedTags] = useState<Tag[]>([]);
 
   // Direct upload state
   const [isUploadingZip, setIsUploadingZip] = useState(false);
@@ -92,6 +94,7 @@ export default function NewProductPage() {
       setProductImages([]);
       setProductZip(null);
       setSelectedCategory(null);
+      setSelectedTags([]);
       setUploadedZipPath(null);
       setUploadProgress(0);
 
@@ -490,6 +493,11 @@ export default function NewProductPage() {
     setSelectedCategory(value as Category);
   };
 
+  // Handle tag selection changes
+  const handleTagsChange = (tags: Tag[]) => {
+    setSelectedTags(tags);
+  };
+
   // Remove an image
   const removeImage = async (index: number) => {
     const imageToRemove = productImages[index];
@@ -634,6 +642,15 @@ export default function NewProductPage() {
                       <SelectItem value="freebies">Freebies</SelectItem>
                     </SelectContent>
                   </Select>
+                </div>
+
+                {/* Tags field */}
+                <div className="grid gap-2">
+                  <Label htmlFor="tags">Tags</Label>
+                  <TagInput
+                    selectedTags={selectedTags}
+                    onChange={handleTagsChange}
+                  />
                 </div>
 
                 {/* Zip file upload */}
