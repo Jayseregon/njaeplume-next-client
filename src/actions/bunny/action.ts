@@ -87,7 +87,8 @@ export async function createProductWithUploads(
 
     // Parse the image data from JSON
     const imageData = JSON.parse(imageDataStr) as {
-      path: string;
+      path?: string;
+      url?: string;
       alt_text: string;
     }[];
 
@@ -98,10 +99,10 @@ export async function createProductWithUploads(
       };
     }
 
-    // Validate all image paths are present
-    const missingPaths = imageData.filter((img) => !img.path);
+    // Check for either path or url property
+    const missingImages = imageData.filter((img) => !img.path && !img.url);
 
-    if (missingPaths.length > 0) {
+    if (missingImages.length > 0) {
       return {
         status: "error",
         error: "Some images were not uploaded correctly. Please try again.",
@@ -110,7 +111,7 @@ export async function createProductWithUploads(
 
     // Convert path property to url property to match the expected interface
     const imageObjects = imageData.map((img) => ({
-      url: img.path, // Map 'path' to 'url' to match the expected interface
+      url: (img.url || img.path) as string, // Use type assertion since we've already validated
       alt_text: img.alt_text,
     }));
 
@@ -249,7 +250,8 @@ export async function verifyBunnyUpload(
 ): Promise<{ success: boolean; error?: string }> {
   try {
     // Get the public pull zone URL from environment variables
-    const pullZoneUrl = process.env.BUNNY_PUBLIC_ASSETS_PULL_ZONE_URL;
+    const pullZoneUrl =
+      process.env.NEXT_PUBLIC_BUNNY_PUBLIC_ASSETS_PULL_ZONE_URL;
 
     if (!pullZoneUrl) {
       console.warn(
