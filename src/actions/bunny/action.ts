@@ -263,8 +263,6 @@ export async function verifyBunnyUpload(
     // Build the public URL for the file through the pull zone
     const fileUrl = `${pullZoneUrl}/${filePath}`;
 
-    console.log(`Verifying file availability at: ${fileUrl}`);
-
     // Send a HEAD request to check if the file exists in the CDN
     // No authentication needed for public pull zones
     const response = await fetch(fileUrl, {

@@ -26,10 +26,12 @@ import {
   SelectValue,
 } from "@/src/components/ui/select";
 import { Card, CardContent } from "@/src/components/ui/card";
+import { Progress } from "@/src/components/ui/progress";
 import {
   createProductWithUploads,
   generateBunnyUploadUrl,
   verifyBunnyUpload,
+  deleteFileFromBunny,
 } from "@/src/actions/bunny/action";
 import { createFilePreview, revokeFilePreview } from "@/src/lib/actionHelpers";
 import { ProductFormState } from "@/src/interfaces/Products";
@@ -489,7 +491,27 @@ export default function NewProductPage() {
   };
 
   // Remove an image
-  const removeImage = (index: number) => {
+  const removeImage = async (index: number) => {
+    const imageToRemove = productImages[index];
+
+    // If image was successfully uploaded to Bunny, delete it from storage
+    if (imageToRemove.status === "success" && imageToRemove.path) {
+      try {
+        // Delete from Bunny storage
+        const result = await deleteFileFromBunny(imageToRemove.path);
+
+        if (!result.success) {
+          console.error(`Failed to delete image from storage: ${result.error}`);
+          // Optionally show an alert to the user
+          alert(
+            `Warning: The image couldn't be deleted from storage. ${result.error}`,
+          );
+        }
+      } catch (error) {
+        console.error("Error deleting image from storage:", error);
+      }
+    }
+
     // Clean up the preview URL to prevent memory leaks
     revokeFilePreview(productImages[index].preview);
 
@@ -521,12 +543,7 @@ export default function NewProductPage() {
       case "uploading":
         return (
           <div className="flex items-center gap-2">
-            <div className="h-1.5 w-16 bg-gray-200 rounded-full overflow-hidden">
-              <div
-                className="h-full bg-blue-600 transition-all duration-300"
-                style={{ width: `${progress}%` }}
-              />
-            </div>
+            <Progress className="h-1.5 w-16" value={progress} />
             <span className="text-xs text-muted-foreground">{progress}%</span>
           </div>
         );
@@ -650,12 +667,7 @@ export default function NewProductPage() {
                         <span>Uploading...</span>
                         <span>{uploadProgress}%</span>
                       </div>
-                      <div className="h-2 w-full bg-gray-200 rounded-full overflow-hidden">
-                        <div
-                          className="h-full bg-blue-600 transition-all duration-300"
-                          style={{ width: `${uploadProgress}%` }}
-                        />
-                      </div>
+                      <Progress className="h-2" value={uploadProgress} />
                     </div>
                   )}
 
@@ -754,13 +766,15 @@ export default function NewProductPage() {
 
               {/* Form status messages */}
               {formState.status === "error" && (
-                <div className="bg-red-50 text-red-600 p-3 rounded-md">
+                <div className="flex text-red-600 p-1 gap-2">
+                  <X />
                   {formState.error}
                 </div>
               )}
 
               {formState.status === "success" && (
-                <div className="bg-green-50 text-green-600 p-3 rounded-md">
+                <div className="flex text-green-600 p-1 gap-2">
+                  <CircleCheckBig />
                   {formState.message}
                 </div>
               )}
