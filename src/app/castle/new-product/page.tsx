@@ -635,11 +635,11 @@ export default function NewProductPage() {
                       <SelectValue placeholder="What will it be?" />
                     </SelectTrigger>
                     <SelectContent>
-                      <SelectItem value="brushes">Brushes</SelectItem>
-                      <SelectItem value="stickers">Stickers</SelectItem>
-                      <SelectItem value="templates">Templates</SelectItem>
-                      <SelectItem value="planners">Planners</SelectItem>
-                      <SelectItem value="freebies">Freebies</SelectItem>
+                      {Object.values(Category).map((category) => (
+                        <SelectItem key={category} value={category}>
+                          {category}
+                        </SelectItem>
+                      ))}
                     </SelectContent>
                   </Select>
                 </div>

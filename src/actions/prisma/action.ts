@@ -21,24 +21,70 @@ export async function updateProduct(data: Partial<Product>) {
   try {
     const { id, tags, images, ...updateData } = data;
 
-    return await prisma.product.update({
+    // Handle base update data
+    const updateOperation: any = {
       where: { id },
       data: {
         ...updateData,
-        ...(tags && {
-          tags: {
-            set: tags.map((tag) => ({ id: tag.id })),
-          },
-        }),
-        ...(images && {
-          images: {
-            set: images.map((image) => ({ id: image.id })),
-          },
-        }),
       },
-    });
-  } finally {
-    await prisma.$disconnect();
+      include: {
+        tags: true,
+        images: true,
+      },
+    };
+
+    // Handle tags if provided
+    if (tags) {
+      updateOperation.data.tags = {
+        set: tags.map((tag) => ({ id: tag.id })),
+      };
+    }
+
+    // Handle images if provided
+    if (images && images.length > 0) {
+      // First, delete any existing images that are not in the new list
+      const existingImageIds = images
+        .filter((img) => img.id)
+        .map((img) => img.id as string);
+
+      // Create a separate transaction to first delete images that are no longer needed
+      if (existingImageIds.length > 0) {
+        await prisma.productImage.deleteMany({
+          where: {
+            productId: id,
+            NOT: {
+              id: {
+                in: existingImageIds,
+              },
+            },
+          },
+        });
+      } else {
+        // If no existing images are being kept, delete all images
+        await prisma.productImage.deleteMany({
+          where: {
+            productId: id,
+          },
+        });
+      }
+
+      // For new images, create them directly
+      const newImages = images.filter((img) => !img.id);
+
+      if (newImages.length > 0) {
+        updateOperation.data.images = {
+          create: newImages.map((img) => ({
+            url: img.url,
+            alt_text: img.alt_text,
+          })),
+        };
+      }
+    }
+
+    return await prisma.product.update(updateOperation);
+  } catch (error) {
+    console.error("Failed to update product:", error);
+    throw error;
   }
 }
 

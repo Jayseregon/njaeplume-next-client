@@ -144,7 +144,7 @@ export function TagInput({ selectedTags, onChange }: TagInputProps) {
           ref={inputRef}
           className="w-full"
           disabled={loading}
-          placeholder="Type to add tags (press Space, Enter or comma to add)"
+          placeholder="Add some tags... (press Space, Enter or comma to add)"
           value={inputValue}
           onChange={(e) => {
             setInputValue(e.target.value);
