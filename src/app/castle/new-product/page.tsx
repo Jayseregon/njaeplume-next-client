@@ -582,8 +582,10 @@ export default function NewProductPage() {
               {/* Product details */}
               <div className="space-y-4">
                 {/* Name field */}
-                <div className="grid gap-2">
-                  <Label htmlFor="name">Name</Label>
+                <div className="flex flex-col gap-2">
+                  <Label className="text-foreground" htmlFor="name">
+                    Name
+                  </Label>
                   <Input
                     required
                     id="name"
@@ -592,22 +594,57 @@ export default function NewProductPage() {
                   />
                 </div>
 
-                {/* Price field */}
-                <div className="grid gap-2">
-                  <Label htmlFor="price">Price</Label>
-                  <Input
-                    required
-                    id="price"
-                    name="price"
-                    placeholder="0.00"
-                    step="0.01"
-                    type="number"
-                  />
+                <div className="grid grid-cols-2 gap-4">
+                  {/* Price field */}
+                  <div className="flex flex-col gap-2">
+                    <Label className="text-foreground" htmlFor="price">
+                      Price
+                    </Label>
+                    <Input
+                      required
+                      id="price"
+                      name="price"
+                      placeholder="0.00"
+                      step="0.01"
+                      type="number"
+                    />
+                  </div>
+
+                  {/* Category field */}
+                  <div className="flex flex-col gap-2">
+                    <Label className="text-foreground" htmlFor="category">
+                      Category
+                    </Label>
+                    <Input
+                      id="category"
+                      name="category"
+                      type="hidden"
+                      value={selectedCategory || ""}
+                    />
+                    <Select
+                      required
+                      value={selectedCategory || ""}
+                      onValueChange={handleCategoryChange}
+                    >
+                      <SelectTrigger id="category">
+                        <SelectValue placeholder="What will it be?" />
+                      </SelectTrigger>
+                      <SelectContent>
+                        {Object.values(Category).map((category) => (
+                          <SelectItem key={category} value={category}>
+                            {category}
+                          </SelectItem>
+                        ))}
+                      </SelectContent>
+                    </Select>
+                  </div>
                 </div>
 
                 {/* Description field */}
-                <div className="grid gap-2">
-                  <Label htmlFor="description">Description</Label>
+                <div className="flex flex-col gap-2">
+                  <Label className="text-foreground" htmlFor="description">
+                    Description
+                  </Label>
                   <Textarea
                     required
                     id="description"
@@ -617,36 +654,11 @@ export default function NewProductPage() {
                   />
                 </div>
 
-                {/* Category field */}
-                <div className="grid gap-2">
-                  <Label htmlFor="category">Category</Label>
-                  <Input
-                    id="category"
-                    name="category"
-                    type="hidden"
-                    value={selectedCategory || ""}
-                  />
-                  <Select
-                    required
-                    value={selectedCategory || ""}
-                    onValueChange={handleCategoryChange}
-                  >
-                    <SelectTrigger id="category">
-                      <SelectValue placeholder="What will it be?" />
-                    </SelectTrigger>
-                    <SelectContent>
-                      {Object.values(Category).map((category) => (
-                        <SelectItem key={category} value={category}>
-                          {category}
-                        </SelectItem>
-                      ))}
-                    </SelectContent>
-                  </Select>
-                </div>
-
                 {/* Tags field */}
-                <div className="grid gap-2">
-                  <Label htmlFor="tags">Tags</Label>
+                <div className="flex flex-col gap-2">
+                  <Label className="text-foreground" htmlFor="tags">
+                    Tags
+                  </Label>
                   <TagInput
                     selectedTags={selectedTags}
                     onChange={handleTagsChange}
@@ -654,8 +666,10 @@ export default function NewProductPage() {
                 </div>
 
                 {/* Zip file upload */}
-                <div className="grid gap-2">
-                  <Label htmlFor="productZip">Zip File</Label>
+                <div className="flex flex-col gap-2">
+                  <Label className="text-foreground" htmlFor="productZip">
+                    Zip File
+                  </Label>
                   <div className="flex gap-2">
                     <Input
                       accept=".zip"
@@ -697,8 +711,10 @@ export default function NewProductPage() {
                 </div>
 
                 {/* Image uploads */}
-                <div className="grid gap-2">
-                  <Label htmlFor="productImages">Images</Label>
+                <div className="flex flex-col gap-2">
+                  <Label className="text-foreground" htmlFor="productImages">
+                    Images
+                  </Label>
                   <div className="flex justify-between gap-2 items-center">
                     <Input
                       multiple

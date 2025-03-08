@@ -49,7 +49,7 @@ interface ImageUploadState {
   progress: number;
   path?: string;
   error?: string;
-  id?: string; // For existing images
+  id?: string;
 }
 
 export const ProductEditDialog = () => {
@@ -94,7 +94,7 @@ export const ProductEditDialog = () => {
             status: "existing" as const,
             progress: 100,
             path: img.url,
-          }))
+          })),
         );
       } else {
         setProductImages([]);
@@ -122,6 +122,7 @@ export const ProductEditDialog = () => {
   const updateSlug = (name: string, category: string) => {
     if (name && category) {
       const newSlug = slugifyProductName(name, category);
+
       setFormData((prev: any) => ({
         ...prev,
         slug: newSlug,
@@ -130,7 +131,7 @@ export const ProductEditDialog = () => {
   };
 
   const handleChange = (
-    e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
+    e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>,
   ) => {
     const { name, value } = e.target;
 
@@ -247,7 +248,7 @@ export const ProductEditDialog = () => {
     status: ImageUploadState["status"],
     progress: number = 0,
     error?: string,
-    path?: string
+    path?: string,
   ) => {
     setProductImages((prev) => {
       const updated = [...prev];
@@ -280,7 +281,7 @@ export const ProductEditDialog = () => {
         if (!result.success) {
           console.error(`Failed to delete image from storage: ${result.error}`);
           toast.error(
-            `The image couldn't be deleted from storage. ${result.error}`
+            `The image couldn't be deleted from storage. ${result.error}`,
           );
 
           return;
@@ -316,7 +317,7 @@ export const ProductEditDialog = () => {
       // Generate upload URL with authentication headers from server
       const urlResult = await generateBunnyUploadUrl(
         formData.name || "product",
-        "product-files"
+        "product-files",
       );
 
       if (
@@ -340,7 +341,7 @@ export const ProductEditDialog = () => {
       xhr.upload.onprogress = (event) => {
         if (event.lengthComputable) {
           const percentComplete = Math.round(
-            (event.loaded / event.total) * 100
+            (event.loaded / event.total) * 100,
           );
 
           setUploadProgress(percentComplete);
@@ -374,7 +375,7 @@ export const ProductEditDialog = () => {
     } catch (error) {
       console.error("Error uploading zip file:", error);
       toast.error(
-        `Upload failed: ${error instanceof Error ? error.message : "Unknown error"}`
+        `Upload failed: ${error instanceof Error ? error.message : "Unknown error"}`,
       );
 
       return false;
@@ -387,13 +388,13 @@ export const ProductEditDialog = () => {
   const uploadImageToBunny = async (
     imageFile: File,
     productName: string,
-    imageIndex: number
+    imageIndex: number,
   ): Promise<boolean> => {
     try {
       // Generate upload URL with authentication headers from server
       const urlResult = await generateBunnyUploadUrl(
         `${productName}-image-${Date.now()}-${imageIndex}`,
-        "product-images"
+        "product-images",
       );
 
       if (
@@ -417,7 +418,7 @@ export const ProductEditDialog = () => {
       xhr.upload.onprogress = (event) => {
         if (event.lengthComputable) {
           const percentComplete = Math.round(
-            (event.loaded / event.total) * 100
+            (event.loaded / event.total) * 100,
           );
 
           updateImageStatus(imageIndex, "uploading", percentComplete);
@@ -434,7 +435,7 @@ export const ProductEditDialog = () => {
               "success",
               100,
               undefined,
-              urlResult.filePath
+              urlResult.filePath,
             );
             resolve(true);
           } else {
@@ -442,7 +443,7 @@ export const ProductEditDialog = () => {
               imageIndex,
               "error",
               0,
-              `Upload failed with status ${xhr.status}`
+              `Upload failed with status ${xhr.status}`,
             );
             reject(new Error(`Upload failed with status ${xhr.status}`));
           }
@@ -453,7 +454,7 @@ export const ProductEditDialog = () => {
             imageIndex,
             "error",
             0,
-            "Network error during upload"
+            "Network error during upload",
           );
           reject(new Error("Upload failed due to network error"));
         };
@@ -493,7 +494,7 @@ export const ProductEditDialog = () => {
         const success = await uploadImageToBunny(
           image.file!,
           formData.name || "product",
-          image.index
+          image.index,
         );
 
         if (!success) {
@@ -516,7 +517,7 @@ export const ProductEditDialog = () => {
   // Get image status indicator
   const getImageStatusIndicator = (
     status: ImageUploadState["status"],
-    progress: number
+    progress: number,
   ) => {
     switch (status) {
       case "existing":
@@ -534,10 +535,7 @@ export const ProductEditDialog = () => {
       case "uploading":
         return (
           <div className="flex items-center gap-2">
-            <Progress
-              className="h-1.5 w-16"
-              value={progress}
-            />
+            <Progress className="h-1.5 w-16" value={progress} />
             <span className="text-xs text-muted-foreground">{progress}%</span>
           </div>
         );
@@ -550,11 +548,7 @@ export const ProductEditDialog = () => {
       case "error":
         return (
           <span className="text-red-600 flex items-center gap-1 text-xs">
-            <X
-              className="h-4 w-4"
-              size={16}
-            />{" "}
-            Failed
+            <X className="h-4 w-4" size={16} /> Failed
           </span>
         );
     }
@@ -573,7 +567,7 @@ export const ProductEditDialog = () => {
 
     // Check if all images are uploaded
     const pendingImages = productImages.filter(
-      (img) => img.status === "pending"
+      (img) => img.status === "pending",
     );
 
     if (pendingImages.length > 0) {
@@ -612,7 +606,7 @@ export const ProductEditDialog = () => {
     } catch (error) {
       console.error("Failed to update product:", error);
       toast.error(
-        `Failed to update product: ${error instanceof Error ? error.message : "Unknown error"}`
+        `Failed to update product: ${error instanceof Error ? error.message : "Unknown error"}`,
       );
     } finally {
       setIsSubmitting(false);
@@ -645,30 +639,29 @@ export const ProductEditDialog = () => {
   if (!selectedProduct) return null;
 
   return (
-    <Dialog
-      open={isDialogOpen}
-      onOpenChange={closeDialog}>
+    <Dialog open={isDialogOpen} onOpenChange={closeDialog}>
       <DialogContent
         aria-describedby={undefined}
-        className="sm:max-w-[800px] max-h-[85vh] flex flex-col">
-        <DialogHeader className="px-6 pt-6">
-          <DialogTitle>Edit Product</DialogTitle>
+        className="sm:max-w-[800px] max-h-[80vh] flex flex-col"
+      >
+        <DialogHeader>
+          <DialogTitle className="text-5xl font-bold mb-5 text-foreground">
+            Edit Product
+          </DialogTitle>
         </DialogHeader>
 
         <div className="overflow-y-auto flex-1 px-6 py-2">
           <form
             className="space-y-4"
             id="edit-product-form"
-            onSubmit={handleSubmit}>
+            onSubmit={handleSubmit}
+          >
             <div className="grid gap-4">
-              <div className="grid grid-cols-4 items-center gap-4">
-                <Label
-                  className="text-right"
-                  htmlFor="name">
+              <div className="flex flex-col gap-2">
+                <Label className="text-foreground" htmlFor="name">
                   Name
                 </Label>
                 <Input
-                  className="col-span-3"
                   id="name"
                   name="name"
                   value={formData.name || ""}
@@ -676,52 +669,62 @@ export const ProductEditDialog = () => {
                 />
               </div>
 
-              <div className="grid grid-cols-4 items-center gap-4">
-                <Label
-                  className="text-right"
-                  htmlFor="price">
-                  Price
+              <div className="grid grid-cols-2 gap-4">
+                <div className="flex flex-col gap-2">
+                  <Label className="text-foreground" htmlFor="price">
+                    Price
+                  </Label>
+                  <Input
+                    className="col-span-3"
+                    id="price"
+                    name="price"
+                    step="0.01"
+                    type="number"
+                    value={formData.price || 0}
+                    onChange={handlePriceChange}
+                  />
+                </div>
+
+                <div className="flex flex-col gap-2">
+                  <Label className="text-foreground" htmlFor="category">
+                    Category
+                  </Label>
+                  <Select
+                    value={formData.category}
+                    onValueChange={handleCategoryChange}
+                  >
+                    <SelectTrigger className="col-span-3">
+                      <SelectValue placeholder="Select category" />
+                    </SelectTrigger>
+                    <SelectContent>
+                      {Object.values(Category).map((category) => (
+                        <SelectItem key={category} value={category}>
+                          {category}
+                        </SelectItem>
+                      ))}
+                    </SelectContent>
+                  </Select>
+                </div>
+              </div>
+
+              {/* Description Field */}
+              <div className="flex flex-col gap-2">
+                <Label className="text-foreground" htmlFor="description">
+                  Description
                 </Label>
-                <Input
+                <Textarea
                   className="col-span-3"
-                  id="price"
-                  name="price"
-                  step="0.01"
-                  type="number"
-                  value={formData.price || 0}
-                  onChange={handlePriceChange}
+                  id="description"
+                  name="description"
+                  rows={5}
+                  value={formData.description || ""}
+                  onChange={handleChange}
                 />
               </div>
 
-              <div className="grid grid-cols-4 items-center gap-4">
-                <Label
-                  className="text-right"
-                  htmlFor="category">
-                  Category
-                </Label>
-                <Select
-                  value={formData.category}
-                  onValueChange={handleCategoryChange}>
-                  <SelectTrigger className="col-span-3">
-                    <SelectValue placeholder="Select category" />
-                  </SelectTrigger>
-                  <SelectContent>
-                    {Object.values(Category).map((category) => (
-                      <SelectItem
-                        key={category}
-                        value={category}>
-                        {category}
-                      </SelectItem>
-                    ))}
-                  </SelectContent>
-                </Select>
-              </div>
-
               {/* Tags Field */}
-              <div className="grid grid-cols-4 items-start gap-4">
-                <Label
-                  className="text-right pt-2"
-                  htmlFor="tags">
+              <div className="flex flex-col gap-2">
+                <Label className="text-foreground" htmlFor="tags">
                   Tags
                 </Label>
                 <div className="col-span-3">
@@ -732,28 +735,9 @@ export const ProductEditDialog = () => {
                 </div>
               </div>
 
-              <div className="grid grid-cols-4 items-center gap-4">
-                <Label
-                  className="text-right"
-                  htmlFor="slug">
-                  Slug
-                </Label>
-                <Input
-                  className="col-span-3"
-                  id="slug"
-                  name="slug"
-                  value={formData.slug || ""}
-                  onChange={handleChange}
-                  readOnly
-                  disabled
-                />
-              </div>
-
               {/* Zip file section */}
-              <div className="grid grid-cols-4 items-start gap-4">
-                <Label
-                  className="text-right pt-2"
-                  htmlFor="zip_file_name">
+              <div className="flex flex-col gap-2">
+                <Label className="text-foreground" htmlFor="zip_file_name">
                   Zip File
                 </Label>
                 <div className="col-span-3 space-y-2">
@@ -764,8 +748,9 @@ export const ProductEditDialog = () => {
                         size="sm"
                         type="button"
                         variant="outline"
-                        onClick={handleRemoveExistingZip}>
-                        <Trash2 className="mr-2 h-4 w-4" /> Replace File
+                        onClick={handleRemoveExistingZip}
+                      >
+                        <Trash2 className="mr-2 h-4 w-4" /> Replace Zip
                       </Button>
                     </div>
                   )}
@@ -784,7 +769,8 @@ export const ProductEditDialog = () => {
                           className="whitespace-nowrap"
                           disabled={isUploadingZip}
                           type="button"
-                          onClick={uploadZipFileToBunny}>
+                          onClick={uploadZipFileToBunny}
+                        >
                           <Upload className="mr-2 h-4 w-4" />
                           Upload Zip
                         </Button>
@@ -798,20 +784,15 @@ export const ProductEditDialog = () => {
                         <span>Uploading...</span>
                         <span>{uploadProgress}%</span>
                       </div>
-                      <Progress
-                        className="h-2"
-                        value={uploadProgress}
-                      />
+                      <Progress className="h-2" value={uploadProgress} />
                     </div>
                   )}
                 </div>
               </div>
 
               {/* Images section */}
-              <div className="grid grid-cols-4 items-start gap-4">
-                <Label
-                  className="text-right pt-2"
-                  htmlFor="productImages">
+              <div className="flex flex-col gap-2">
+                <Label className="text-foreground" htmlFor="productImages">
                   Images
                 </Label>
                 <div className="col-span-3 space-y-3">
@@ -828,7 +809,8 @@ export const ProductEditDialog = () => {
                         className="whitespace-nowrap"
                         disabled={isUploadingImages}
                         type="button"
-                        onClick={uploadAllImages}>
+                        onClick={uploadAllImages}
+                      >
                         <Upload className="mr-2 h-4 w-4" />
                         Upload New Images
                       </Button>
@@ -841,9 +823,7 @@ export const ProductEditDialog = () => {
                       <h3 className="font-medium mb-2">Product Images</h3>
                       <div className="space-y-3">
                         {productImages.map((image, index) => (
-                          <div
-                            key={index}
-                            className="flex items-center gap-3">
+                          <div key={index} className="flex items-center gap-3">
                             <div className="h-16 w-16 rounded-md overflow-hidden">
                               <img
                                 alt={`Preview ${index}`}
@@ -863,14 +843,15 @@ export const ProductEditDialog = () => {
                             <div className="w-24">
                               {getImageStatusIndicator(
                                 image.status,
-                                image.progress
+                                image.progress,
                               )}
                             </div>
                             <Button
                               size="icon"
                               type="button"
                               variant="destructive"
-                              onClick={() => removeImage(index)}>
+                              onClick={() => removeImage(index)}
+                            >
                               <Trash2 />
                             </Button>
                           </div>
@@ -880,32 +861,17 @@ export const ProductEditDialog = () => {
                   )}
                 </div>
               </div>
-
-              <div className="grid grid-cols-4 items-start gap-4">
-                <Label
-                  className="text-right pt-2"
-                  htmlFor="description">
-                  Description
-                </Label>
-                <Textarea
-                  className="col-span-3"
-                  id="description"
-                  name="description"
-                  rows={5}
-                  value={formData.description || ""}
-                  onChange={handleChange}
-                />
-              </div>
             </div>
           </form>
         </div>
 
-        <DialogFooter className="flex justify-between px-6 pb-6 pt-2">
+        <DialogFooter className="flex justify-between">
           <Button
             disabled={isSubmitting}
             type="button"
             variant="destructive"
-            onClick={handleDelete}>
+            onClick={handleDelete}
+          >
             {isSubmitting ? "Deleting..." : "Delete Product"}
           </Button>
           <div>
@@ -913,13 +879,15 @@ export const ProductEditDialog = () => {
               className="mr-2"
               type="button"
               variant="outline"
-              onClick={closeDialog}>
+              onClick={closeDialog}
+            >
               Cancel
             </Button>
             <Button
               disabled={isSubmitting || isUploadingImages || isUploadingZip}
               form="edit-product-form"
-              type="submit">
+              type="submit"
+            >
               {isSubmitting ? "Saving..." : "Save changes"}
             </Button>
           </div>

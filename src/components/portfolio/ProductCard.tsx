@@ -6,7 +6,7 @@ import { Product } from "@/interfaces/Products";
 
 export const ProductCard = ({ product }: { product: Product }) => {
   return (
-    <Card className="rounded-2xl pt-3">
+    <Card className="rounded-2xl pt-3 text-foreground">
       <CardHeader>
         <h3 className="text-xl pb-1 font-bold">{product.name}</h3>
         <p className="italic text-sm pb-2">{product.category}</p>
