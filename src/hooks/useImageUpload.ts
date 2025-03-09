@@ -52,6 +52,9 @@ export function useImageUpload(initialImages: ImageUploadState[] = []) {
         }));
 
         setProductImages((prev) => [...prev, ...newImageStates]);
+        toast.info(
+          `${newImages.length} image(s) added. Don't forget to upload them.`,
+        );
       }
     },
     [],
@@ -121,8 +124,11 @@ export function useImageUpload(initialImages: ImageUploadState[] = []) {
 
             return;
           }
+
+          toast.success("Image deleted successfully");
         } catch (error) {
           console.error("Error deleting image from storage:", error);
+          toast.error("Failed to delete image from storage");
 
           return;
         }
@@ -225,6 +231,9 @@ export function useImageUpload(initialImages: ImageUploadState[] = []) {
         return true;
       } catch (error) {
         console.error("Error uploading image:", error);
+        toast.error(
+          `Failed to upload image: ${error instanceof Error ? error.message : "Unknown error"}`,
+        );
 
         return false;
       }
@@ -244,8 +253,12 @@ export function useImageUpload(initialImages: ImageUploadState[] = []) {
           .filter((img) => img.status === "pending" && img.file);
 
         if (imagesToUpload.length === 0) {
+          toast.info("No pending images to upload");
+
           return true;
         }
+
+        toast.info(`Uploading ${imagesToUpload.length} image(s)...`);
 
         // Upload each image sequentially
         for (const image of imagesToUpload) {
@@ -263,14 +276,20 @@ export function useImageUpload(initialImages: ImageUploadState[] = []) {
               0,
               "Failed to upload image",
             );
+            toast.error(`Failed to upload image ${image.index + 1}`);
 
             return false;
           }
         }
 
+        toast.success("All images uploaded successfully");
+
         return true;
       } catch (error) {
         console.error("Error uploading images:", error);
+        toast.error(
+          `Error uploading images: ${error instanceof Error ? error.message : "Unknown error"}`,
+        );
 
         return false;
       } finally {

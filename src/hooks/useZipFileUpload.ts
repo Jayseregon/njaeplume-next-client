@@ -39,6 +39,8 @@ export function useZipFileUpload(initialZipPath: string | null = null) {
         setIsUploadingZip(true);
         setUploadProgress(0);
 
+        toast.info("Uploading zip file...");
+
         // Generate upload URL with authentication headers from server
         const urlResult = await generateBunnyUploadUrl(
           productName || "product",
@@ -95,6 +97,8 @@ export function useZipFileUpload(initialZipPath: string | null = null) {
 
         // Verify upload
         await verifyBunnyUpload(urlResult.filePath!);
+
+        toast.success("Zip file uploaded successfully");
 
         return true;
       } catch (error) {

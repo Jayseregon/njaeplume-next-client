@@ -1,5 +1,6 @@
 import React from "react";
 import { Upload, Trash2 } from "lucide-react";
+import { toast } from "sonner";
 
 import { Button } from "@/src/components/ui/button";
 import { Input } from "@/src/components/ui/input";
@@ -30,6 +31,20 @@ export const ProductImageUploader: React.FC<ProductImageUploaderProps> = ({
     (img) => img.status === "pending",
   );
 
+  const handleUploadAllClick = async () => {
+    if (!hasPendingImages) {
+      toast.info("No pending images to upload");
+
+      return;
+    }
+
+    await uploadAllImages(productName);
+  };
+
+  const handleRemoveImageClick = async (index: number) => {
+    await removeImage(index);
+  };
+
   return (
     <div className="flex flex-col gap-2">
       <Label className="text-foreground" htmlFor="productImages">
@@ -49,7 +64,7 @@ export const ProductImageUploader: React.FC<ProductImageUploaderProps> = ({
               className="whitespace-nowrap"
               disabled={isUploadingImages}
               type="button"
-              onClick={() => uploadAllImages(productName)}
+              onClick={handleUploadAllClick}
             >
               <Upload className="mr-2 h-4 w-4" />
               Upload New Images
@@ -90,7 +105,7 @@ export const ProductImageUploader: React.FC<ProductImageUploaderProps> = ({
                     size="icon"
                     type="button"
                     variant="destructive"
-                    onClick={() => removeImage(index)}
+                    onClick={() => handleRemoveImageClick(index)}
                   >
                     <Trash2 />
                   </Button>

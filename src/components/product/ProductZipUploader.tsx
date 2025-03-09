@@ -1,5 +1,6 @@
 import React from "react";
 import { Upload, Trash2, CircleCheckBig } from "lucide-react";
+import { toast } from "sonner";
 
 import { Button } from "@/src/components/ui/button";
 import { Input } from "@/src/components/ui/input";
@@ -26,6 +27,22 @@ export const ProductZipUploader: React.FC<ProductZipUploaderProps> = ({
     uploadZipFileToBunny,
     handleRemoveExistingZip,
   } = zipUploadHook;
+
+  const handleZipSelection = (e: React.ChangeEvent<HTMLInputElement>) => {
+    if (e.target.files && e.target.files[0]) {
+      handleZipUpload(e);
+      toast.info("Zip file selected. Click 'Upload Zip' to upload.");
+    }
+  };
+
+  const handleUploadClick = async () => {
+    if (!productZip) {
+      toast.error("Please select a zip file first");
+
+      return;
+    }
+    await uploadZipFileToBunny(productName);
+  };
 
   return (
     <div className="flex flex-col gap-2">
@@ -54,14 +71,14 @@ export const ProductZipUploader: React.FC<ProductZipUploaderProps> = ({
               disabled={isUploadingZip || !!uploadedZipPath}
               id="productZip"
               type="file"
-              onChange={handleZipUpload}
+              onChange={handleZipSelection}
             />
             {productZip && !uploadedZipPath && (
               <Button
                 className="whitespace-nowrap"
                 disabled={isUploadingZip}
                 type="button"
-                onClick={() => uploadZipFileToBunny(productName)}
+                onClick={handleUploadClick}
               >
                 <Upload className="mr-2 h-4 w-4" />
                 Upload Zip

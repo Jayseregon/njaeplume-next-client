@@ -1,10 +1,4 @@
-import { Category } from "@prisma/client";
-
-export interface Tag {
-  id: string;
-  name: string;
-  slug: string;
-}
+import { Category, Tag } from "@prisma/client";
 
 export interface Product {
   id: string;

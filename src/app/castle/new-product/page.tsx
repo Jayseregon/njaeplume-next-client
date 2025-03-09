@@ -8,7 +8,7 @@ import {
   useEffect,
 } from "react";
 import { Category, Tag } from "@prisma/client";
-import { CircleCheckBig, X } from "lucide-react";
+import { toast } from "sonner";
 
 import { PageTitle } from "@/src/components/root/PageTitle";
 import ErrorBoundary from "@/src/components/root/ErrorBoundary";
@@ -54,6 +54,9 @@ export default function NewProductPage() {
       // Set flag to prevent multiple resets
       setFormReset(true);
 
+      // Show success toast
+      toast.success(formState.message || "Product created successfully");
+
       // Reset hooks
       imageUploadHook.resetImages();
       zipUploadHook.resetZip();
@@ -66,11 +69,21 @@ export default function NewProductPage() {
       if (formRef.current) {
         formRef.current.reset();
       }
+    } else if (formState.status === "error" && !formReset) {
+      // Show error toast
+      toast.error(formState.error || "Failed to create product");
     } else if (formState.status !== "success" && formReset) {
       // Reset the flag when form status changes from success
       setFormReset(false);
     }
-  }, [formState.status, formReset, imageUploadHook, zipUploadHook]);
+  }, [
+    formState.status,
+    formState.message,
+    formState.error,
+    formReset,
+    imageUploadHook,
+    zipUploadHook,
+  ]);
 
   // Handle form submission with file paths
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
@@ -78,7 +91,7 @@ export default function NewProductPage() {
 
     // Client-side validation
     if (imageUploadHook.productImages.length === 0) {
-      alert("Please upload at least one image");
+      toast.error("Please upload at least one image");
 
       return;
     }
@@ -101,6 +114,7 @@ export default function NewProductPage() {
         ) as HTMLInputElement;
         const productName = nameInput?.value || "product";
 
+        toast.info("Uploading images...");
         await imageUploadHook.uploadAllImages(productName);
 
         return; // Return and wait for uploads to complete
@@ -118,6 +132,7 @@ export default function NewProductPage() {
 
       // If zip is not uploaded yet, upload it directly to Bunny first
       if (!zipUploadHook.uploadedZipPath && zipUploadHook.productZip) {
+        toast.info("Uploading zip file...");
         const uploadSuccessful =
           await zipUploadHook.uploadZipFileToBunny(productName);
 
@@ -126,7 +141,7 @@ export default function NewProductPage() {
 
       // If we don't have a zip path at this point, something went wrong
       if (!zipUploadHook.uploadedZipPath) {
-        alert("Please upload a zip file");
+        toast.error("Please upload a zip file");
 
         return;
       }
@@ -142,13 +157,15 @@ export default function NewProductPage() {
 
       formData.set("imageData", JSON.stringify(imageData));
 
+      toast.info("Creating product...");
+
       // Submit form within a transition to avoid blocking UI
       startTransition(() => {
         formAction(formData);
       });
     } catch (error) {
       console.error("Form submission error:", error);
-      alert(
+      toast.error(
         `Form submission failed: ${error instanceof Error ? error.message : "Unknown error"}`,
       );
     }
@@ -260,21 +277,6 @@ export default function NewProductPage() {
                   productName={getProductNameFromForm()}
                 />
               </div>
-
-              {/* Form status messages */}
-              {formState.status === "error" && (
-                <div className="flex text-red-600 p-1 gap-2">
-                  <X />
-                  {formState.error}
-                </div>
-              )}
-
-              {formState.status === "success" && (
-                <div className="flex text-green-600 p-1 gap-2">
-                  <CircleCheckBig />
-                  {formState.message}
-                </div>
-              )}
 
               {/* Submit button */}
               <Button
