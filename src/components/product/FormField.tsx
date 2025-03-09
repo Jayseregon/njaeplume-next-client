@@ -39,6 +39,7 @@ type CommonProps = {
   error?: string;
   required?: boolean;
   containerClassName?: string;
+  disabled?: boolean;
 };
 
 type FormFieldProps = CommonProps &
@@ -61,6 +62,7 @@ export function FormField({
   required = false,
   containerClassName = "flex flex-col gap-2",
   inputProps = {},
+  disabled = false,
 }: FormFieldProps) {
   return (
     <div className={containerClassName}>
@@ -78,6 +80,7 @@ export function FormField({
         inputType === "password") && (
         <Input
           className={className}
+          disabled={disabled}
           id={id}
           name={name}
           required={required}
@@ -89,6 +92,7 @@ export function FormField({
       {inputType === "textarea" && (
         <Textarea
           className={className}
+          disabled={disabled}
           id={id}
           name={name}
           required={required}
@@ -98,6 +102,7 @@ export function FormField({
 
       {inputType === "select" && (
         <Select
+          disabled={disabled}
           required={required}
           value={(inputProps as SelectProps).value}
           onValueChange={(inputProps as SelectProps).onValueChange}

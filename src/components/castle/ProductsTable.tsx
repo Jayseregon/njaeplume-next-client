@@ -1,6 +1,16 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
+import {
+  ColumnDef,
+  flexRender,
+  getCoreRowModel,
+  useReactTable,
+  getSortedRowModel,
+  SortingState,
+  getFilteredRowModel,
+} from "@tanstack/react-table";
+import { Search } from "lucide-react";
 
 import {
   Table,
@@ -14,12 +24,19 @@ import { Badge } from "@/components/ui/badge";
 import { Product } from "@/interfaces/Products";
 import { formatDate, getRandomSubset } from "@/src/lib/utils";
 import { useProductStore } from "@/src/stores/productStore";
+import { Input } from "@/components/ui/input";
 
 export const ProductsTable = ({ products }: { products: Product[] }) => {
   // Store randomized tags for each product
   const [randomizedProductTags, setRandomizedProductTags] = useState<
     Record<string | number, any[]>
   >({});
+
+  // Add state for sorting and filtering with default sort by name
+  const [sorting, setSorting] = useState<SortingState>([
+    { id: "createdAt", desc: true },
+  ]);
+  const [globalFilter, setGlobalFilter] = useState("");
 
   const { setSelectedProduct, openDialog } = useProductStore();
 
@@ -41,69 +58,180 @@ export const ProductsTable = ({ products }: { products: Product[] }) => {
     openDialog();
   };
 
+  // Define columns for TanStack Table
+  const columns = useMemo<ColumnDef<Product>[]>(
+    () => [
+      {
+        accessorKey: "name",
+        header: "Name",
+      },
+      {
+        accessorKey: "price",
+        header: "Price",
+        cell: ({ row }) => `$${(row.original.price || 0).toFixed(2)}`,
+      },
+      {
+        accessorKey: "category",
+        header: "Category",
+      },
+      {
+        accessorKey: "description",
+        header: "Description",
+        cell: ({ row }) => (
+          <div className="overflow-hidden text-ellipsis max-w-sm">
+            {row.original.description}
+          </div>
+        ),
+      },
+      {
+        accessorKey: "createdAt",
+        header: "Created",
+        cell: ({ row }) => formatDate(row.original.createdAt),
+      },
+
+      {
+        accessorKey: "zip_file_name",
+        header: "Zipfile",
+      },
+      {
+        accessorKey: "slug",
+        header: "Slug",
+      },
+      {
+        accessorKey: "tags",
+        header: "Tags",
+        enableSorting: false,
+        cell: ({ row }) => {
+          const product = row.original;
+
+          return (
+            <div className="overflow-hidden text-ellipsis max-w-sm">
+              {product.tags && product.tags.length > 0 && (
+                <div className="flex flex-row gap-0.5">
+                  {(product.id && randomizedProductTags[product.id]
+                    ? randomizedProductTags[product.id]
+                    : product.tags.slice(0, 5)
+                  ).map((tag) => (
+                    <Badge key={tag.id} variant="primary">
+                      {tag.name}
+                    </Badge>
+                  ))}
+                </div>
+              )}
+            </div>
+          );
+        },
+      },
+      {
+        accessorKey: "updatedAt",
+        header: "Updated",
+        cell: ({ row }) => formatDate(row.original.updatedAt),
+      },
+      {
+        accessorKey: "id",
+        header: "cuid",
+      },
+    ],
+    [randomizedProductTags],
+  );
+
+  // Set up the table instance
+  const table = useReactTable({
+    data: products,
+    columns,
+    state: {
+      sorting,
+      globalFilter,
+    },
+    onSortingChange: setSorting,
+    onGlobalFilterChange: setGlobalFilter,
+    getCoreRowModel: getCoreRowModel(),
+    getSortedRowModel: getSortedRowModel(),
+    getFilteredRowModel: getFilteredRowModel(),
+  });
+
   return (
-    <div className="rounded-md border">
-      <Table className="w-full mx-auto">
-        <TableHeader>
-          <TableRow>
-            <TableHead className="text-center">ID</TableHead>
-            <TableHead className="text-center">Name</TableHead>
-            <TableHead className="text-center">Price</TableHead>
-            <TableHead className="text-center">Category</TableHead>
-            <TableHead className="text-center">Description</TableHead>
-            <TableHead className="text-center">zipfile</TableHead>
-            <TableHead className="text-center">slug</TableHead>
-            <TableHead className="text-center">tags</TableHead>
-            <TableHead className="text-center">Created</TableHead>
-            <TableHead className="text-center">Updated</TableHead>
-          </TableRow>
-        </TableHeader>
-        <TableBody>
-          {products.map((product) => (
-            <TableRow
-              key={product.id}
-              className="text-start cursor-pointer hover:bg-neutral-50 dark:hover:bg-neutral-900"
-              onClick={() => handleRowClick(product)}
-            >
-              <TableCell className="font-medium">{product.id}</TableCell>
+    <div className="space-y-4">
+      {/* Search input */}
+      <div className="relative">
+        <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-muted-foreground h-4 w-4" />
+        <Input
+          className="pl-10 pr-10 w-full md:max-w-sm"
+          placeholder="Search products..."
+          value={globalFilter}
+          onChange={(e) => setGlobalFilter(e.target.value)}
+        />
+      </div>
 
-              <TableCell>{product.name}</TableCell>
-              <TableCell>{`$${(product.price || 0).toFixed(2)}`}</TableCell>
-              <TableCell>{product.category}</TableCell>
-
-              <TableCell className="overflow-hidden text-ellipsis max-w-sm">
-                {product.description}
-              </TableCell>
-              <TableCell>{product.zip_file_name}</TableCell>
-              <TableCell>{product.slug}</TableCell>
-              <TableCell className="overflow-hidden text-ellipsis max-w-sm">
-                {product.tags && product.tags.length > 0 && (
-                  <div className="flex flex-row gap-0.5">
-                    {(product.id && randomizedProductTags[product.id]
-                      ? randomizedProductTags[product.id]
-                      : product.tags.slice(0, 5)
-                    ).map((tag) => (
-                      <Badge key={tag.id} variant="primary">
-                        {tag.name}
-                      </Badge>
-                    ))}
-                  </div>
-                )}
-              </TableCell>
-
-              <TableCell>{formatDate(product.createdAt)}</TableCell>
-              <TableCell>{formatDate(product.updatedAt)}</TableCell>
-            </TableRow>
-          ))}
-          {products.length === 0 && (
-            <TableRow className="text-center">
-              <TableCell className="text-center py-6" colSpan={10}>
-                No products found
-              </TableCell>
-            </TableRow>
-          )}
-        </TableBody>
-      </Table>
+      {/* Table */}
+      <div className="rounded-md border">
+        <Table className="w-full mx-auto">
+          <TableHeader>
+            {table.getHeaderGroups().map((headerGroup) => (
+              <TableRow key={headerGroup.id}>
+                {headerGroup.headers.map((header) => (
+                  <TableHead
+                    key={header.id}
+                    className="text-center"
+                    style={{
+                      cursor: header.column.getCanSort()
+                        ? "pointer"
+                        : "default",
+                    }}
+                    onClick={header.column.getToggleSortingHandler()}
+                  >
+                    <div className="inline-flex items-center">
+                      {header.isPlaceholder
+                        ? null
+                        : flexRender(
+                            header.column.columnDef.header,
+                            header.getContext(),
+                          )}
+                      {header.column.getCanSort() && (
+                        <span className="ml-1">
+                          {{
+                            asc: "↑",
+                            desc: "↓",
+                          }[header.column.getIsSorted() as string] ?? ""}
+                        </span>
+                      )}
+                    </div>
+                  </TableHead>
+                ))}
+              </TableRow>
+            ))}
+          </TableHeader>
+          <TableBody>
+            {table.getRowModel().rows.length > 0 ? (
+              table.getRowModel().rows.map((row) => (
+                <TableRow
+                  key={row.id}
+                  className="text-start cursor-pointer hover:bg-neutral-50 dark:hover:bg-neutral-900"
+                  onClick={() => handleRowClick(row.original)}
+                >
+                  {row.getVisibleCells().map((cell) => (
+                    <TableCell key={cell.id}>
+                      {flexRender(
+                        cell.column.columnDef.cell,
+                        cell.getContext(),
+                      )}
+                    </TableCell>
+                  ))}
+                </TableRow>
+              ))
+            ) : (
+              <TableRow className="text-center">
+                <TableCell
+                  className="text-center py-6"
+                  colSpan={columns.length}
+                >
+                  No products found
+                </TableCell>
+              </TableRow>
+            )}
+          </TableBody>
+        </Table>
+      </div>
     </div>
   );
 };

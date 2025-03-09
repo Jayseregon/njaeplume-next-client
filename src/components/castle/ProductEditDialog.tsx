@@ -223,17 +223,33 @@ export const ProductEditDialog = () => {
             onSubmit={handleSubmit}
           >
             <div className="grid gap-4">
-              {/* Name field */}
-              <FormField
-                id="name"
-                inputProps={{
-                  value: formData.name || "",
-                  onChange: handleChange,
-                }}
-                inputType="text"
-                label="Name"
-                name="name"
-              />
+              <div className="grid grid-cols-2 gap-4">
+                {/* Name field */}
+                <FormField
+                  id="name"
+                  inputProps={{
+                    value: formData.name || "",
+                    onChange: handleChange,
+                  }}
+                  inputType="text"
+                  label="Name"
+                  name="name"
+                />
+
+                {/* id field */}
+                <FormField
+                  className="col-span-1"
+                  disabled={true}
+                  id="id"
+                  inputProps={{
+                    value: formData.id || "",
+                    onChange: handleChange,
+                  }}
+                  inputType="text"
+                  label="ID"
+                  name="id"
+                />
+              </div>
 
               <div className="grid grid-cols-2 gap-4">
                 {/* Price field */}
