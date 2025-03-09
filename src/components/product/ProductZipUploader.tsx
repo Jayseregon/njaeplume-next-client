@@ -11,11 +11,13 @@ import { useZipFileUpload } from "@/src/hooks/useZipFileUpload";
 interface ProductZipUploaderProps {
   zipUploadHook: ReturnType<typeof useZipFileUpload>;
   productName: string;
+  category: string;
 }
 
 export const ProductZipUploader: React.FC<ProductZipUploaderProps> = ({
   zipUploadHook,
   productName,
+  category,
 }) => {
   const {
     productZip,
@@ -41,7 +43,7 @@ export const ProductZipUploader: React.FC<ProductZipUploaderProps> = ({
 
       return;
     }
-    await uploadZipFileToBunny(productName);
+    await uploadZipFileToBunny(productName, category);
   };
 
   return (

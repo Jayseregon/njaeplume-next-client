@@ -151,12 +151,14 @@ export function useImageUpload(initialImages: ImageUploadState[] = []) {
       imageFile: File,
       productName: string,
       imageIndex: number,
+      category: string,
     ): Promise<boolean> => {
       try {
         // Generate upload URL with authentication headers from server
         const urlResult = await generateBunnyUploadUrl(
-          `${productName}-image-${Date.now()}-${imageIndex}`,
+          `${productName}-${imageIndex}`,
           "product-images",
+          category,
         );
 
         if (
@@ -243,7 +245,7 @@ export function useImageUpload(initialImages: ImageUploadState[] = []) {
 
   // Upload all pending images
   const uploadAllImages = useCallback(
-    async (productName: string) => {
+    async (productName: string, category: string) => {
       setIsUploadingImages(true);
 
       try {
@@ -267,6 +269,7 @@ export function useImageUpload(initialImages: ImageUploadState[] = []) {
             image.file!,
             productName || "product",
             image.index,
+            category,
           );
 
           if (!success) {

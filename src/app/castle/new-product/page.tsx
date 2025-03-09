@@ -115,7 +115,10 @@ export default function NewProductPage() {
         const productName = nameInput?.value || "product";
 
         toast.info("Uploading images...");
-        await imageUploadHook.uploadAllImages(productName);
+        await imageUploadHook.uploadAllImages(
+          productName,
+          getProductCategory(),
+        );
 
         return; // Return and wait for uploads to complete
       } else {
@@ -133,8 +136,10 @@ export default function NewProductPage() {
       // If zip is not uploaded yet, upload it directly to Bunny first
       if (!zipUploadHook.uploadedZipPath && zipUploadHook.productZip) {
         toast.info("Uploading zip file...");
-        const uploadSuccessful =
-          await zipUploadHook.uploadZipFileToBunny(productName);
+        const uploadSuccessful = await zipUploadHook.uploadZipFileToBunny(
+          productName,
+          getProductCategory(),
+        );
 
         if (!uploadSuccessful) return;
       }
@@ -198,6 +203,11 @@ export default function NewProductPage() {
     ) as HTMLInputElement;
 
     return nameInput?.value || "product";
+  };
+
+  // Get category from form or selected state
+  const getProductCategory = (): string => {
+    return selectedCategory || "uncategorized";
   };
 
   return (
@@ -267,12 +277,14 @@ export default function NewProductPage() {
 
                 {/* Zip file upload section using our component */}
                 <ProductZipUploader
+                  category={getProductCategory()}
                   productName={getProductNameFromForm()}
                   zipUploadHook={zipUploadHook}
                 />
 
                 {/* Image uploads using our component */}
                 <ProductImageUploader
+                  category={getProductCategory()}
                   imageUploadHook={imageUploadHook}
                   productName={getProductNameFromForm()}
                 />

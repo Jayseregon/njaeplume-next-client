@@ -28,7 +28,7 @@ export function useZipFileUpload(initialZipPath: string | null = null) {
 
   // Upload zip file to Bunny
   const uploadZipFileToBunny = useCallback(
-    async (productName: string): Promise<boolean> => {
+    async (productName: string, category: string): Promise<boolean> => {
       if (!productZip) {
         toast.error("Please select a zip file first");
 
@@ -43,8 +43,9 @@ export function useZipFileUpload(initialZipPath: string | null = null) {
 
         // Generate upload URL with authentication headers from server
         const urlResult = await generateBunnyUploadUrl(
-          productName || "product",
+          productName,
           "product-files",
+          category,
         );
 
         if (

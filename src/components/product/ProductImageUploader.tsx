@@ -11,11 +11,13 @@ import { useImageUpload } from "@/src/hooks/useImageUpload";
 interface ProductImageUploaderProps {
   imageUploadHook: ReturnType<typeof useImageUpload>;
   productName: string;
+  category: string;
 }
 
 export const ProductImageUploader: React.FC<ProductImageUploaderProps> = ({
   imageUploadHook,
   productName,
+  category,
 }) => {
   const {
     productImages,
@@ -38,7 +40,7 @@ export const ProductImageUploader: React.FC<ProductImageUploaderProps> = ({
       return;
     }
 
-    await uploadAllImages(productName);
+    await uploadAllImages(productName, category);
   };
 
   const handleRemoveImageClick = async (index: number) => {

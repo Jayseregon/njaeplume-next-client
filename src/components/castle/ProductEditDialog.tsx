@@ -144,7 +144,8 @@ export const ProductEditDialog = () => {
     if (pendingImages.length > 0) {
       toast.info("Uploading pending images first...");
       const success = await imageUploadHook.uploadAllImages(
-        formData.name || "product",
+        formData.name,
+        getProductCategory(),
       );
 
       if (!success) {
@@ -200,6 +201,11 @@ export const ProductEditDialog = () => {
     } finally {
       setIsSubmitting(false);
     }
+  };
+
+  // Helper function to get current category or fallback
+  const getProductCategory = (): string => {
+    return formData.category || "uncategorized";
   };
 
   if (!selectedProduct) return null;
@@ -303,11 +309,13 @@ export const ProductEditDialog = () => {
 
               {/* Rest of the form remains unchanged */}
               <ProductZipUploader
+                category={getProductCategory()}
                 productName={formData.name || "product"}
                 zipUploadHook={zipUploadHook}
               />
 
               <ProductImageUploader
+                category={getProductCategory()}
                 imageUploadHook={imageUploadHook}
                 productName={formData.name || "product"}
               />

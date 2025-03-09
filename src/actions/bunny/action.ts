@@ -201,6 +201,7 @@ export async function deleteProductWithFiles(
 export async function generateBunnyUploadUrl(
   fileName: string,
   folder: string,
+  category: string,
 ): Promise<GenerateUploadUrlResult> {
   try {
     const storageZone = process.env.BUNNY_PUBLIC_ASSETS_STORAGE_ZONE;
@@ -214,7 +215,7 @@ export async function generateBunnyUploadUrl(
     const sanitizedFileName = getProductZipFileName(fileName);
 
     // Construct the path according to Bunny.net documentation
-    const filePath = `${folder}/${sanitizedFileName}`;
+    const filePath = `${folder}/${category}/${sanitizedFileName}`;
     const baseUploadUrl = `https://storage.bunnycdn.com/${storageZone}/${filePath}`;
 
     // Create expiration time (15 minutes from now)

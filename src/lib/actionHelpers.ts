@@ -36,7 +36,7 @@ export async function verifyRecaptcha(
 export function getProductZipFileName(productName: string): string {
   const sanitizedName = sanitizeFileName(productName);
 
-  return `${sanitizedName}-${Date.now()}.zip`;
+  return `${sanitizedName}.zip`;
 }
 
 /**
