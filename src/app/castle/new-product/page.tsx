@@ -50,10 +50,8 @@ export default function NewProductPage() {
 
   // Reset form and state after successful submission
   useEffect(() => {
+    // If submission was successful and form hasn't been reset yet
     if (formState.status === "success" && !formReset) {
-      // Set flag to prevent multiple resets
-      setFormReset(true);
-
       // Show success toast
       toast.success(formState.message || "Product created successfully");
 
@@ -69,12 +67,12 @@ export default function NewProductPage() {
       if (formRef.current) {
         formRef.current.reset();
       }
+
+      // Set flag to prevent multiple resets
+      setFormReset(true);
     } else if (formState.status === "error" && !formReset) {
       // Show error toast
       toast.error(formState.error || "Failed to create product");
-    } else if (formState.status !== "success" && formReset) {
-      // Reset the flag when form status changes from success
-      setFormReset(false);
     }
   }, [
     formState.status,
@@ -84,6 +82,14 @@ export default function NewProductPage() {
     imageUploadHook,
     zipUploadHook,
   ]);
+
+  // Reset the formReset flag when a new submission starts or completes
+  useEffect(() => {
+    if (isPending) {
+      // When a submission starts, we should prepare for the next reset cycle
+      setFormReset(false);
+    }
+  }, [isPending]);
 
   // Handle form submission with file paths
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
@@ -161,6 +167,9 @@ export default function NewProductPage() {
       const imageData = imageUploadHook.prepareImageDataForSubmission();
 
       formData.set("imageData", JSON.stringify(imageData));
+
+      // Clear formReset flag before submitting to ensure proper reset after submission
+      setFormReset(false);
 
       toast.info("Creating product...");
 
