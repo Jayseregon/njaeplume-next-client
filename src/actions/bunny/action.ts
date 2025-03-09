@@ -5,8 +5,27 @@ import { Category, PrismaClient } from "@prisma/client";
 import { ProductFormState } from "@/src/interfaces/Products";
 import { GenerateUploadUrlResult } from "@/src/interfaces/Products";
 import { getProductZipFileName } from "@/src/lib/actionHelpers";
+import { createProduct, deleteProduct } from "@/src/actions/prisma/action";
 
-import { createProduct, deleteProduct } from "../prisma/action";
+// Function to determine which storage configuration to use based on file path or folder
+function getBunnyStorageConfig(path: string): {
+  storageZone: string | undefined;
+  accessKey: string | undefined;
+} {
+  // If the path contains "product-images", use public assets config
+  if (path.includes("product-images")) {
+    return {
+      storageZone: process.env.BUNNY_PUBLIC_ASSETS_STORAGE_ZONE,
+      accessKey: process.env.BUNNY_PUBLIC_ASSETS_PWD,
+    };
+  }
+
+  // Otherwise, use download config for zip files
+  return {
+    storageZone: process.env.BUNNY_DOWNLOAD_STORAGE_ZONE,
+    accessKey: process.env.BUNNY_DOWNLOAD_PWD,
+  };
+}
 
 // Function to delete a file from Bunny.net storage
 export async function deleteFileFromBunny(
@@ -17,9 +36,8 @@ export async function deleteFileFromBunny(
       throw new Error("Missing file path");
     }
 
-    // Get storage configuration
-    const storageZone = process.env.BUNNY_PUBLIC_ASSETS_STORAGE_ZONE;
-    const accessKey = process.env.BUNNY_PUBLIC_ASSETS_PWD;
+    // Get storage configuration based on file path
+    const { storageZone, accessKey } = getBunnyStorageConfig(path);
 
     if (!storageZone || !accessKey) {
       throw new Error("Missing Bunny.net configuration");
@@ -204,8 +222,8 @@ export async function generateBunnyUploadUrl(
   category: string,
 ): Promise<GenerateUploadUrlResult> {
   try {
-    const storageZone = process.env.BUNNY_PUBLIC_ASSETS_STORAGE_ZONE;
-    const accessKey = process.env.BUNNY_PUBLIC_ASSETS_PWD;
+    // Reuse the storage configuration function
+    const { storageZone, accessKey } = getBunnyStorageConfig(folder);
 
     if (!storageZone || !accessKey) {
       throw new Error("Missing Bunny.net configuration");
