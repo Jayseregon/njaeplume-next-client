@@ -1,7 +1,7 @@
 "use client";
 
 import { useMemo, useState } from "react";
-import { ChevronDown, Search } from "lucide-react";
+import { ArrowDown10, ArrowUp01, ChevronDown, Search } from "lucide-react";
 import { useRouter } from "next/navigation";
 import { toast } from "sonner";
 import {
@@ -208,8 +208,8 @@ export const UsersTable = ({ users }: { users: SerializableUser[] }) => {
                       {header.column.getCanSort() && (
                         <span className="ml-1">
                           {{
-                            asc: "↑",
-                            desc: "↓",
+                            asc: <ArrowUp01 size={16} />,
+                            desc: <ArrowDown10 size={16} />,
                           }[header.column.getIsSorted() as string] ?? ""}
                         </span>
                       )}

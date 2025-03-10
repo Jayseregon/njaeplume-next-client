@@ -10,7 +10,8 @@ import {
   SortingState,
   getFilteredRowModel,
 } from "@tanstack/react-table";
-import { Search } from "lucide-react";
+import { ArrowDown10, ArrowUp01, CloudDownload, Search } from "lucide-react";
+import { toast } from "sonner";
 
 import {
   Table,
@@ -25,11 +26,19 @@ import { Product } from "@/interfaces/Products";
 import { formatDate, getRandomSubset } from "@/src/lib/utils";
 import { useProductStore } from "@/src/stores/productStore";
 import { Input } from "@/components/ui/input";
+import { Button } from "@/components/ui/button";
+import { generateBunnySignedUrl } from "@/src/actions/bunny/action";
+import { SimpleSpinner } from "@/components/root/SimpleSpinner";
 
 export const ProductsTable = ({ products }: { products: Product[] }) => {
   // Store randomized tags for each product
   const [randomizedProductTags, setRandomizedProductTags] = useState<
     Record<string | number, any[]>
+  >({});
+
+  // Store loading state for downloads
+  const [loadingDownloads, setLoadingDownloads] = useState<
+    Record<string, boolean>
   >({});
 
   // Add state for sorting and filtering with default sort by name
@@ -56,6 +65,46 @@ export const ProductsTable = ({ products }: { products: Product[] }) => {
   const handleRowClick = (product: Product) => {
     setSelectedProduct(product);
     openDialog();
+  };
+
+  // Function to handle downloads
+  const handleDownload = async (e: React.MouseEvent, product: Product) => {
+    e.stopPropagation(); // Prevent row click from triggering
+
+    try {
+      setLoadingDownloads((prev) => ({ ...prev, [product.id]: true }));
+
+      // Generate a signed URL that expires in 5 minutes (default)
+      const response = await generateBunnySignedUrl(product.zip_file_name);
+
+      if (!response.success || !response.url) {
+        throw new Error(response.error || "Failed to generate download link");
+      }
+
+      // Create a temporary anchor element for download
+      const downloadLink = document.createElement("a");
+
+      downloadLink.href = response.url;
+
+      // Extract filename from zip_file_name
+      const fileName =
+        product.zip_file_name.split("/").pop() || `${product.slug}.zip`;
+
+      downloadLink.download = fileName; // Force download instead of navigation
+
+      // Trigger click to start download
+      document.body.appendChild(downloadLink);
+      downloadLink.click();
+      document.body.removeChild(downloadLink);
+    } catch (error) {
+      console.error("Download error:", error);
+      toast.error("Download Error", {
+        description:
+          error instanceof Error ? error.message : "Failed to start download",
+      });
+    } finally {
+      setLoadingDownloads((prev) => ({ ...prev, [product.id]: false }));
+    }
   };
 
   // Define columns for TanStack Table
@@ -131,8 +180,26 @@ export const ProductsTable = ({ products }: { products: Product[] }) => {
         accessorKey: "id",
         header: "cuid",
       },
+      {
+        id: "actions",
+        header: "Actions",
+        cell: ({ row }) => (
+          <Button
+            disabled={loadingDownloads[row.original.id]}
+            size="xs"
+            variant="form"
+            onClick={(e) => handleDownload(e, row.original)}
+          >
+            {loadingDownloads[row.original.id] ? (
+              <SimpleSpinner />
+            ) : (
+              <CloudDownload size={16} />
+            )}
+          </Button>
+        ),
+      },
     ],
-    [randomizedProductTags],
+    [randomizedProductTags, loadingDownloads],
   );
 
   // Set up the table instance
@@ -190,8 +257,8 @@ export const ProductsTable = ({ products }: { products: Product[] }) => {
                       {header.column.getCanSort() && (
                         <span className="ml-1">
                           {{
-                            asc: "↑",
-                            desc: "↓",
+                            asc: <ArrowUp01 size={16} />,
+                            desc: <ArrowDown10 size={16} />,
                           }[header.column.getIsSorted() as string] ?? ""}
                         </span>
                       )}

@@ -1,5 +1,7 @@
 "use server";
 
+import crypto from "crypto";
+
 import { Category, PrismaClient } from "@prisma/client";
 
 import { ProductFormState } from "@/src/interfaces/Products";
@@ -322,6 +324,70 @@ export async function verifyBunnyUpload(
       error:
         "Verification warning: " +
         (error instanceof Error ? error.message : "Unknown error"),
+    };
+  }
+}
+
+// Generate a signed URL for Bunny CDN downloads
+export async function generateBunnySignedUrl(
+  filePath: string,
+  expiration: number = 60 * 5, // Default to 5 minutes
+): Promise<{ success: boolean; url?: string; error?: string }> {
+  try {
+    const tokenSecurityKey = process.env.BUNNY_DOWNLOAD_PULL_API_KEY;
+    const pullZoneUrl = process.env.NEXT_PUBLIC_BUNNY_DOWNLOAD_PULL_ZONE_URL;
+
+    if (!tokenSecurityKey) {
+      throw new Error(
+        "BUNNY_DOWNLOAD_PULL_API_KEY is not set in environment variables",
+      );
+    }
+
+    if (!pullZoneUrl) {
+      throw new Error(
+        "NEXT_PUBLIC_BUNNY_DOWNLOAD_PULL_ZONE_URL is not set in environment variables",
+      );
+    }
+
+    // Construct the full URL for the file
+    const url = `${pullZoneUrl}/${filePath}`;
+
+    // Calculate expiration timestamp
+    const expires = Math.floor(Date.now() / 1000) + expiration;
+
+    // Parse the URL to get the path
+    const urlObj = new URL(url);
+    const path = urlObj.pathname;
+
+    // Create the string to sign
+    const stringToSign = `${tokenSecurityKey}${path}${expires}`;
+
+    // Generate SHA256 hash
+    const sha256Hash = crypto
+      .createHash("sha256")
+      .update(stringToSign)
+      .digest();
+
+    // Base64 encode and make URL safe
+    const token = Buffer.from(sha256Hash)
+      .toString("base64")
+      .replace(/\+/g, "-")
+      .replace(/\//g, "_")
+      .replace(/=/g, "");
+
+    // Construct signed URL
+    const signedUrl = `${url}?token=${token}&expires=${expires}`;
+
+    return {
+      success: true,
+      url: signedUrl,
+    };
+  } catch (error) {
+    console.error("Error generating signed URL:", error);
+
+    return {
+      success: false,
+      error: error instanceof Error ? error.message : "Unknown error occurred",
     };
   }
 }

@@ -5,6 +5,8 @@ import ErrorBoundary from "@/src/components/root/ErrorBoundary";
 import { Product } from "@/interfaces/Products";
 
 export const ProductCard = ({ product }: { product: Product }) => {
+  const pullZone = process.env.NEXT_PUBLIC_BUNNY_PUBLIC_ASSETS_PULL_ZONE_URL;
+
   return (
     <Card className="rounded-2xl pt-3 text-foreground">
       <CardHeader>
@@ -34,7 +36,7 @@ export const ProductCard = ({ product }: { product: Product }) => {
                   height={600}
                   priority={false}
                   sizes="(max-width: 768px) 100vw, 50vw"
-                  src={`https://njaeink-remote-pull.b-cdn.net/${product.images[0].url}`}
+                  src={`${pullZone}/${product.images[0].url}`}
                   width={800}
                 />
               </div>
