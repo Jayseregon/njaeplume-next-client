@@ -28,6 +28,15 @@ jest.mock("@/components/root/LocaleSwitcher", () => ({
   ),
 }));
 
+// Mock UserLogin component
+jest.mock("@/components/root/UserLogin", () => ({
+  UserLogin: ({ nonce }: { nonce: string }) => (
+    <div data-nonce={nonce} data-testid="user-login">
+      User Login
+    </div>
+  ),
+}));
+
 describe("NavbarRight", () => {
   const mockNonce = "test-nonce-123";
 
@@ -37,6 +46,7 @@ describe("NavbarRight", () => {
     expect(screen.getByTestId("search-input")).toBeInTheDocument();
     expect(screen.getByTestId("theme-switch")).toBeInTheDocument();
     expect(screen.getByTestId("locale-switcher")).toBeInTheDocument();
+    expect(screen.getByTestId("user-login")).toBeInTheDocument();
   });
 
   it("passes nonce prop to all child components", () => {
@@ -54,6 +64,10 @@ describe("NavbarRight", () => {
       "data-nonce",
       mockNonce,
     );
+    expect(screen.getByTestId("user-login")).toHaveAttribute(
+      "data-nonce",
+      mockNonce,
+    );
   });
 
   it("has correct responsive classes", () => {
@@ -61,18 +75,25 @@ describe("NavbarRight", () => {
 
     const wrapper = container.firstChild as HTMLElement;
 
-    expect(wrapper).toHaveClass("hidden", "md:flex", "items-center", "gap-1");
+    expect(wrapper).toHaveClass(
+      "hidden",
+      "md:flex",
+      "items-center",
+      "gap-1",
+      "pr-2",
+    );
   });
 
   it("renders in the correct order", () => {
     render(<NavbarRight nonce={mockNonce} />);
 
     const elements = screen.getAllByTestId(
-      /search-input|theme-switch|locale-switcher/,
+      /search-input|theme-switch|locale-switcher|user-login/,
     );
 
     expect(elements[0]).toHaveAttribute("data-testid", "search-input");
     expect(elements[1]).toHaveAttribute("data-testid", "theme-switch");
     expect(elements[2]).toHaveAttribute("data-testid", "locale-switcher");
+    expect(elements[3]).toHaveAttribute("data-testid", "user-login");
   });
 });

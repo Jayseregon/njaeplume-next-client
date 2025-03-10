@@ -3,6 +3,26 @@ import { render, screen } from "@testing-library/react";
 import { NavbarCenter } from "@/components/root/navbar/NavbarCenter";
 import { siteConfig } from "@/config/site";
 
+// Mock Clerk authentication components
+jest.mock("@clerk/nextjs", () => {
+  // Default mock implementation
+  const defaultMock = {
+    useUser: () => ({ isSignedIn: false, user: null }),
+    SignInButton: ({ children }: { children: React.ReactNode }) => (
+      <div data-testid="sign-in-button">{children}</div>
+    ),
+    SignedIn: ({ children }: { children: React.ReactNode }) => (
+      <div data-testid="signed-in">{children}</div>
+    ),
+    SignedOut: ({ children }: { children: React.ReactNode }) => (
+      <div data-testid="signed-out">{children}</div>
+    ),
+    UserButton: () => <div data-testid="user-button">User Button</div>,
+  };
+
+  return defaultMock;
+});
+
 // Mock navigation menu components
 jest.mock("@/components/ui/navigation-menu", () => ({
   NavigationMenu: ({ children }: { children: React.ReactNode }) => (
@@ -108,5 +128,77 @@ describe("NavbarCenter", () => {
     siteConfig.navItems.forEach((item, index) => {
       expect(links[index]).toHaveAttribute("href", item.href);
     });
+  });
+
+  it("does not display castle nav item for non-authenticated users", () => {
+    render(<NavbarCenter currentPath="/" />);
+
+    // Count nav items - should only be the regular ones, no castle items
+    const items = screen.getAllByTestId("navigation-menu-item");
+
+    expect(items).toHaveLength(siteConfig.navItems.length);
+
+    // Check castle item is not present
+    const castleItem = siteConfig.castleNavItems.find(
+      (item) => item.key === "castle",
+    );
+
+    if (castleItem) {
+      expect(screen.queryByText(castleItem.label)).not.toBeInTheDocument();
+    }
+  });
+
+  it("displays castle nav item for users with castleAdmin role", () => {
+    // Mock the clerk auth to return a signed-in user with castleAdmin role
+    jest.spyOn(require("@clerk/nextjs"), "useUser").mockReturnValue({
+      isSignedIn: true,
+      user: {
+        publicMetadata: { role: "castleAdmin" },
+      },
+    });
+
+    render(<NavbarCenter currentPath="/" />);
+
+    // Count nav items - should include regular items plus castle item
+    const items = screen.getAllByTestId("navigation-menu-item");
+    const castleItem = siteConfig.castleNavItems.find(
+      (item) => item.key === "castle",
+    );
+
+    if (castleItem) {
+      expect(items).toHaveLength(siteConfig.navItems.length + 1);
+      expect(screen.getByText(castleItem.label)).toBeInTheDocument();
+    }
+
+    // Clean up mock
+    jest.restoreAllMocks();
+  });
+
+  it("does not display castle nav item for signed-in users without castleAdmin role", () => {
+    // Mock the clerk auth to return a signed-in user without castleAdmin role
+    jest.spyOn(require("@clerk/nextjs"), "useUser").mockReturnValue({
+      isSignedIn: true,
+      user: {
+        publicMetadata: { role: "user" },
+      },
+    });
+
+    render(<NavbarCenter currentPath="/" />);
+
+    // Count nav items - should only be the regular ones, no castle items
+    const items = screen.getAllByTestId("navigation-menu-item");
+
+    expect(items).toHaveLength(siteConfig.navItems.length);
+
+    const castleItem = siteConfig.castleNavItems.find(
+      (item) => item.key === "castle",
+    );
+
+    if (castleItem) {
+      expect(screen.queryByText(castleItem.label)).not.toBeInTheDocument();
+    }
+
+    // Clean up mock
+    jest.restoreAllMocks();
   });
 });
