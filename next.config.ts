@@ -36,8 +36,8 @@ const nextConfig: NextConfig = {
   output: "standalone",
   pageExtensions: ["js", "jsx", "md", "mdx", "ts", "tsx"],
   compiler: {
-    reactRemoveProperties: true,
-    removeConsole: true
+    reactRemoveProperties: process.env.NODE_ENV === "production",
+    removeConsole: process.env.NODE_ENV === "production",
   },
   images: {
     remotePatterns: [
