@@ -32,6 +32,11 @@ jest.mock("@/components/root/navbar/NavbarContent", () => ({
   NavbarContent: () => <div data-testid="navbar-content">Navbar Content</div>,
 }));
 
+// Mock UserLogin component
+jest.mock("@/components/root/UserLogin", () => ({
+  UserLogin: () => <div data-testid="user-login">User Login</div>,
+}));
+
 describe("Navbar", () => {
   const mockedUsePathname = usePathname as jest.Mock;
 
@@ -39,13 +44,14 @@ describe("Navbar", () => {
     jest.clearAllMocks();
   });
 
-  it("renders homepage version with only theme and locale switchers", () => {
+  it("renders homepage version with theme switcher, locale switcher, and user login", () => {
     mockedUsePathname.mockReturnValue("/");
 
     render(<Navbar />);
 
     expect(screen.getByTestId("theme-switch")).toBeInTheDocument();
     expect(screen.getByTestId("locale-switcher")).toBeInTheDocument();
+    expect(screen.getByTestId("user-login")).toBeInTheDocument();
     expect(screen.queryByTestId("navbar-content")).not.toBeInTheDocument();
   });
 
@@ -65,6 +71,18 @@ describe("Navbar", () => {
     const nav = container.querySelector("nav");
 
     expect(nav).toHaveClass("sticky", "top-0", "w-full", "bg-background");
+  });
+
+  it("has correct padding on the homepage right section", () => {
+    mockedUsePathname.mockReturnValue("/");
+
+    render(<Navbar />);
+
+    // Find the right section with theme switcher and locale switcher
+    const rightSection = screen.getByTestId("theme-switch").parentElement;
+
+    expect(rightSection).toHaveClass("pr-2");
+    expect(rightSection).not.toHaveClass("md:pr-0");
   });
 
   it("passes correct props to NavbarContent for non-homepage routes", () => {

@@ -35,13 +35,23 @@ const permissionsPolicy = `
 const nextConfig: NextConfig = {
   output: "standalone",
   pageExtensions: ["js", "jsx", "md", "mdx", "ts", "tsx"],
+  compiler: {
+    reactRemoveProperties: process.env.NODE_ENV === "production",
+    removeConsole: process.env.NODE_ENV === "production",
+  },
   images: {
     remotePatterns: [
       {
-        protocol: 'https',
-        hostname: 'njaeink-remote-pull.b-cdn.net',
-        port: '',
-        pathname: '/**',
+        protocol: "https",
+        hostname: "njaeink-remote-pull.b-cdn.net",
+        port: "",
+        pathname: "/**",
+      },
+      {
+        protocol: "https",
+        hostname: "njae-plume-public-assets-pull.b-cdn.net",
+        port: "",
+        pathname: "/**",
       },
     ],
   },

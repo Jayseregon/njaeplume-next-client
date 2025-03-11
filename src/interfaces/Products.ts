@@ -1,10 +1,4 @@
-import { Category } from "@prisma/client";
-
-export interface Tag {
-  id: string;
-  name: string;
-  slug: string;
-}
+import { Category, Tag } from "@prisma/client";
 
 export interface Product {
   id: string;
@@ -25,4 +19,21 @@ export interface ProductImage {
   productId: string;
   url: string;
   alt_text: string;
+}
+
+// State interface for the form
+export interface ProductFormState {
+  status: "idle" | "uploading" | "creating" | "success" | "error";
+  message?: string;
+  productId?: string;
+  error?: string;
+}
+
+export interface GenerateUploadUrlResult {
+  success: boolean;
+  uploadUrl?: string;
+  filePath?: string;
+  authHeaders?: Record<string, string>;
+  error?: string;
+  expiresAt?: number;
 }
