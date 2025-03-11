@@ -18,15 +18,15 @@ import {
 } from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
 import { Label } from "@/components/ui/label";
-import { TagInput } from "@/src/components/product/TagInput";
+import { TagInput } from "@/src/components/castle/TagInput";
 import { useImageUpload } from "@/src/hooks/useImageUpload";
 import { useZipFileUpload } from "@/src/hooks/useZipFileUpload";
-import { ProductImageUploader } from "@/src/components/product/ProductImageUploader";
-import { ProductZipUploader } from "@/src/components/product/ProductZipUploader";
+import { ProductImageUploader } from "@/src/components/castle/ProductImageUploader";
+import { ProductZipUploader } from "@/src/components/castle/ProductZipUploader";
 import { slugifyProductName } from "@/src/lib/actionHelpers";
 import { SimpleSpinner } from "@/components/root/SimpleSpinner";
-import { FormField } from "@/src/components/product/FormField";
-import { CategoryField } from "@/src/components/product/CategoryField";
+import { FormField } from "@/src/components/castle/FormField";
+import { CategoryField } from "@/src/components/castle/CategoryField";
 
 export const ProductEditDialog = () => {
   const router = useRouter();
