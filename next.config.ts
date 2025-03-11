@@ -35,6 +35,10 @@ const permissionsPolicy = `
 const nextConfig: NextConfig = {
   output: "standalone",
   pageExtensions: ["js", "jsx", "md", "mdx", "ts", "tsx"],
+  compiler: {
+    reactRemoveProperties: true,
+    removeConsole: true
+  },
   images: {
     remotePatterns: [
       {
