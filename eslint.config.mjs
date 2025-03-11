@@ -148,6 +148,8 @@ const eslintConfig = [
           "@typescript-eslint/no-unused-vars": 0,
           "react/display-name": 0,
           "@typescript-eslint/no-require-imports": 0,
+          "@typescript-eslint/prefer-ts-expect-error": 0,
+          "@typescript-eslint/ban-ts-comment": 0, // Allows ts-expect-error, ts-ignore, etc.
         },
       },
       {

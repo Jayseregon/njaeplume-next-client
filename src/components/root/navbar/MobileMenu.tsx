@@ -18,8 +18,8 @@ import { ThemeSwitch } from "@/components/root/ThemeSwitch";
 import LocaleSwitcher from "@/components/root/LocaleSwitcher";
 import { siteConfig } from "@/config/site";
 import { MobileMenuProps } from "@/src/interfaces/Root";
-
-import { Brand } from "./Brand";
+import { Brand } from "@/components/root/navbar/Brand";
+import { UserLogin } from "@/components/root/UserLogin";
 
 export function MobileMenu({ nonce, currentPath }: MobileMenuProps) {
   const [openMobileMenu, setOpenMobileMenu] = useState(false);
@@ -34,8 +34,9 @@ export function MobileMenu({ nonce, currentPath }: MobileMenuProps) {
         </SheetTrigger>
         <SheetContent className="w-3/4">
           <SheetHeader>
-            <SheetTitle>
+            <SheetTitle className="flex pt-5 justify-between items-center">
               <Brand withMargin={false} />
+              <UserLogin nonce={nonce} />
             </SheetTitle>
           </SheetHeader>
           <div className="mt-4 flex flex-col gap-3">

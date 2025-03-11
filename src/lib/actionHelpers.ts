@@ -5,6 +5,12 @@ export function sanitizeFileName(fileName: string): string {
     .replace(/^-+|-+$/g, "");
 }
 
+export function slugifyProductName(fileName: string, category: string): string {
+  const fullName = `${fileName} ${category}`;
+
+  return sanitizeFileName(fullName);
+}
+
 export async function verifyRecaptcha(
   token: string,
   recaptchaKey: string,
@@ -22,4 +28,50 @@ export async function verifyRecaptcha(
   const data = await response.json();
 
   return data.success;
+}
+
+/**
+ * Generate a safe file name for a product zip file
+ */
+export function getProductZipFileName(productName: string): string {
+  const sanitizedName = sanitizeFileName(productName);
+
+  return `${sanitizedName}.zip`;
+}
+
+/**
+ * Create a file preview URL for client-side display
+ */
+export function createFilePreview(file: File): string {
+  return URL.createObjectURL(file);
+}
+
+/**
+ * Clean up a file preview URL when no longer needed
+ */
+export function revokeFilePreview(url: string): void {
+  URL.revokeObjectURL(url);
+}
+
+/**
+ * Normalize tag name and generate a URL-safe slug
+ */
+export function normalizeTagName(
+  tagName: string,
+): { name: string; slug: string } | null {
+  const normalizedName = tagName.trim().toLowerCase();
+
+  if (!normalizedName) return null;
+
+  const slug = normalizedName
+    .replace(/\s+/g, "-")
+    .replace(/[^\w\-]+/g, "")
+    .replace(/\-\-+/g, "-")
+    .replace(/^-+/, "")
+    .replace(/-+$/, "");
+
+  return {
+    name: normalizedName,
+    slug,
+  };
 }

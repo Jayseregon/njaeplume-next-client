@@ -2,7 +2,14 @@
 
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { Package, PanelLeftIcon, Users, LucideIcon, Cat } from "lucide-react";
+import {
+  Package,
+  PanelLeftIcon,
+  Users,
+  LucideIcon,
+  Cat,
+  PackagePlus,
+} from "lucide-react";
 import { createContext, useContext, useState } from "react";
 
 import { cn } from "@/src/lib/utils";
@@ -57,6 +64,7 @@ const iconMap: Record<string, LucideIcon> = {
   Users: Users,
   Package: Package,
   Cat: Cat,
+  PackagePlus: PackagePlus,
 };
 
 export function AdminSidebar() {

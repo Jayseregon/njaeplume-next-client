@@ -22,17 +22,23 @@ jest.mock("@/components/ui/sheet", () => ({
       {children}
     </div>
   ),
-  SheetContent: ({ children }: any) => (
-    <div data-testid="sheet-content">{children}</div>
+  SheetContent: ({ children, className }: any) => (
+    <div className={className} data-testid="sheet-content">
+      {children}
+    </div>
   ),
   SheetHeader: ({ children }: any) => (
     <div data-testid="sheet-header">{children}</div>
   ),
-  SheetTitle: ({ children }: any) => (
-    <div data-testid="sheet-title">{children}</div>
+  SheetTitle: ({ children, className }: any) => (
+    <div className={className} data-testid="sheet-title">
+      {children}
+    </div>
   ),
-  SheetTrigger: ({ children }: any) => (
-    <div data-testid="sheet-trigger">{children}</div>
+  SheetTrigger: ({ children, className }: any) => (
+    <div className={className} data-testid="sheet-trigger">
+      {children}
+    </div>
   ),
 }));
 
@@ -76,6 +82,24 @@ jest.mock("@/components/root/LocaleSwitcher", () => ({
   default: ({ nonce }: { nonce: string }) => (
     <div data-nonce={nonce} data-testid="locale-switcher">
       Locale Switcher
+    </div>
+  ),
+}));
+
+// Mock Brand component
+jest.mock("@/components/root/navbar/Brand", () => ({
+  Brand: ({ withMargin }: { withMargin: boolean }) => (
+    <div data-testid="brand" data-with-margin={withMargin.toString()}>
+      Brand
+    </div>
+  ),
+}));
+
+// Mock UserLogin component
+jest.mock("@/components/root/UserLogin", () => ({
+  UserLogin: ({ nonce }: { nonce: string }) => (
+    <div data-nonce={nonce} data-testid="user-login">
+      User Login
     </div>
   ),
 }));
@@ -181,6 +205,39 @@ describe("MobileMenu", () => {
     expect(screen.getByTestId("locale-switcher")).toHaveAttribute(
       "data-nonce",
       mockProps.nonce,
+    );
+  });
+
+  it("renders brand with correct props", () => {
+    render(<MobileMenu {...mockProps} />);
+
+    expect(screen.getByTestId("brand")).toBeInTheDocument();
+    expect(screen.getByTestId("brand")).toHaveAttribute(
+      "data-with-margin",
+      "false",
+    );
+  });
+
+  it("renders user login component with correct nonce", () => {
+    render(<MobileMenu {...mockProps} />);
+
+    expect(screen.getByTestId("user-login")).toBeInTheDocument();
+    expect(screen.getByTestId("user-login")).toHaveAttribute(
+      "data-nonce",
+      mockProps.nonce,
+    );
+  });
+
+  it("sheet title has correct styling classes", () => {
+    render(<MobileMenu {...mockProps} />);
+
+    const sheetTitle = screen.getByTestId("sheet-title");
+
+    expect(sheetTitle).toHaveClass(
+      "flex",
+      "pt-5",
+      "justify-between",
+      "items-center",
     );
   });
 });

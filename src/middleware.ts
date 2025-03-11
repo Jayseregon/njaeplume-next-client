@@ -8,7 +8,7 @@ function applyCsp(response: NextResponse, _req: NextRequest): NextResponse {
   const nonce = Buffer.from(crypto.randomUUID()).toString("base64");
   const cspHeader = `
     default-src 'self';
-    script-src 'self' 'nonce-${nonce}' https://www.google.com https://www.gstatic.com https://vercel.live https://*.clerk.accounts.dev;
+    script-src 'self' 'nonce-${nonce}' https://www.google.com https://www.gstatic.com https://vercel.live https://*.clerk.accounts.dev https://clerk.njaeplume.com;
     style-src 'self' 'nonce-${nonce}' 'unsafe-inline';
     img-src 'self' blob: data: https://njaeink-remote-pull.b-cdn.net https://img.clerk.com;
     font-src 'self';
@@ -17,7 +17,7 @@ function applyCsp(response: NextResponse, _req: NextRequest): NextResponse {
     form-action 'self';
     frame-src 'self' https://www.google.com https://vercel.live;
     worker-src 'self' blob:;
-    connect-src 'self' https://ny.storage.bunnycdn.com https://*.clerk.accounts.dev https://clerk-telemetry.com;
+    connect-src 'self' https://ny.storage.bunnycdn.com https://*.clerk.accounts.dev https://clerk-telemetry.com https://clerk.njaeplume.com;
     frame-ancestors 'none';
     upgrade-insecure-requests;
   `
@@ -29,6 +29,9 @@ function applyCsp(response: NextResponse, _req: NextRequest): NextResponse {
 
   return response;
 }
+
+// Apply CSP in production on all responses
+const isDev = process.env.NODE_ENV === "development";
 
 const isAdminCastleRoute = createRouteMatcher(["/castle(.*)"]);
 
@@ -46,8 +49,6 @@ export default clerkMiddleware(async (auth, req) => {
   } else {
     response = NextResponse.next();
   }
-  // Apply CSP in production on all responses
-  const isDev = process.env.NODE_ENV === "development";
 
   if (!isDev) {
     return applyCsp(response, req);
