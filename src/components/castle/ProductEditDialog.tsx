@@ -34,6 +34,7 @@ export const ProductEditDialog = () => {
   const [formData, setFormData] = useState<any>({});
   const [selectedTags, setSelectedTags] = useState<Tag[]>([]);
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const [hasError, setHasError] = useState(false);
 
   // Initialize our custom hooks
   const imageUploadHook = useImageUpload([]);
@@ -185,6 +186,7 @@ export const ProductEditDialog = () => {
     if (!selectedProduct?.id) return;
 
     setIsSubmitting(true);
+    setHasError(false);
     try {
       const result = await deleteProductWithFiles(selectedProduct.id);
 
@@ -193,9 +195,11 @@ export const ProductEditDialog = () => {
         closeDialog();
         router.refresh(); // Refresh the page to get updated data
       } else {
+        setHasError(true);
         toast.error(`Failed to delete product: ${result.error}`);
       }
     } catch (error) {
+      setHasError(true);
       console.error("Failed to delete product:", error);
       toast.error("An error occurred while deleting the product.");
     } finally {
@@ -211,7 +215,14 @@ export const ProductEditDialog = () => {
   if (!selectedProduct) return null;
 
   return (
-    <Dialog open={isDialogOpen} onOpenChange={closeDialog}>
+    <Dialog
+      open={isDialogOpen}
+      onOpenChange={() => {
+        // Only close the dialog if not submitting and no errors; if error exists, do nothing.
+        if (isSubmitting || hasError) return;
+        closeDialog();
+      }}
+    >
       <DialogContent
         aria-describedby={undefined}
         className="sm:max-w-[800px] max-h-[80vh] flex flex-col"
