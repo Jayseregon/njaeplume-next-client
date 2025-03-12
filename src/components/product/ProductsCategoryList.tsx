@@ -1,12 +1,9 @@
-import { getProducts } from "@/actions/prisma/action";
-import { ProductCard } from "@/components/portfolio/ProductCard";
 import ErrorBoundary from "@/src/components/root/ErrorBoundary";
+import { ErrorDefaultDisplay } from "@/components/root/ErrorDefaultDisplay";
+import { Product } from "@/src/interfaces/Products";
+import { ProductCard } from "@/src/components/product/ProductCard";
 
-import { ErrorDefaultDisplay } from "../root/ErrorDefaultDisplay";
-
-export default async function ProductList() {
-  const products = await getProducts();
-
+export const ProductsCategoryList = ({ products }: { products: Product[] }) => {
   if (!products?.length) {
     return (
       <div className="flex justify-center">
@@ -24,4 +21,4 @@ export default async function ProductList() {
       </div>
     </ErrorBoundary>
   );
-}
+};

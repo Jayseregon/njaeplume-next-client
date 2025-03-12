@@ -17,6 +17,17 @@ export async function getProducts() {
   }
 }
 
+export async function getProductsByCategory(category: Category) {
+  try {
+    return await prisma.product.findMany({
+      where: { category },
+      include: { images: true, tags: true },
+    });
+  } finally {
+    await prisma.$disconnect();
+  }
+}
+
 export async function updateProduct(data: Partial<Product>) {
   try {
     const { id, tags, images, ...updateData } = data;

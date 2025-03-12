@@ -4,10 +4,10 @@ import { useTranslations } from "next-intl";
 import Image from "next/image";
 import Link from "next/link";
 import { useContext } from "react";
+import { Store } from "lucide-react";
 
 import { Button } from "@/components/ui/button";
-import { PortfolioIcon } from "@/components/icons";
-import { getNavItemByKey } from "@/config/site";
+import { getHomeItemByKey } from "@/config/site";
 import { title, subtitle } from "@/components/typography";
 import { LoadingButton } from "@/components/root/LoadingButton";
 
@@ -16,7 +16,7 @@ import { NonceContext } from "./providers";
 export default function RootPage() {
   const nonce = useContext(NonceContext);
   const t = useTranslations("HomePage");
-  const portfolio = getNavItemByKey("portfolio");
+  const shop = getHomeItemByKey("shop");
 
   return (
     <div className="flex flex-col items-center w-full">
@@ -59,10 +59,10 @@ export default function RootPage() {
 
         <div className="py-1" />
 
-        {portfolio && portfolio.href ? (
+        {shop && shop.href ? (
           <Button asChild className="w-1/4" variant="form">
-            <Link href={portfolio.href}>
-              <PortfolioIcon /> {portfolio.label}
+            <Link href={shop.href}>
+              <Store /> {shop.label}
             </Link>
           </Button>
         ) : (
