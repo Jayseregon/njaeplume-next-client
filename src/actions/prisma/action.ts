@@ -7,6 +7,22 @@ import { slugifyProductName, normalizeTagName } from "@/src/lib/actionHelpers";
 
 const prisma = new PrismaClient();
 
+async function generateUniqueSlug(
+  name: string,
+  category: string,
+): Promise<string> {
+  const baseSlug = slugifyProductName(name, category);
+  let slug = baseSlug;
+  let suffix = 1;
+
+  while (await prisma.product.findFirst({ where: { slug } })) {
+    slug = `${baseSlug}-${suffix}`;
+    suffix++;
+  }
+
+  return slug;
+}
+
 export async function getProducts() {
   try {
     return await prisma.product.findMany({
@@ -32,7 +48,23 @@ export async function updateProduct(data: Partial<Product>) {
   try {
     const { id, tags, images, ...updateData } = data;
 
-    // Handle base update data
+    if (!id) throw new Error("Product ID must be provided.");
+
+    // Get the current product so we have a fallback for name/category.
+    const currentProduct = await prisma.product.findUnique({ where: { id } });
+
+    if (!currentProduct) {
+      throw new Error("Product not found");
+    }
+
+    // Determine values for recalculating the slug.
+    const newName = updateData.name ?? currentProduct.name;
+    const newCategory = updateData.category ?? currentProduct.category;
+
+    // Recalculate slug regardless of whether the client already passed a slug.
+    updateData.slug = await generateUniqueSlug(newName, newCategory);
+
+    // Prepare the update operation.
     const updateOperation: any = {
       where: { id },
       data: {
@@ -44,21 +76,19 @@ export async function updateProduct(data: Partial<Product>) {
       },
     };
 
-    // Handle tags if provided
+    // Handle tags if provided.
     if (tags) {
       updateOperation.data.tags = {
         set: tags.map((tag) => ({ id: tag.id })),
       };
     }
 
-    // Handle images if provided
+    // Handle images if provided.
     if (images && images.length > 0) {
-      // First, delete any existing images that are not in the new list
       const existingImageIds = images
         .filter((img) => img.id)
         .map((img) => img.id as string);
 
-      // Create a separate transaction to first delete images that are no longer needed
       if (existingImageIds.length > 0) {
         await prisma.productImage.deleteMany({
           where: {
@@ -71,7 +101,6 @@ export async function updateProduct(data: Partial<Product>) {
           },
         });
       } else {
-        // If no existing images are being kept, delete all images
         await prisma.productImage.deleteMany({
           where: {
             productId: id,
@@ -79,7 +108,6 @@ export async function updateProduct(data: Partial<Product>) {
         });
       }
 
-      // For new images, create them directly
       const newImages = images.filter((img) => !img.id);
 
       if (newImages.length > 0) {
@@ -119,7 +147,7 @@ export async function createProduct(data: {
   images: { url: string; alt_text: string }[];
 }) {
   try {
-    const slug = slugifyProductName(data.name, data.category);
+    const slug = await generateUniqueSlug(data.name, data.category);
 
     return await prisma.product.create({
       data: {
@@ -179,6 +207,17 @@ export async function createTagIfNotExists(tagName: string) {
         name: normalized.name,
         slug: normalized.slug,
       },
+    });
+  } finally {
+    await prisma.$disconnect();
+  }
+}
+
+export async function getProductBySlug(slug: string) {
+  try {
+    return await prisma.product.findUnique({
+      where: { slug },
+      include: { images: true, tags: true },
     });
   } finally {
     await prisma.$disconnect();
