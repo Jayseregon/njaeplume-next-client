@@ -24,7 +24,7 @@ export async function generateMetadata({
   }
 
   return {
-    title: `${product.name} | NJAE Plume Brushes`,
+    title: `${product.name} | NJAE Plume Planners`,
     description: product.description.substring(0, 160),
   };
 }

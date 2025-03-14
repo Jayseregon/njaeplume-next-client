@@ -5,6 +5,11 @@ import { PrismaClient, Category } from "@prisma/client";
 import { Product } from "@/src/interfaces/Products";
 import { slugifyProductName, normalizeTagName } from "@/src/lib/actionHelpers";
 
+// New cache implementations
+const productsCache = new Map<string, { data: any; timestamp: number }>();
+const productSlugCache = new Map<string, { data: any; timestamp: number }>();
+const CACHE_DURATION = 60000 * 5; // cache duration in ms (60s * 5: 5 minutes)
+
 const prisma = new PrismaClient();
 
 async function generateUniqueSlug(
@@ -33,12 +38,23 @@ export async function getProducts() {
   }
 }
 
-export async function getProductsByCategory(category: Category) {
+export async function getProductsByCategory(category: Category | string) {
+  // Check cache first
+  const cacheEntry = productsCache.get(category as string);
+
+  if (cacheEntry && Date.now() - cacheEntry.timestamp < CACHE_DURATION) {
+    return cacheEntry.data;
+  }
   try {
-    return await prisma.product.findMany({
-      where: { category },
+    const data = await prisma.product.findMany({
+      where: { category: category as Category },
       include: { images: true, tags: true },
     });
+
+    // Save to cache
+    productsCache.set(category as string, { data, timestamp: Date.now() });
+
+    return data;
   } finally {
     await prisma.$disconnect();
   }
@@ -214,11 +230,20 @@ export async function createTagIfNotExists(tagName: string) {
 }
 
 export async function getProductBySlug(slug: string) {
+  const cacheEntry = productSlugCache.get(slug);
+
+  if (cacheEntry && Date.now() - cacheEntry.timestamp < CACHE_DURATION) {
+    return cacheEntry.data;
+  }
   try {
-    return await prisma.product.findUnique({
+    const data = await prisma.product.findUnique({
       where: { slug },
       include: { images: true, tags: true },
     });
+
+    productSlugCache.set(slug, { data, timestamp: Date.now() });
+
+    return data;
   } finally {
     await prisma.$disconnect();
   }

@@ -71,7 +71,7 @@ export function ProductDetail({ product }: { product: Product }) {
                 alt={
                   product.images[currentImageIndex]?.alt_text || product.name
                 }
-                className="object-contain"
+                className="object-contain transition-opacity duration-300 ease-in-out"
                 sizes="(max-width: 768px) 100vw, 50vw"
                 src={`${pullZone}/${product.images[currentImageIndex]?.url}`}
               />
@@ -105,11 +105,12 @@ export function ProductDetail({ product }: { product: Product }) {
 
         {/* Thumbnails */}
         {hasMultipleImages && (
-          <div className="flex gap-2 overflow-auto pb-2 px-1">
+          <div className="flex gap-2 overflow-auto py-2 px-1">
             {product.images.map((image, i) => (
               <button
                 key={image.id}
-                className={`flex-shrink-0 relative h-20 w-20 rounded-md overflow-hidden transition-all ${
+                aria-label={`View thumbnail ${i + 1}`}
+                className={`flex-shrink-0 relative h-20 w-20 rounded-md overflow-hidden transition-all transform hover:scale-105 focus:scale-95 ${
                   currentImageIndex === i
                     ? "ring-2 ring-primary ring-offset-2"
                     : "opacity-70 hover:opacity-100"
