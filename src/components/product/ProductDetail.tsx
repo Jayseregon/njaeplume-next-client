@@ -37,8 +37,13 @@ export function ProductDetail({ product }: { product: Product }) {
     <div className="grid grid-cols-1 lg:grid-cols-5 gap-8">
       {/* Back button for mobile */}
       <div className="lg:hidden mb-2">
-        <Button asChild size="sm" variant="ghost">
-          <Link className="flex items-center" href="/shop/brushes">
+        <Button
+          asChild
+          size="sm"
+          variant="ghost">
+          <Link
+            className="flex items-center"
+            href="/shop/brushes">
             <ArrowLeft className="mr-2 h-4 w-4" />
             Back to Brushes
           </Link>
@@ -48,8 +53,13 @@ export function ProductDetail({ product }: { product: Product }) {
       {/* Image Gallery - Takes 3 columns on desktop */}
       <div className="lg:col-span-3 space-y-4">
         <div className="hidden lg:block">
-          <Button asChild size="sm" variant="ghost">
-            <Link className="flex items-center" href="/shop/brushes">
+          <Button
+            asChild
+            size="sm"
+            variant="ghost">
+            <Link
+              className="flex items-center"
+              href="/shop/brushes">
               <ArrowLeft className="mr-2 h-4 w-4" />
               Back to Brushes
             </Link>
@@ -61,19 +71,16 @@ export function ProductDetail({ product }: { product: Product }) {
             <div className="w-full aspect-square bg-muted flex items-center justify-center rounded-lg">
               <p>Failed to load image</p>
             </div>
-          }
-        >
-          <div className="relative aspect-square bg-muted rounded-lg overflow-hidden">
+          }>
+          <div className="relative aspect-square bg-muted rounded-xl overflow-hidden">
             {product.images.length > 0 && (
               <Image
                 fill
                 priority
-                alt={
-                  product.images[currentImageIndex]?.alt_text || product.name
-                }
+                alt={product.images[currentImageIndex].alt_text}
                 className="object-contain transition-opacity duration-300 ease-in-out"
                 sizes="(max-width: 768px) 100vw, 50vw"
-                src={`${pullZone}/${product.images[currentImageIndex]?.url}`}
+                src={`${pullZone}/${product.images[currentImageIndex].url}`}
               />
             )}
 
@@ -84,8 +91,7 @@ export function ProductDetail({ product }: { product: Product }) {
                   className="absolute left-2 top-1/2 -translate-y-1/2 bg-background/80 hover:bg-background/90 rounded-full"
                   size="icon"
                   variant="secondary"
-                  onClick={() => navigateImage(-1)}
-                >
+                  onClick={() => navigateImage(-1)}>
                   <ChevronLeft className="h-4 w-4" />
                 </Button>
 
@@ -94,8 +100,7 @@ export function ProductDetail({ product }: { product: Product }) {
                   className="absolute right-2 top-1/2 -translate-y-1/2 bg-background/80 hover:bg-background/90 rounded-full"
                   size="icon"
                   variant="secondary"
-                  onClick={() => navigateImage(1)}
-                >
+                  onClick={() => navigateImage(1)}>
                   <ChevronRight className="h-4 w-4" />
                 </Button>
               </>
@@ -115,13 +120,12 @@ export function ProductDetail({ product }: { product: Product }) {
                     ? "ring-2 ring-primary ring-offset-2"
                     : "opacity-70 hover:opacity-100"
                 }`}
-                onClick={() => setCurrentImageIndex(i)}
-              >
+                onClick={() => setCurrentImageIndex(i)}>
                 <Image
                   fill
-                  alt={image.alt_text || `${product.name} thumbnail ${i + 1}`}
+                  alt={image.alt_text}
                   className="object-cover"
-                  sizes="80px"
+                  sizes="70px"
                   src={`${pullZone}/${image.url}`}
                 />
               </button>
@@ -135,7 +139,9 @@ export function ProductDetail({ product }: { product: Product }) {
         <div>
           <h1 className="text-3xl font-bold mb-2">{product.name}</h1>
           <div className="flex items-center gap-2 mb-1">
-            <Badge className="capitalize" variant="secondary">
+            <Badge
+              className="capitalize"
+              variant="secondary">
               {product.category}
             </Badge>
           </div>
@@ -158,7 +164,9 @@ export function ProductDetail({ product }: { product: Product }) {
             <h2 className="font-medium text-lg mb-2">Tags</h2>
             <div className="flex flex-wrap gap-2">
               {product.tags.map((tag) => (
-                <Badge key={tag.id} variant="outline">
+                <Badge
+                  key={tag.id}
+                  variant="outline">
                   {tag.name}
                 </Badge>
               ))}
@@ -182,10 +190,15 @@ export function ProductDetail({ product }: { product: Product }) {
         </Card>
 
         <div className="pt-4 flex flex-col gap-3">
-          <Button className="w-full" size="lg">
+          <Button
+            className="w-full"
+            size="lg">
             Buy Now - {formattedPrice}
           </Button>
-          <Button className="w-full" size="lg" variant="outline">
+          <Button
+            className="w-full"
+            size="lg"
+            variant="outline">
             Add to Cart
           </Button>
         </div>
