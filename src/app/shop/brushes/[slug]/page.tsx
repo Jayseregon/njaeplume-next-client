@@ -44,3 +44,22 @@ export default async function ProductPage({ params }: ProductPageProps) {
     </div>
   );
 }
+
+// export default async function ProductPage({ params }: ProductPageProps) {
+//   const { slug } = await params;
+
+//   // Create the product promise - this will be passed directly to ProductDetail
+//   const productPromise = getProductBySlug(slug).then((product) => {
+//     if (!product) {
+//       notFound();
+//     }
+//     return product as Product;
+//   });
+
+//   return (
+//     <div className="container mx-auto px-4 py-8">
+//       {/* Pass the promise directly to ProductDetail */}
+//       <ProductDetail product={productPromise} />
+//     </div>
+//   );
+// }
