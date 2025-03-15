@@ -17,9 +17,9 @@ export function ProductDetail({ product }: { product: Product }) {
   const pullZone = process.env.NEXT_PUBLIC_BUNNY_PUBLIC_ASSETS_PULL_ZONE_URL;
 
   const hasMultipleImages = product.images.length > 1;
-  const formattedPrice = new Intl.NumberFormat("en-US", {
+  const formattedPrice = new Intl.NumberFormat("en-CA", {
     style: "currency",
-    currency: "USD",
+    currency: "CAD",
   }).format(product.price);
 
   const navigateImage = (direction: number) => {
