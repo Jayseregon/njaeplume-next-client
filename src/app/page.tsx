@@ -60,7 +60,7 @@ export default function RootPage() {
         <div className="py-1" />
 
         {shop && shop.href ? (
-          <Button asChild className="w-1/4" variant="form">
+          <Button asChild className="w-auto" variant="form">
             <Link href={shop.href}>
               <Store /> {shop.label}
             </Link>
