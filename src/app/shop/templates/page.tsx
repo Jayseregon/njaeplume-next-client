@@ -30,7 +30,7 @@ export default function TemplatesPage() {
 
   return (
     <div>
-      <PageTitle title="Stickers" />
+      <PageTitle title="Templates" />
       <div className="py-5" />
       <CategoryGallery products={products} />
     </div>

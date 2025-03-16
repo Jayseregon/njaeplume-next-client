@@ -12,13 +12,19 @@ function Accordion({
   return <AccordionPrimitive.Root data-slot="accordion" {...props} />;
 }
 
+interface AccordionItemProps
+  extends React.ComponentProps<typeof AccordionPrimitive.Item> {
+  bordered?: boolean;
+}
+
 function AccordionItem({
   className,
+  bordered = true,
   ...props
-}: React.ComponentProps<typeof AccordionPrimitive.Item>) {
+}: AccordionItemProps) {
   return (
     <AccordionPrimitive.Item
-      className={cn("border-b last:border-b-0", className)}
+      className={cn(bordered ? "border-b last:border-b-0" : "", className)}
       data-slot="accordion-item"
       {...props}
     />

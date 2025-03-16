@@ -30,7 +30,7 @@ export default function PlannersPage() {
 
   return (
     <div>
-      <PageTitle title="Stickers" />
+      <PageTitle title="Planners" />
       <div className="py-5" />
       <CategoryGallery products={products} />
     </div>

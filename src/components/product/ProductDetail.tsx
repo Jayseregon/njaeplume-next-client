@@ -12,12 +12,6 @@ import { Product } from "@/src/interfaces/Products";
 import ErrorBoundary from "@/src/components/root/ErrorBoundary";
 import { PageTitle } from "@/src/components/root/PageTitle";
 import { getProductSpecificationsByCategory } from "@/src/lib/specsSelector";
-import {
-  Accordion,
-  AccordionContent,
-  AccordionItem,
-  AccordionTrigger,
-} from "@/components/ui/accordion";
 
 export function ProductDetail({ product }: { product: Product }) {
   const [currentImageIndex, setCurrentImageIndex] = useState(0);
@@ -155,7 +149,7 @@ export function ProductDetail({ product }: { product: Product }) {
             <Button className="w-40">Add to Cart</Button>
           </div>
 
-          <Separator className="my-6" />
+          <Separator className="my-10" />
 
           {/* Description */}
           <div>
@@ -175,21 +169,12 @@ export function ProductDetail({ product }: { product: Product }) {
             </div>
           )}
 
-          <Separator className="mt-6 mb-2" />
+          <Separator className="mt-10 mb-0" />
 
-          {/* Specifications Accordion */}
-          <Accordion collapsible className="w-full text-justify" type="single">
-            <AccordionItem value="specifications">
-              <AccordionTrigger className="text-foreground text-md">
-                Specifications
-              </AccordionTrigger>
-              <AccordionContent>
-                <div className="py-2 text-xs">
-                  {getProductSpecificationsByCategory(product.category)}
-                </div>
-              </AccordionContent>
-            </AccordionItem>
-          </Accordion>
+          {/* Product Specifications */}
+          <div className="w-full text-justify">
+            {getProductSpecificationsByCategory(product.category)}
+          </div>
         </div>
       </div>
     </div>
