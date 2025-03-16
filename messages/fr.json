@@ -48,5 +48,70 @@
   "Themes": {
     "h1_title": "Themes",
     "subtitle": "Test des couleurs des thèmes Dark et Light."
+  },
+  "FAQ": {
+    "title": "FAQ",
+    "lastUpdated": "Dernière mise à jour: 19 novembre 2023",
+    "questions": {
+      "usage": {
+        "question": "Que pouvons-nous faire avec ces produits?",
+        "answer1": "Après l'achat de l'un de nos produits, même ceux personnalisés, vous pouvez les utiliser pour vos projets personnels. La plupart d'entre eux sont créés pour offrir une variété d'utilisations dans les planificateurs, tout ce dont vous avez besoin, utilisez, créez et possédez personnellement.",
+        "answer2": "Vous pouvez le présenter, mais vous ne pouvez pas le revendre, le reproduire ou le copier. Les droits et crédits sont toujours réservés à Niniefy (Nathalie Tran). Si vous souhaitez utiliser quoi que ce soit que vous avez acheté ici d'une autre manière que personnelle, contactez nous d'abord.",
+        "answer3": "Si vous êtes une entreprise et souhaitez collaborer, n'hésitez pas à nous contacter.",
+        "answer4": "Les polices ont cependant des conditions spéciales. Il sera précisé lesquelles vous pouvez utiliser personnellement ou commercialement, en fonction de la licence que vous achetez."
+      },
+      "unique": {
+        "question": "Les produits sont-ils uniques?",
+        "answer1": "Chaque produit sur ce site a été entièrement fait à la main et est unique.",
+        "answer2": "Vous ne trouverez pas de copie ailleurs. Si une référence a été utilisée, à des fins de précision, elle sera spécifiée dans la description du produit.",
+        "answer3": "Cependant, s'il y a des similitudes, ou une forte ressemblance quelque part, c'est purement une coïncidence, car le Web est un vaste endroit. Mais, ces produits n'ont pas été créés en copiant ou en trichant."
+      },
+      "logos": {
+        "question": "Pourquoi y a-t-il deux logos différents?",
+        "answer1": "L'un est le logo principal du site web, tandis que l'autre, qui apparaît sur les produits, est le logo de l'illustrateur : Niniefy. Le site web est une entreprise familiale : le PDG est le mari, Jay ; la designer est la femme, Nathalie (alias Ninie)."
+      },
+      "niniefy": {
+        "question": "Qui est Niniefy?",
+        "answer1": "Niniefy est le surnom de Nathalie Tran pour la partie illustration. Elle est celle qui conçoit absolument tout sur le site web, que ce soient les produits, les images, les logos, les photos, même les séparateurs. Tout est fait entièrement à la main, donc il n'y aura jamais d'infractions aux droits d'auteur."
+      },
+      "shipping": {
+        "question": "Quelle est la politique de livraison?",
+        "answer1": "Comme tous les produits sont entièrement numériques, il n'y a pas de livraison disponible. Au moins, pour le moment, vous devez imprimer les œuvres d'art ou les autocollants vous-même, à moins que vous ne soyez prêt à payer plus, si vous le souhaitez. Si c'est le cas, n'hésitez pas à utiliser notre formulaire de contact pour que nous puissions nous mettre d'accord sur les détails et réaliser votre souhait.",
+        "answer2": "L'utilisation des autres produits restera numérique, donc pas besoin de les expédier! En revanche, vous recevrez le lien pour le télécharger immédiatement après l'achat. Pas de temps d'attente!"
+      },
+      "returns": {
+        "question": "Quelle est la politique de retour?",
+        "answer1": "Aucun retour ne sera accepté.",
+        "answer2": "La nature de nos produits ne permet aucun remboursement ou retour, car vous pouvez immédiatement voir ce que vous achetez, à partir des photos des produits, vous ne pouvez pas prouver que vous n'avez jamais dupliqué les fichiers ou entièrement supprimé les produits en question.",
+        "answer3": "Cependant, s'il y avait un problème, vous avez besoin d'aide sur quoi que ce soit en rapport avec ce que notre entreprise offre, contactez-nous dès que vous le pouvez et nous serons ravis de vous aider.",
+        "answer4": "Enfin, si vous n'êtes pas satisfait d'un produit, contactez-nous également et dites-nous pourquoi, afin que nous puissions essayer de le régler et de le réparer.",
+        "answer5": "Nous nous réservons le droit de refuser d'aider tout client abusif et agressif."
+      },
+      "custom": {
+        "question": "Comment obtenir des produits personnalisés?",
+        "answer1": "Si vous avez quelque chose en tête, vous voulez quelque chose fait à partir de zéro, ou vous aimez un produit préexistant mais vous en avez besoin d'un unique, juste pour vous, à votre goût, veuillez nous contacter en utilisant notre formulaire de contact, avant de faire tout achat.",
+        "answer2": "Nous vous poserons quelques questions pour comprendre vos désirs et besoins pour s'assurer que vous serez satisfait de votre produit personnalisé sur demande."
+      },
+      "fewProducts": {
+        "question": "Pourquoi y a-t-il si peu de produits?",
+        "answer1": "Ce site web est uniquement créé par deux personnes : l'une est le créateur des produits, et l'autre est le créateur du site web. L'un doit créer des produits et des mises en page, tout en s'occupant d'un bébé, cela prend du temps. L'autre a un travail à temps plein, donc nous avons très peu de temps pour ajouter des produits de manière à assurer qu'il n'y ait pas de vol.",
+        "answer2": "Patience avec nous, il y a beaucoup plus de produits en route."
+      },
+      "fanArt": {
+        "question": "Pourquoi certaines œuvres sont-elles en vente tandis que d'autres ne le sont pas?",
+        "answer1": "Vous remarquerez peut-être un lien vers niniefy.com présentant un portfolio de œuvres d'art. Certaines seront en vente sur njaeplume.com, ici même, tandis que d'autres n'apparaîtront que sur niniefy.com.",
+        "answer2": "Ce seront en fait des fan arts créés uniquement par Niniefy (Nathalie Tran) mais, comme ils sont des représentations de produits sous licence comme Harry Potter (tout ce qui concerne le monde des sorciers, vraiment), Disney et d'autres films, nous n'avons pas les droits de les vendre, malgré le fait qu'ils soient faits à la main.",
+        "answer3": "Nous les présenterons toujours pour que vous puissiez voir les compétences ou les possibilités. Jusqu'à ce que nous puissions détenir les licences, nous espérons que vous comprendrez.",
+        "answer4": "Si vous avez des questions, n'hésitez pas à nous contacter."
+      },
+      "howToUse": {
+        "question": "Comment utiliser les produits?",
+        "answer1": "La plupart des produits proposés sont en fait faciles à utiliser. Ils sont envoyés sous forme de fichier ZIP : décompressez le fichier en cliquant dessus, puis ouvrez tout ce qu'il révèle en cliquant directement dessus à nouveau.",
+        "answer2": "Les brosses, les nuanciers, pour Procreate®, s'importeront automatiquement dans l'application appropriée, lorsque vous cliquez sur ceux-ci.",
+        "answer3": "Les polices devront être partagées pour être utilisées soit sur Procreate® ou d'autres applications/systèmes : long clic, puis partager (ou Ouvrir avec), puis sélectionnez l'application sur laquelle vous souhaitez installer la police.",
+        "answer4": "Les œuvres d'art et les autocollants seront ouverts par un simple ou double clic, et vous pouvez les enregistrer en tant que images.",
+        "answer5": "Si vous souhaitez des vidéos tutorielles sur ce sujet, ou sur Procreate® et GoodNotes, faites-le nous savoir!"
+      }
+    }
   }
 }

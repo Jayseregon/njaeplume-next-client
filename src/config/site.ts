@@ -44,6 +44,11 @@ export const siteConfig = {
       label: "Contact",
       href: "/contact",
     },
+    {
+      key: "faq",
+      label: "FAQ",
+      href: "/faq",
+    },
   ],
   links: {},
   // Add castle routes for admin area

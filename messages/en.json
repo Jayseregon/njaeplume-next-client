@@ -5,12 +5,12 @@
     "redirect": "In the mean time, you can still visit our Portfolio containing all previous creations.",
     "code": "Currently in development"
   },
-  "Utils" : {
-    "LoadingButton": "Please wait", 
+  "Utils": {
+    "LoadingButton": "Please wait",
     "ErrorDefaultDisplay": {
       "title": "Something went wrong!",
       "message": "Please try again later."
-    } 
+    }
   },
   "Footer": {
     "copyright1": "NJAE Plume G.P.",
@@ -41,12 +41,77 @@
     "btn": "Send",
     "btn_pending": "Sending...",
     "success": "Email sent successfully!",
-    "error1": "Oops!", 
+    "error1": "Oops!",
     "error2": "There was a problem sending your email.",
     "error3": "Please try again later."
   },
   "Themes": {
     "h1_title": "Themes",
     "subtitle": "Testing the Dark & Light themes color scheme."
+  },
+  "FAQ": {
+    "title": "FAQ",
+    "lastUpdated": "Last Updated: November 19, 2023",
+    "questions": {
+      "usage": {
+        "question": "What can we do with these products?",
+        "answer1": "After you purchase any of our products, even custom ones, you can use it for your personal projects. Most of them are created to offer variety to use in planners, anything you need, use, create and own personally.",
+        "answer2": "You can showcase it, but you can not resell it, reproduce or copy. The rights and credits are still reserved to Niniefy (Nathalie Tran). If you want to use anything you purchased here in any other way than personal, contact us first.",
+        "answer3": "If you are a company and want to make a collaboration, feel free to reach out to us.",
+        "answer4": "Fonts have special conditions, though. It will be specified which ones you can use personally or commercially, depending on the license you buy."
+      },
+      "unique": {
+        "question": "Are the products unique?",
+        "answer1": "Every single product in this website has been handmade entirely and is unique.",
+        "answer2": "You won't find a copy anywhere. If a reference has been used, for precision purpose, it will be specified in the product's description.",
+        "answer3": "However, if there are any similarities, or strong resemblance somewhere, this is purely a coincidence, as the Web is a wide place. But, these products have not been created by copying or cheating."
+      },
+      "logos": {
+        "question": "Why are there two different logos?",
+        "answer1": "One is the main logo of the website, while the other, that appears on products, is the illustrator's logo: Niniefy. The website is a family owned company : the CEO is the husband, Jay ; the designer is the wife, Nathalie (aka Ninie)."
+      },
+      "niniefy": {
+        "question": "Who is Niniefy?",
+        "answer1": "Niniefy is Nathalie Tran's nickname for the illustration part. She is the one designing absolutely everything on the website, be it products, images, logos, photos, even separators. Everything is done entirely by hand, so there will never be copyrights infringements."
+      },
+      "shipping": {
+        "question": "What is the shipping policy?",
+        "answer1": "As the products are all completely digital, there is no shipping available. At least, for the time being, you are required to print the artworks or stickers yourselves, unless you're willing to pay extra, if you want us to. If so, feel free to use our contact form so we can agree on details and make your wish come true.",
+        "answer2": "The other products' use will remain digital, so no need to ship it! On the upside, you will receive the link to download it immediately upon purchase. No waiting time!"
+      },
+      "returns": {
+        "question": "What is the return policy?",
+        "answer1": "There won't be any return accepted.",
+        "answer2": "The nature of our products can't allow any refund or return, because you can immediately see what you are buying, from the products' pictures, you can't prove you never duplicated the files or entirely deleted the products in question.",
+        "answer3": "However, if there was a problem, you need assistance on anything related to what our company offers, contact us as soon as you can and we will gladly help you.",
+        "answer4": "Lastly, if you are unsatisfied with a product, contact us also and to tell us why, so we could try to arrange and fix it.",
+        "answer5": "We reserve ourselves the right to refuse to help any abusive and aggressive clients."
+      },
+      "custom": {
+        "question": "How to get custom products?",
+        "answer1": "If you have anything in mind, you want something from made scratch, or you like a preexisting product but you need it unique, just for you, at your taste, please reach out to us using our contact form, before making any purchase.",
+        "answer2": "We will ask you a few questions to understand your wants and needs to make sure you'll be satisfied with your on-demand custom product."
+      },
+      "fewProducts": {
+        "question": "Why is there so few products?",
+        "answer1": "This website is only created by two persons: one is the creator of the products, and the other is the creator of the website. One has to create products and the layouts, while taking care of a baby, it takes time. The other has a full time working job, so we have very few time to add products in a way to ensure no thievery.",
+        "answer2": "Bear with us, there is a lot more products on the way."
+      },
+      "fanArt": {
+        "question": "Why some artworks are for sale while others aren't?",
+        "answer1": "You may notice a link to niniefy.com showcasing a portfolio of artworks. Some will be for sale on njaeplume.com, right here, while others will only appear on niniefy.com.",
+        "answer2": "These will actually be some fan arts solely created by Niniefy (Nathalie Tran) but, as they are representations of licensed products like Harry Potter (anything Wizarding World, really), Disney and other movies, we don't have the rights to sell these, despite the fact that they're handmade.",
+        "answer3": "We will still showcase them for you to see the skills or possibilities. Until we can hold the licenses, we hope you will understand.",
+        "answer4": "If you have any question, don't hesitate to contact us."
+      },
+      "howToUse": {
+        "question": "How to use the products?",
+        "answer1": "Most of the products offered are actually easy to use. They are sent as a ZIP file: unzip the file by clicking on it, and then, open anything it uncovers by clicking directly on it again.",
+        "answer2": "Brushes, swatches, for Procreate®, will import automatically in the appropriate app, when you click on these.",
+        "answer3": "Fonts will need to be shared to use either on Procreate® of other apps/systems: long click, then share (or Open with), then select the app you want to install the font on.",
+        "answer4": "Artworks and stickers will be open by a simple or double click, and you can save them as images.",
+        "answer5": "If you would like tutorial videos on this subject, or about Procreate® and GoodNotes, let us now!"
+      }
+    }
   }
 }

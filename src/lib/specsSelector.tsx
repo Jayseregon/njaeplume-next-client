@@ -1,5 +1,6 @@
 import { Circle } from "lucide-react";
 import React from "react";
+import Link from "next/link";
 
 import {
   Accordion,
@@ -24,15 +25,25 @@ const SpecItem: React.FC<{ children: React.ReactNode }> = ({ children }) => (
 // Shared components for reusable sections
 const CustomDemandSection: React.FC = () => (
   <div>
-    For any custom art demand, please reach out to us through our contact form,
-    before purchase.
+    For any custom art demand, please reach out to us through our{" "}
+    <Link className="text-foreground hover:text-primary" href="/contact">
+      contact form
+    </Link>
+    , before purchase.
   </div>
 );
 
 const FAQSection: React.FC = () => (
   <div>
-    Check our FAQ page for more information on how to use our products, or feel
-    free to contact us.
+    Check our{" "}
+    <Link className="text-foreground hover:text-primary" href="/faq">
+      FAQ page
+    </Link>{" "}
+    for more information on how to use our products, or feel free to{" "}
+    <Link className="text-foreground hover:text-primary" href="/contact">
+      contact us
+    </Link>
+    .
   </div>
 );
 
