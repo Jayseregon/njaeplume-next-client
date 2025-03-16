@@ -4,7 +4,7 @@ import { useEffect, useState } from "react";
 // import { useTranslations } from "next-intl";
 
 import { PageTitle } from "@/src/components/root/PageTitle";
-import { ProductsCategoryGallery } from "@/src/components/product/ProductsCategoryGallery";
+import { CategoryGallery } from "@/src/components/product/CategoryGallery";
 import { getProductsByCategory } from "@/src/actions/prisma/action";
 import { Product } from "@/src/interfaces/Products";
 
@@ -32,7 +32,7 @@ export default function StickersPage() {
     <div>
       <PageTitle title="Stickers" />
       <div className="py-5" />
-      <ProductsCategoryGallery products={products} />
+      <CategoryGallery products={products} />
     </div>
   );
 }

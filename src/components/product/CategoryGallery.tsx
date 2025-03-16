@@ -3,11 +3,7 @@ import { ErrorDefaultDisplay } from "@/components/root/ErrorDefaultDisplay";
 import { Product } from "@/src/interfaces/Products";
 import { ProductCard } from "@/src/components/product/ProductCard";
 
-export const ProductsCategoryGallery = ({
-  products,
-}: {
-  products: Product[];
-}) => {
+export const CategoryGallery = ({ products }: { products: Product[] }) => {
   if (!products?.length) {
     return (
       <div className="flex justify-center">
