@@ -11,7 +11,7 @@ import { Separator } from "@/components/ui/separator";
 import { Product } from "@/src/interfaces/Products";
 import ErrorBoundary from "@/src/components/root/ErrorBoundary";
 import { PageTitle } from "@/src/components/root/PageTitle";
-import { getProductSpecByCategory } from "@/src/lib/productSpecSelector";
+import { getProductSpecificationsByCategory } from "@/src/lib/specsSelector";
 import {
   Accordion,
   AccordionContent,
@@ -185,7 +185,7 @@ export function ProductDetail({ product }: { product: Product }) {
               </AccordionTrigger>
               <AccordionContent>
                 <div className="py-2 text-xs">
-                  {getProductSpecByCategory(product.category)}
+                  {getProductSpecificationsByCategory(product.category)}
                 </div>
               </AccordionContent>
             </AccordionItem>

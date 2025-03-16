@@ -14,7 +14,9 @@ const SpecItem: React.FC<{ children: React.ReactNode }> = ({ children }) => (
   </div>
 );
 
-export function getProductSpecByCategory(category: string): React.ReactNode {
+export function getProductSpecificationsByCategory(
+  category: string,
+): React.ReactNode {
   const currentYear = new Date().getFullYear();
 
   const descriptions: Record<string, React.ReactNode> = {
