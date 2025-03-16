@@ -13,13 +13,29 @@
     }
   },
   "Footer": {
-    "copyright1": "NJAE Plume G.P.",
+    "copyright1": "NJAE Plume",
     "copyright2": "All rights reserved",
     "google1": "This site is protected by reCAPTCHA and the Google ",
     "gpp": "Privacy Policy",
     "gts": "Terms of Service",
     "gtxt1": " and ",
-    "gtxt2": " apply."
+    "gtxt2": " apply.",
+    "about": "About Us",
+    "humanMadeProducts": "100% Human-Made Products - No AI",
+    "policies": "Policies",
+    "privacy": "Privacy Policy",
+    "terms": "Terms of Service",
+    "cookies": "Cookies Policy",
+    "returns": "Returns Policy",
+    "shipping": "Shipping Info",
+    "disclaimer": "Disclaimers",
+    "help": "Help & Support",
+    "faq": "FAQ",
+    "contact": "Contact Us",
+    "digital": "status",
+    "location": "location",
+    "locationAddress": "everywhere://digital-space",
+    "online": "online"
   },
   "LocaleSwitcher": {
     "label": "Change language",

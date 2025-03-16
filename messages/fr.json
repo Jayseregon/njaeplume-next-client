@@ -13,13 +13,29 @@
     }
   },
   "Footer": {
-    "copyright1": "NJAE Plume S.E.N.C.",
+    "copyright1": "NJAE Plume",
     "copyright2": "Tous droits réservés",
     "google1": "Ce site est protégé par reCAPTCHA et Google ",
     "gpp": "Politique de confidentialité",
     "gts": "Conditions d'utilisation",
     "gtxt1": " et ",
-    "gtxt2": " s'appliquent."
+    "gtxt2": " s'appliquent.",
+    "about": "À Propos",
+    "humanMadeProducts": "Produits 100% faits par des Humains - Aucun IA",
+    "policies": "Politiques",
+    "privacy": "Confidentialité",
+    "terms": "Conditions d'utilisation",
+    "cookies": "Politique de cookies",
+    "returns": "Politique de retours",
+    "shipping": "Informations de livraison",
+    "disclaimer": "Avis juridiques",
+    "help": "Aide & Support",
+    "faq": "FAQ",
+    "contact": "Contactez-nous",
+    "digital": "statut",
+    "location": "emplacement",
+    "locationAddress": "partout://espace-numérique",
+    "online": "en ligne"
   },
   "LocaleSwitcher": {
     "label": "Changer de langue",

@@ -68,6 +68,8 @@ export default function RootPage() {
         ) : (
           <LoadingButton />
         )}
+
+        <div className="py-5" />
       </div>
     </div>
   );
