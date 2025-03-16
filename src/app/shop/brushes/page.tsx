@@ -36,34 +36,3 @@ export default function BrushesPage() {
     </div>
   );
 }
-
-// import { Suspense } from "react";
-// // import { Metadata } from "next";
-
-// // import { useTranslations } from "next-intl";
-
-// import { PageTitle } from "@/src/components/root/PageTitle";
-// import { ProductsCategoryGallery } from "@/src/components/product/ProductsCategoryGallery";
-// import { getProductsByCategory } from "@/src/actions/prisma/action";
-// import { ProductsGridSkeleton } from "@/src/components/product/Skeletons";
-
-// // export const metadata: Metadata = {
-// //   title: "Procreate Brushes | NJAE Plume",
-// //   description: "Explore and purchase our collection of premium Procreate brushes.",
-// // };
-
-// export default function BrushesPage() {
-//   // const t = useTranslations("Portfolio");
-
-//   const productsPromise = getProductsByCategory("brushes");
-
-//   return (
-//     <div>
-//       <PageTitle title="Brushes" />
-//       <div className="py-5" />
-//       <Suspense fallback={<ProductsGridSkeleton />}>
-//         <ProductsCategoryGallery products={productsPromise} />
-//       </Suspense>
-//     </div>
-//   );
-// }
