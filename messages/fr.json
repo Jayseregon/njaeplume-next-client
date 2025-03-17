@@ -21,6 +21,7 @@
     "gtxt1": " et ",
     "gtxt2": " s'appliquent.",
     "about": "À Propos",
+    "ourStory": "Notre Histoire",
     "humanMadeProducts": "Produits 100% faits par des Humains - Aucun IA",
     "policies": "Politiques",
     "privacy": "Confidentialité",
@@ -61,9 +62,17 @@
     "error2": "Il y a eu un problème lors de l'envoi de votre e-mail.",
     "error3": "Veuillez réessayer plus tard."
   },
-  "Themes": {
-    "h1_title": "Themes",
-    "subtitle": "Test des couleurs des thèmes Dark et Light."
+  "About": {
+    "title": "Notre Histoire",
+    "intro": "Nous sommes une petite famille composée d'adultes non conventionnels, d'une petite fille totalement mignonne et curieuse, et d'une adorable boule de fourrure ronronnante. 🐾",
+    "artist": "Vous pouvez m'appeler Ninie, prononcé 'nee-nee', l'artiste derrière ces produits. Et le PDG, le manager, ma moitié est Jay. Sans lui, il n'y aurait rien.",
+    "background": "Nous sommes basés au Canada mais venons de l'autre côté de l'océan. J'ai commencé à dessiner il y a moins de deux ans. Je me sens épanouie lorsque je suis en train de créer quoi que ce soit. Donnez-moi un crayon et un iPad et voilà! Tout ici est entièrement fait à la main par moi-même.",
+    "customization": "Il m'est aussi arrivé de réaliser qu'ayant un goût spécifique et le besoin de personnaliser mes possessions, je ne trouve pas vraiment de moyens faciles de le faire en ligne autrement que par moi-même. Comme l'option n'est généralement pas présentée, les gens ne peuvent pas la demander. C'est pourquoi je veux offrir à d'autres la possibilité de personnaliser tout ce qui se trouve ici selon leurs désirs et leurs besoins.",
+    "digital": "Pour le moment, nous nous concentrons uniquement sur les produits numériques. Vous pouvez télécharger immédiatement après l'achat et l'utiliser comme vous le souhaitez: l'imprimer ou le conserver numériquement.",
+    "conclusion": "Pour toute demande ou suggestion, n'hésitez pas à nous contacter en utilisant le formulaire. Dans l'espoir que vous trouverez tout ce dont vous avez besoin ici, nous vous souhaitons le meilleur!",
+    "signature": "- Ninie, Jay et co.",
+    "cta": "Laissez-nous créer quelque chose d'unique pour vous.",
+    "contactButton": "Contactez-nous"
   },
   "FAQ": {
     "title": "FAQ",

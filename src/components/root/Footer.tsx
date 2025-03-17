@@ -5,8 +5,13 @@ import { useTranslations } from "next-intl";
 import Link from "next/link";
 import { MapPin, PencilLine } from "lucide-react";
 
+import { getSubItemByKey } from "@/src/config/site";
+
 export default function Footer({ nonce }: { nonce?: string }): JSX.Element {
   const t = useTranslations("Footer");
+  const contactItem = getSubItemByKey("contact");
+  const faqItem = getSubItemByKey("faq");
+  const aboutItem = getSubItemByKey("about");
 
   return (
     <footer
@@ -19,6 +24,15 @@ export default function Footer({ nonce }: { nonce?: string }): JSX.Element {
           {/* Company info */}
           <div className="space-y-4">
             <h3 className="font-semibold text-base">{t("about")}</h3>
+            <div className="space-y-2 text-sm">
+              <Link
+                className="hover:underline hover:text-primary transition-colors"
+                href={aboutItem.href}
+              >
+                {t("ourStory")}
+              </Link>
+            </div>
+
             <p className="text-sm">
               &copy; {new Date().getFullYear()} {t("copyright1")} -{" "}
               {t("copyright2")}
@@ -78,13 +92,13 @@ export default function Footer({ nonce }: { nonce?: string }): JSX.Element {
             <div className="space-y-2 text-sm">
               <Link
                 className="hover:underline hover:text-primary transition-colors block"
-                href="/faq"
+                href={faqItem.href}
               >
                 {t("faq")}
               </Link>
               <Link
                 className="hover:underline hover:text-primary transition-colors block"
-                href="/contact"
+                href={contactItem.href}
               >
                 {t("contact")}
               </Link>

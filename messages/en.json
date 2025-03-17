@@ -21,6 +21,7 @@
     "gtxt1": " and ",
     "gtxt2": " apply.",
     "about": "About Us",
+    "ourStory": "Our Story",
     "humanMadeProducts": "100% Human-Made Products - No AI",
     "policies": "Policies",
     "privacy": "Privacy Policy",
@@ -61,9 +62,17 @@
     "error2": "There was a problem sending your email.",
     "error3": "Please try again later."
   },
-  "Themes": {
-    "h1_title": "Themes",
-    "subtitle": "Testing the Dark & Light themes color scheme."
+  "About": {
+    "title": "Our Story",
+    "intro": "We are a little family composed of unconventional adults, a totally cute and curious baby girl, and an adorable purring ball of fur. 🐾",
+    "artist": "You can call me Ninie, pronounced 'nee-nee', the artist behind these products. And the CEO, manager, my better-half is Jay. Without him, there would be nothing.",
+    "background": "We are based in Canada but come from across the ocean. I've only started drawing less than two years ago. I feel fulfilled when I'm in my process of creating anything. Give me a pencil and an iPad and voilà! Everything in here is completely handmade by myself.",
+    "customization": "It also occurred to me that having a specific taste and a need to have my possessions customized, I can't really find easy ways to do it online other than by myself. As the option is not usually presented, people can't ask for it. Which is why I want to offer others the opportunity to have anything here customized according to their wants and needs.",
+    "digital": "At the moment, we are focusing on digital products only. You can download immediately after purchase and use it as you want to: print it or keep it digitally.",
+    "conclusion": "For any inquiries or suggestions, feel free to contact us using the form. In the hope you'll find everything you need here, we wish you the best!",
+    "signature": "- Ninie, Jay and co.",
+    "cta": "Let us tailor something unique for you.",
+    "contactButton": "Contact Us"
   },
   "FAQ": {
     "title": "FAQ",

@@ -39,6 +39,13 @@ export const siteConfig = {
       label: "Freebies",
       href: "/shop/freebies",
     },
+  ],
+  subItems: [
+    {
+      key: "about",
+      label: "About",
+      href: "/about",
+    },
     {
       key: "contact",
       label: "Contact",
@@ -80,14 +87,35 @@ export const siteConfig = {
   ],
 };
 
+export interface NavItemProps {
+  key: string;
+  label: string;
+  href: string;
+}
+
+const DEFAULT_NAV_ITEM: NavItemProps = {
+  key: "",
+  label: "Not Found",
+  href: "/",
+};
+
 export function getNavItemByKey(key: string) {
   return siteConfig.navItems.find((item) => item.key === key);
 }
 
-export function getCastleNavItemByKey(key: string) {
-  return siteConfig.castleNavItems.find((item) => item.key === key);
+export function getCastleNavItemByKey(key: string): NavItemProps {
+  return (
+    siteConfig.castleNavItems.find((item) => item.key === key) ||
+    DEFAULT_NAV_ITEM
+  );
 }
 
 export function getHomeItemByKey(key: string) {
   return siteConfig.homeItems.find((item) => item.key === key);
+}
+
+export function getSubItemByKey(key: string): NavItemProps {
+  return (
+    siteConfig.subItems.find((item) => item.key === key) || DEFAULT_NAV_ITEM
+  );
 }

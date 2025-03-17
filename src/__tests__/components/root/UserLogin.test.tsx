@@ -2,8 +2,7 @@ import { render, screen } from "@testing-library/react";
 import * as clerk from "@clerk/nextjs";
 
 import { getCastleNavItemByKey } from "@/config/site";
-
-import { UserLogin } from "../../../components/root/UserLogin";
+import { UserLogin } from "@/components/root/UserLogin";
 
 // Mock the Lucide icons
 jest.mock("lucide-react", () => ({
@@ -13,24 +12,50 @@ jest.mock("lucide-react", () => ({
   LayoutDashboard: () => (
     <div data-testid="dashboard-icon">LayoutDashboard Icon</div>
   ),
+  Mail: () => <div data-testid="mail-icon">Mail Icon</div>,
 }));
 
-// Mock the Clerk components and hooks
-jest.mock("@clerk/nextjs", () => ({
-  SignInButton: ({ children }: { children: React.ReactNode }) => (
-    <div data-testid="sign-in-button">{children}</div>
-  ),
-  SignedIn: ({ children }: { children: React.ReactNode }) => (
-    <div data-testid="signed-in">{children}</div>
-  ),
-  SignedOut: ({ children }: { children: React.ReactNode }) => (
-    <div data-testid="signed-out">{children}</div>
-  ),
-  UserButton: ({ children }: { children: React.ReactNode }) => (
+// Mock the Clerk components and hooks with correct structure
+jest.mock("@clerk/nextjs", () => {
+  const UserButtonComponent = ({ children }: { children: React.ReactNode }) => (
     <div data-testid="user-button">{children}</div>
-  ),
-  useUser: jest.fn(),
-}));
+  );
+
+  // Add the MenuItems and Link as properties of UserButton
+  UserButtonComponent.MenuItems = ({
+    children,
+  }: {
+    children: React.ReactNode;
+  }) => <div data-testid="user-button-menu-items">{children}</div>;
+
+  UserButtonComponent.Link = ({
+    label,
+    labelIcon,
+    href,
+  }: {
+    label: string;
+    labelIcon: React.ReactNode;
+    href: string;
+  }) => (
+    <div data-href={href} data-label={label} data-testid="user-button-link">
+      {labelIcon}
+    </div>
+  );
+
+  return {
+    SignInButton: ({ children }: { children: React.ReactNode }) => (
+      <div data-testid="sign-in-button">{children}</div>
+    ),
+    SignedIn: ({ children }: { children: React.ReactNode }) => (
+      <div data-testid="signed-in">{children}</div>
+    ),
+    SignedOut: ({ children }: { children: React.ReactNode }) => (
+      <div data-testid="signed-out">{children}</div>
+    ),
+    UserButton: UserButtonComponent,
+    useUser: jest.fn(() => ({ isSignedIn: false, user: null })),
+  };
+});
 
 // Mock the Button component
 jest.mock("@/components/ui/button", () => ({
@@ -44,6 +69,13 @@ jest.mock("@/components/ui/button", () => ({
 // Mock the site config
 jest.mock("@/config/site", () => ({
   getCastleNavItemByKey: jest.fn(),
+  getSubItemByKey: jest.fn().mockImplementation((key) => {
+    if (key === "contact") {
+      return { href: "/contact", label: "Contact" };
+    }
+
+    return null;
+  }),
 }));
 
 describe("UserLogin", () => {
@@ -85,7 +117,7 @@ describe("UserLogin", () => {
 
   it("renders castle admin option when user has castleAdmin role", () => {
     // Mock the castle nav item
-    const mockCastleItem = { href: "/castle", key: "castle" };
+    const mockCastleItem = { href: "/castle", key: "castle", label: "Castle" };
 
     (getCastleNavItemByKey as jest.Mock).mockReturnValue(mockCastleItem);
 
@@ -99,36 +131,60 @@ describe("UserLogin", () => {
       },
     } as any);
 
-    // Mock the UserButton.MenuItems and UserButton.Link components
-    (clerk.UserButton as any).MenuItems = ({
-      children,
-    }: {
-      children: React.ReactNode;
-    }) => <div data-testid="user-button-menu-items">{children}</div>;
+    render(<UserLogin />);
 
-    (clerk.UserButton as any).Link = ({
-      label,
-      labelIcon,
-    }: {
-      label: string;
-      labelIcon: React.ReactNode;
-    }) => (
-      <div data-label={label} data-testid="user-button-link">
-        {labelIcon}
-      </div>
+    expect(screen.getByTestId("signed-in")).toBeInTheDocument();
+    expect(screen.getByTestId("user-button")).toBeInTheDocument();
+
+    // Check for both links - Castle and Contact
+    const links = screen.getAllByTestId("user-button-link");
+
+    expect(links).toHaveLength(2);
+
+    // Find Castle link
+    const castleLink = links.find(
+      (link) => link.getAttribute("data-label") === "Castle",
     );
+
+    expect(castleLink).toBeTruthy();
+    expect(castleLink).toHaveAttribute("data-href", "/castle");
+    expect(screen.getByTestId("dashboard-icon")).toBeInTheDocument();
+
+    // Find Contact link
+    const contactLink = links.find(
+      (link) => link.getAttribute("data-label") === "Contact",
+    );
+
+    expect(contactLink).toBeTruthy();
+    expect(contactLink).toHaveAttribute("data-href", "/contact");
+    expect(screen.getByTestId("mail-icon")).toBeInTheDocument();
+  });
+
+  it("renders contact option for regular users without castle admin role", () => {
+    // Mock the castle nav item
+    (getCastleNavItemByKey as jest.Mock).mockReturnValue(null);
+
+    // Mock the useUser hook for regular user
+    jest.spyOn(clerk, "useUser").mockReturnValue({
+      isSignedIn: true,
+      user: {
+        publicMetadata: {}, // No castle admin role
+      },
+    } as any);
 
     render(<UserLogin />);
 
     expect(screen.getByTestId("signed-in")).toBeInTheDocument();
     expect(screen.getByTestId("user-button")).toBeInTheDocument();
-    expect(screen.getByTestId("user-button-menu-items")).toBeInTheDocument();
-    expect(screen.getByTestId("user-button-link")).toBeInTheDocument();
-    expect(screen.getByTestId("user-button-link")).toHaveAttribute(
-      "data-label",
-      "Castle",
-    );
-    expect(screen.getByTestId("dashboard-icon")).toBeInTheDocument();
+
+    // Should only have Contact link, not Castle link
+    const userButtonLinks = screen.getAllByTestId("user-button-link");
+
+    expect(userButtonLinks).toHaveLength(1);
+    expect(userButtonLinks[0]).toHaveAttribute("data-label", "Contact");
+    expect(userButtonLinks[0]).toHaveAttribute("data-href", "/contact");
+    expect(screen.getByTestId("mail-icon")).toBeInTheDocument();
+    expect(screen.queryByTestId("dashboard-icon")).not.toBeInTheDocument();
   });
 
   it("accepts and passes along nonce prop for CSP", () => {
