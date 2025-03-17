@@ -56,6 +56,16 @@ export const siteConfig = {
       label: "FAQ",
       href: "/faq",
     },
+    {
+      key: "returns-refunds",
+      label: "Returns & Refunds",
+      href: "/policies/returns-refunds",
+    },
+    {
+      key: "shipping",
+      label: "Shipping",
+      href: "/policies/shipping",
+    },
   ],
   links: {},
   // Add castle routes for admin area

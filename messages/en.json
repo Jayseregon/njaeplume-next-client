@@ -27,8 +27,8 @@
     "privacy": "Privacy Policy",
     "terms": "Terms of Service",
     "cookies": "Cookies Policy",
-    "returns": "Returns Policy",
-    "shipping": "Shipping Info",
+    "returns": "Returns & Refunds",
+    "shipping": "Shipping",
     "disclaimer": "Disclaimers",
     "help": "Help & Support",
     "faq": "FAQ",
@@ -137,6 +137,52 @@
         "answer4": "Artworks and stickers will be open by a simple or double click, and you can save them as images.",
         "answer5": "If you would like tutorial videos on this subject, or about Procreate® and GoodNotes, let us now!"
       }
+    }
+  },
+  "ReturnsRefunds": {
+    "title": "Returns & Refunds",
+    "lastUpdated": "Last Updated: March 17, 2025",
+    "definitions": {
+      "title": "Definitions and legal references",
+      "website": "This Website (or this Application)",
+      "websiteDesc": "The property that enables the provision of the Service.",
+      "owner": "Owner (or We or Us)",
+      "ownerDesc": "NJAE Plume GP - The natural person(s) or legal entity that provides this Website and/or the Service to Users.",
+      "product": "Product (or Service)",
+      "productDesc": "Product (or Service) refers to the items provided by this Website as described on this Website.",
+      "user": "User (or You)",
+      "userDesc": "The natural person or legal entity that uses this Website."
+    },
+    "policy": {
+      "intro": "Thanks for purchasing our products at njaeplume.com operated by NJAE Plume GP.",
+      "noRefunds": "Due to the nature of our business, unfortunately, there is no effective way for us to issue refunds.",
+      "questions": "We will be happy to answer questions regarding our products before your purchase to ensure it will meet your needs. Thank you for your understanding.",
+      "additionalQuestions": "If you have any additional questions, feel free to contact us through our dedicated contact form.",
+      "contactButton": "Contact Us"
+    }
+  },
+  "Shipping": {
+    "title": "Shipping",
+    "lastUpdated": "Last Updated: March 17, 2025",
+    "definitions": {
+      "title": "Definitions and legal references",
+      "website": "This Website (or this Application)",
+      "websiteDesc": "The property that enables the provision of the Service.",
+      "owner": "Owner (or We or Us)",
+      "ownerDesc": "NJAE Plume GP - The natural person(s) or legal entity that provides this Website and/or the Service to Users.",
+      "product": "Product (or Service)",
+      "productDesc": "Product (or Service) refers to the items provided by this Website as described on this Website.",
+      "user": "User (or You)",
+      "userDesc": "The natural person or legal entity that uses this Website."
+    },
+    "policy": {
+      "intro": "Thanks for purchasing our products at njaeplume.com operated by NJAE Plume GP.",
+      "noShipping": "Due to the nature of our business, and all our products being of digital nature, we do not provide any shipping services.",
+      "download": "Each product is directly downloadable upon purchase.",
+      "technicalIssue": "In case of technical issue, if you have not received any link or are not able to download your products, we might directly send them to you by email, or cloud service if the total size exceed 20Mo, providing you send us proof of purchase.",
+      "understanding": "Thank you for your understanding.",
+      "additionalQuestions": "If you have any additional questions, feel free to contact us through our dedicated contact form.",
+      "contactButton": "Contact Us"
     }
   }
 }

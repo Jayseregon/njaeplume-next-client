@@ -86,7 +86,7 @@ describe("Footer", () => {
       { text: "Privacy Policy", href: "/policies/privacy" },
       { text: "Terms of Service", href: "/policies/terms" },
       { text: "Cookies", href: "/policies/cookies" },
-      { text: "Returns", href: "/policies/returns" },
+      { text: "Returns", href: "/policies/returns-refunds" },
       { text: "Shipping", href: "/policies/shipping" },
       { text: "Disclaimers", href: "/policies/disclaimers" },
     ];

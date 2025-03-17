@@ -9,9 +9,6 @@ import { getSubItemByKey } from "@/src/config/site";
 
 export default function Footer({ nonce }: { nonce?: string }): JSX.Element {
   const t = useTranslations("Footer");
-  const contactItem = getSubItemByKey("contact");
-  const faqItem = getSubItemByKey("faq");
-  const aboutItem = getSubItemByKey("about");
 
   return (
     <footer
@@ -27,7 +24,7 @@ export default function Footer({ nonce }: { nonce?: string }): JSX.Element {
             <div className="space-y-2 text-sm">
               <Link
                 className="hover:underline hover:text-primary transition-colors"
-                href={aboutItem.href}
+                href={getSubItemByKey("about").href}
               >
                 {t("ourStory")}
               </Link>
@@ -55,27 +52,27 @@ export default function Footer({ nonce }: { nonce?: string }): JSX.Element {
               </Link>
               <Link
                 className="hover:underline hover:text-primary transition-colors"
+                href={getSubItemByKey("returns-refunds").href}
+              >
+                {t("returns")}
+              </Link>
+              <Link
+                className="hover:underline hover:text-primary transition-colors"
                 href="/policies/terms"
               >
                 {t("terms")}
               </Link>
               <Link
                 className="hover:underline hover:text-primary transition-colors"
+                href={getSubItemByKey("shipping").href}
+              >
+                {t("shipping")}
+              </Link>
+              <Link
+                className="hover:underline hover:text-primary transition-colors"
                 href="/policies/cookies"
               >
                 {t("cookies")}
-              </Link>
-              <Link
-                className="hover:underline hover:text-primary transition-colors"
-                href="/policies/returns"
-              >
-                {t("returns")}
-              </Link>
-              <Link
-                className="hover:underline hover:text-primary transition-colors"
-                href="/policies/shipping"
-              >
-                {t("shipping")}
               </Link>
               <Link
                 className="hover:underline hover:text-primary transition-colors"
@@ -92,13 +89,13 @@ export default function Footer({ nonce }: { nonce?: string }): JSX.Element {
             <div className="space-y-2 text-sm">
               <Link
                 className="hover:underline hover:text-primary transition-colors block"
-                href={faqItem.href}
+                href={getSubItemByKey("faq").href}
               >
                 {t("faq")}
               </Link>
               <Link
                 className="hover:underline hover:text-primary transition-colors block"
-                href={contactItem.href}
+                href={getSubItemByKey("contact").href}
               >
                 {t("contact")}
               </Link>

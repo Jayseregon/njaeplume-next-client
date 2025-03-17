@@ -27,8 +27,8 @@
     "privacy": "Confidentialité",
     "terms": "Conditions d'utilisation",
     "cookies": "Politique de cookies",
-    "returns": "Politique de retours",
-    "shipping": "Informations de livraison",
+    "returns": "Retours & Remboursements",
+    "shipping": "Livraison",
     "disclaimer": "Avis juridiques",
     "help": "Aide & Support",
     "faq": "FAQ",
@@ -137,6 +137,52 @@
         "answer4": "Les œuvres d'art et les autocollants seront ouverts par un simple ou double clic, et vous pouvez les enregistrer en tant que images.",
         "answer5": "Si vous souhaitez des vidéos tutorielles sur ce sujet, ou sur Procreate® et GoodNotes, faites-le nous savoir!"
       }
+    }
+  },
+  "ReturnsRefunds": {
+    "title": "Retours & Remboursements",
+    "lastUpdated": "Dernière mise à jour : 19 novembre 2023",
+    "definitions": {
+      "title": "Définitions et références légales",
+      "website": "Ce site web (ou cette application)",
+      "websiteDesc": "La propriété qui permet la fourniture du service.",
+      "owner": "Propriétaire (ou Nous)",
+      "ownerDesc": "NJAE Plume S.E.N.C. - La ou les personnes physiques ou l'entité juridique qui fournit ce site web et/ou le service aux utilisateurs.",
+      "product": "Produit (ou Service)",
+      "productDesc": "Le produit (ou service) fait référence aux articles fournis par ce site web comme décrit sur ce site web.",
+      "user": "Utilisateur (ou Vous)",
+      "userDesc": "La personne physique ou l'entité juridique qui utilise ce site web."
+    },
+    "policy": {
+      "intro": "Merci d'avoir acheté nos produits sur njaeplume.com exploité par NJAE Plume S.E.N.C..",
+      "noRefunds": "En raison de la nature de notre activité, malheureusement, il n'y a pas de moyen efficace pour nous de délivrer des remboursements.",
+      "questions": "Nous serons heureux de répondre à vos questions concernant nos produits avant votre achat pour s'assurer qu'il répondra à vos besoins. Merci de votre compréhension.",
+      "additionalQuestions": "Si vous avez des questions supplémentaires, n'hésitez pas à nous contacter en utilisant notre formulaire de contact.",
+      "contactButton": "Contactez-nous"
+    }
+  },
+  "Shipping": {
+    "title": "Livraison",
+    "lastUpdated": "Dernière mise à jour : 19 novembre 2023",
+    "definitions": {
+      "title": "Définitions et références légales",
+      "website": "Ce site web (ou cette application)",
+      "websiteDesc": "La propriété qui permet la fourniture du service.",
+      "owner": "Propriétaire (ou Nous)",
+      "ownerDesc": "NJAE Plume S.E.N.C. - La ou les personnes physiques ou l'entité juridique qui fournit ce site web et/ou le service aux utilisateurs.",
+      "product": "Produit (ou Service)",
+      "productDesc": "Le produit (ou service) fait référence aux articles fournis par ce site web comme décrit sur ce site web.",
+      "user": "Utilisateur (ou Vous)",
+      "userDesc": "La personne physique ou l'entité juridique qui utilise ce site web."
+    },
+    "policy": {
+      "intro": "Merci d'avoir acheté nos produits sur njaeplume.com exploité par NJAE Plume S.E.N.C..",
+      "noShipping": "En raison de la nature de notre activité, et tous nos produits étant de nature numérique, nous ne fournissons aucun service d'expédition.",
+      "download": "Chaque produit est directement téléchargeable après l'achat.",
+      "technicalIssue": "En cas de problème technique, si vous n'avez reçu aucun lien ou ne pouvez pas télécharger vos produits, nous pourrions vous les envoyer directement par email, ou par un service cloud si la taille totale dépasse 20Mo, à condition que vous nous envoyiez une preuve d'achat.",
+      "understanding": "Merci de votre compréhension.",
+      "additionalQuestions": "Si vous avez des questions supplémentaires, n'hésitez pas à nous contacter en utilisant notre formulaire de contact.",
+      "contactButton": "Contactez-nous"
     }
   }
 }
