@@ -31,33 +31,33 @@ export default function FAQPage() {
 
   return (
     <ErrorBoundary fallback={<ErrorDefaultDisplay />}>
-      <div className="container">
-        <PageTitle title={t("title")} />
+      <PageTitle title={t("title")} />
 
-        <Accordion collapsible className="w-full" type="single">
-          {faqStructure.map((section) => (
-            <AccordionItem key={section.id} value={section.id}>
-              <AccordionTrigger className="text-foreground font-bold text-xl">
-                {t(`questions.${section.id}.question`)}
-              </AccordionTrigger>
-              <AccordionContent className="pb-4 pt-1 text-justify">
-                {Array.from({ length: section.answerCount }, (_, i) => {
-                  const index = i + 1;
+      <div className="py-5" />
 
-                  return (
-                    <p
-                      key={`${section.id}-answer-${index}`}
-                      className={i > 0 ? "mt-3" : ""}
-                    >
-                      {t(`questions.${section.id}.answer${index}`)}
-                    </p>
-                  );
-                })}
-              </AccordionContent>
-            </AccordionItem>
-          ))}
-        </Accordion>
-      </div>
+      <Accordion collapsible className="w-full" type="single">
+        {faqStructure.map((section) => (
+          <AccordionItem key={section.id} value={section.id}>
+            <AccordionTrigger className="text-foreground font-bold text-xl">
+              {t(`questions.${section.id}.question`)}
+            </AccordionTrigger>
+            <AccordionContent className="pb-4 pt-1 text-justify">
+              {Array.from({ length: section.answerCount }, (_, i) => {
+                const index = i + 1;
+
+                return (
+                  <p
+                    key={`${section.id}-answer-${index}`}
+                    className={i > 0 ? "mt-3" : ""}
+                  >
+                    {t(`questions.${section.id}.answer${index}`)}
+                  </p>
+                );
+              })}
+            </AccordionContent>
+          </AccordionItem>
+        ))}
+      </Accordion>
     </ErrorBoundary>
   );
 }

@@ -66,91 +66,91 @@ export default function ContactPage() {
 
   return (
     <ErrorBoundary fallback={<ErrorDefaultDisplay />}>
-      <div nonce={nonce}>
-        <PageTitle title={t("title")} />
-        <div className="text-foreground">
-          <EmailIcon size={65} />
-        </div>
-        <form action={formAction} className="space-y-4" nonce={nonce}>
-          <div
-            className="grid grid-cols-1 sm:grid-cols-2 gap-5 w-full"
-            nonce={nonce}
-          >
-            <FieldInput
-              fieldTarget="firstName"
-              t={t}
-              type="text"
-              value={contactForm.firstName}
-              onChange={handleChange}
-            />
-            <FieldInput
-              fieldTarget="lastName"
-              t={t}
-              type="text"
-              value={contactForm.lastName}
-              onChange={handleChange}
-            />
-          </div>
+      <PageTitle title={t("title")} />
+      <div className="py-5" />
 
+      <div className="text-foreground">
+        <EmailIcon size={65} />
+      </div>
+      <form action={formAction} className="space-y-4" nonce={nonce}>
+        <div
+          className="grid grid-cols-1 sm:grid-cols-2 gap-5 w-full"
+          nonce={nonce}
+        >
           <FieldInput
-            fieldTarget="email"
-            t={t}
-            type="email"
-            value={contactForm.email}
-            onChange={handleChange}
-          />
-
-          <FieldInput
-            fieldTarget="subject"
+            fieldTarget="firstName"
             t={t}
             type="text"
-            value={contactForm.subject}
+            value={contactForm.firstName}
             onChange={handleChange}
           />
-
-          <TextInput
-            fieldTarget="message"
+          <FieldInput
+            fieldTarget="lastName"
             t={t}
-            value={contactForm.message}
+            type="text"
+            value={contactForm.lastName}
             onChange={handleChange}
           />
+        </div>
 
-          <HoneypotField
-            t={t}
-            value={contactForm.honeypot ?? ""}
-            onChange={handleChange}
-          />
+        <FieldInput
+          fieldTarget="email"
+          t={t}
+          type="email"
+          value={contactForm.email}
+          onChange={handleChange}
+        />
 
-          <input
-            name="recaptchaToken"
-            type="hidden"
-            value={recaptchaToken ?? ""}
-            onChange={handleChange}
-          />
+        <FieldInput
+          fieldTarget="subject"
+          t={t}
+          type="text"
+          value={contactForm.subject}
+          onChange={handleChange}
+        />
 
-          <div
-            className="flex justify-center py-4 mx-auto"
-            id="recaptcha"
+        <TextInput
+          fieldTarget="message"
+          t={t}
+          value={contactForm.message}
+          onChange={handleChange}
+        />
+
+        <HoneypotField
+          t={t}
+          value={contactForm.honeypot ?? ""}
+          onChange={handleChange}
+        />
+
+        <input
+          name="recaptchaToken"
+          type="hidden"
+          value={recaptchaToken ?? ""}
+          onChange={handleChange}
+        />
+
+        <div
+          className="flex justify-center py-4 mx-auto"
+          id="recaptcha"
+          nonce={nonce}
+        >
+          <ReCAPTCHA
             nonce={nonce}
-          >
-            <ReCAPTCHA
-              nonce={nonce}
-              sitekey={process.env.NEXT_PUBLIC_RECAPTCHA_SITE_KEY ?? ""}
-              onChange={setRecaptchaToken}
-            />
-          </div>
+            sitekey={process.env.NEXT_PUBLIC_RECAPTCHA_SITE_KEY ?? ""}
+            onChange={setRecaptchaToken}
+          />
+        </div>
 
-          <Button
-            className="w-full bg-foreground text-background py-2 px-4 rounded-md hover:bg-warning-500 focus:outline-hidden"
-            disabled={pending || !recaptchaToken}
-            nonce={nonce}
-            type="submit"
-            variant="form"
-          >
-            {pending ? t("btn_pending") : t("btn")}
-          </Button>
-        </form>
-      </div>
+        <Button
+          className="w-full bg-foreground text-background py-2 px-4 rounded-md hover:bg-warning-500 focus:outline-hidden"
+          disabled={pending || !recaptchaToken}
+          nonce={nonce}
+          type="submit"
+          variant="form"
+        >
+          {pending ? t("btn_pending") : t("btn")}
+        </Button>
+      </form>
     </ErrorBoundary>
   );
 }

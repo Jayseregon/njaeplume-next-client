@@ -14,49 +14,49 @@ export default function AboutPage() {
 
   return (
     <ErrorBoundary fallback={<ErrorDefaultDisplay />}>
-      <div className="container py-5">
-        <PageTitle title={t("title")} />
+      <PageTitle title={t("title")} />
 
-        <div className="about-content">
-          <div className="row">
-            <div className="col-lg-8 offset-lg-2">
-              <div className="mb-6 text-justify">
-                <p className="mb-4">{t("intro")}</p>
-                <p className="mb-4">{t("artist")}</p>
-              </div>
+      <div className="py-5" />
 
-              <div className="mb-6">
-                <p className="text-justify">{t("background")}</p>
-              </div>
+      <div className="about-content">
+        <div className="row">
+          <div className="col-lg-8 offset-lg-2">
+            <div className="mb-6 text-justify">
+              <p className="mb-4">{t("intro")}</p>
+              <p className="mb-4">{t("artist")}</p>
+            </div>
 
-              <div className="mb-6">
-                <p className="text-justify">{t("customization")}</p>
-              </div>
+            <div className="mb-6">
+              <p className="text-justify">{t("background")}</p>
+            </div>
 
-              <div className="mb-6">
-                <p className="text-justify">{t("digital")}</p>
-              </div>
+            <div className="mb-6">
+              <p className="text-justify">{t("customization")}</p>
+            </div>
 
-              <div className="mb-8">
-                <p className="text-justify mb-2">{t("conclusion")}</p>
-                <p className="mt-4 text-right italic">{t("signature")}</p>
-              </div>
+            <div className="mb-6">
+              <p className="text-justify">{t("digital")}</p>
+            </div>
 
-              <div className="flex flex-col items-center justify-center gap-6 border-t border-gray-200 pt-8 mt-8">
-                <h2 className="text-2xl font-semibold text-center pt-5">
-                  {t("cta")}
-                </h2>
-                <Button
-                  asChild
-                  className="flex items-center gap-2 w-1/4"
-                  variant="form"
-                >
-                  <Link href="/contact">
-                    <Mail className="w-4 h-4 mr-1" />
-                    {t("contactButton")}
-                  </Link>
-                </Button>
-              </div>
+            <div className="mb-8">
+              <p className="text-justify mb-2">{t("conclusion")}</p>
+              <p className="mt-4 text-right italic">{t("signature")}</p>
+            </div>
+
+            <div className="flex flex-col items-center justify-center gap-6 border-t border-gray-200 pt-8 mt-8">
+              <h2 className="text-2xl font-semibold text-center pt-5">
+                {t("cta")}
+              </h2>
+              <Button
+                asChild
+                className="flex items-center gap-2 w-1/4"
+                variant="form"
+              >
+                <Link href="/contact">
+                  <Mail className="w-4 h-4 mr-1" />
+                  {t("contactButton")}
+                </Link>
+              </Button>
             </div>
           </div>
         </div>
