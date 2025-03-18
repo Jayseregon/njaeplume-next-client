@@ -30,6 +30,7 @@
     "returns": "Retours & Remboursements",
     "shipping": "Livraison",
     "disclaimer": "Avis juridiques",
+    "eula": "Contrat de Licence d'Utilisateur Final",
     "help": "Aide & Support",
     "faq": "FAQ",
     "contact": "Contactez-nous",
@@ -159,7 +160,7 @@
       "clarification": "Nous vous encourageons vivement à examiner attentivement la description du produit, les images de prévisualisation et toute démonstration disponible avant de procéder à l'achat, afin de vous assurer qu'il correspond à vos besoins spécifiques et est compatible avec votre logiciel. Nous sommes à votre disposition pour répondre à toutes vos questions avant l'achat.",
       "faultyFiles": "Dans le cas peu probable où vous rencontreriez un problème avec un fichier téléchargé (par exemple, un fichier corrompu ou incomplet), veuillez nous contacter immédiatement via notre formulaire de contact dédié. Nous évaluerons le problème et, à notre discrétion, pourrons fournir un fichier de remplacement. Cela ne constitue pas un remboursement.",
       "termsOfServiceLink": "Veuillez également consulter nos Conditions Générales d'Utilisation pour plus de détails concernant votre achat et l'utilisation de nos produits numériques.",
-      "governingLaw": "La présente politique de Retours et Remboursements est régie et interprétée conformément aux lois de la province de Québec, Canada. Tout litige découlant de ou en lien avec cette politique sera soumis à la juridiction exclusive des tribunaux du Québec, Canada.",
+      "governingLaw": "This Returns & Refunds policy is governed by and construed in accordance with the laws of the Province of Quebec and the federal laws of Canada applicable therein, without regard to its conflict of law provisions. Any disputes arising under or in connection with this policy shall be subject to the exclusive jurisdiction of the courts of Quebec, Canada.",
       "questions": "Nous sommes disponibles pour répondre à toutes vos questions sur nos produits avant votre achat afin de vous assurer qu'ils correspondent à vos besoins. Merci de votre compréhension.",
       "additionalQuestions": "Si vous avez des questions ou préoccupations supplémentaires, n'hésitez pas à nous contacter via notre formulaire de contact dédié.",
       "contactButton": "Nous Contacter"
@@ -187,6 +188,36 @@
       "understanding": "Nous vous remercions de votre compréhension.",
       "additionalQuestions": "Si vous avez des questions supplémentaires, n'hésitez pas à nous contacter via notre formulaire de contact dédié.",
       "contactButton": "Nous Contacter"
+    }
+  },
+  "LicenseAgreement": {
+    "title": "Contrat de Licence d'Utilisateur Final (CLUF)",
+    "lastUpdated": "Dernière mise à jour : 17 mars 2025",
+    "definitions": {
+      "title": "Définitions et Références Légales",
+      "website": "Ce Site Web (ou cette Application)",
+      "websiteDesc": "L'entité qui permet la fourniture du Service.",
+      "owner": "Propriétaire (ou Nous)",
+      "ownerDesc": "NJAE Plume S.E.N.C. - La ou les personnes physiques ou morales qui fournissent ce Site Web et/ou le Service aux Utilisateurs.",
+      "product": "Produit (ou Service)",
+      "productDesc": "Produit (ou Service) désigne les biens numériques ou services fournis par ce Site Web tels que décrits sur ce Site Web.",
+      "user": "Utilisateur (ou Vous)",
+      "userDesc": "La personne physique ou morale qui utilise ce Site Web."
+    },
+    "policy": {
+      "intro": "Merci d'avoir acheté nos produits numériques sur njaeplume.com, exploité par NJAE Plume S.E.N.C..",
+      "acceptance": "En achetant et en téléchargeant notre produit numérique, vous reconnaissez avoir lu, compris et accepté d'être lié par le présent Contrat de Licence.",
+      "licenseGrant": "Lors de l'achat, vous bénéficiez d'une licence limitée, non-exclusive et non transférable vous autorisant à utiliser le produit numérique à des fins personnelles uniquement.",
+      "usageRestrictions": "Il vous est interdit de revendre, reproduire, distribuer, modifier ou créer des œuvres dérivées du produit sans le consentement écrit préalable de NJAE Plume S.E.N.C..",
+      "personalUseClarification": "L'utilisation personnelle autorisée par cette licence signifie utiliser le produit numérique pour vos besoins individuels et non commerciaux. Cela inclut, sans s'y limiter, l'utilisation de modèles pour des projets personnels ou la décoration de vos appareils personnels avec des stickers. Il est expressément interdit d'utiliser le produit à des fins commerciales, telles que la création de produits à vendre, l'utilisation du produit dans le cadre du branding ou du marketing de votre entreprise, ou la distribution du produit à des tiers.",
+      "copyright": "Tous les droits d'auteur et droits de propriété intellectuelle relatifs au produit demeurent la propriété exclusive de NJAE Plume S.E.N.C..",
+      "termination": "Cette licence est valable jusqu'à sa résiliation par NJAE Plume S.E.N.C.. Nous nous réservons le droit de résilier cette licence immédiatement et sans préavis si vous ne respectez pas l'une des conditions du présent Contrat de Licence. En cas de résiliation, vous devez cesser toute utilisation du produit numérique et détruire toutes les copies, qu'elles soient sous forme électronique ou physique.",
+      "warrantyDisclaimer": "Le produit est fourni « en l'état » sans aucune garantie, expresse ou implicite. NJAE Plume S.E.N.C. ne pourra être tenu responsable des dommages découlant de l'utilisation du produit.",
+      "limitationOfLiability": "Dans la mesure maximale permise par la loi applicable, NJAE Plume S.E.N.C. ne pourra en aucun cas être tenu responsable de tout dommage indirect, accessoire, spécial, consécutif ou punitif (y compris, sans limitation, les dommages liés à la perte de profits, de données, d'utilisation, de réputation ou autres pertes incorporelles) découlant de ou en relation avec votre utilisation ou l'incapacité à utiliser le produit, même si NJAE Plume S.E.N.C. a été informé de la possibilité de tels dommages. Notre responsabilité totale envers vous pour toutes les réclamations découlant du présent Contrat de Licence ou du produit ne pourra en aucun cas dépasser le montant que vous avez payé pour le produit.",
+      "indemnification": "Vous acceptez d'indemniser et de dégager de toute responsabilité NJAE Plume S.E.N.C., ses affiliés, dirigeants, administrateurs, employés, agents et concédants de licence contre toute réclamation, responsabilité, dommage, perte, coût, dépense ou frais (y compris les honoraires raisonnables d'avocat) découlant de ou en relation avec votre violation du présent Contrat de Licence ou votre utilisation du produit numérique.",
+      "governingLaw": "Le présent Accord est régi et interprété conformément aux lois de la province de Québec et aux lois fédérales du Canada applicables, sans égard aux dispositions relatives aux conflits de lois. Tout litige découlant de ou en relation avec le présent Accord sera soumis à la juridiction exclusive des tribunaux du Québec, Canada.",
+      "entireAgreement": "Le présent Contrat de Licence constitue l'intégralité de l'accord entre vous et NJAE Plume S.E.N.C. concernant le produit et remplace toutes les communications et propositions antérieures ou contemporaines, orales ou écrites, entre vous et NJAE Plume S.E.N.C. relatives au produit.",
+      "severability": "Si une disposition du présent Contrat de Licence est jugée invalide ou inapplicable, ladite disposition sera supprimée et les autres dispositions resteront en vigueur et de plein effet."
     }
   }
 }

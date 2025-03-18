@@ -30,6 +30,7 @@
     "returns": "Returns & Refunds",
     "shipping": "Shipping",
     "disclaimer": "Disclaimers",
+    "eula": "End-User License Agreement",
     "help": "Help & Support",
     "faq": "FAQ",
     "contact": "Contact Us",
@@ -159,7 +160,7 @@
       "clarification": "We strongly encourage you to carefully review the product description, preview images, and any available demonstrations before making a purchase to ensure the product meets your specific needs and software compatibility. We are happy to answer any pre-purchase questions you may have.",
       "faultyFiles": "In the unlikely event that you experience issues with a downloaded file (e.g., it is corrupted or incomplete), please contact us immediately through our dedicated contact form. We will assess the issue and, at our discretion, may provide a replacement file. This does not constitute a refund.",
       "termsOfServiceLink": "Please also refer to our comprehensive Terms of Service for further details regarding your purchase and use of our digital products.",
-      "governingLaw": "This Returns & Refunds policy is governed by and construed in accordance with the laws of the Province of Quebec, Canada. Any disputes arising under or in connection with this policy shall be subject to the exclusive jurisdiction of the courts of Quebec, Canada.",
+      "governingLaw": "This Returns & Refunds policy is governed by and construed in accordance with the laws of the Province of Quebec and the federal laws of Canada applicable therein, without regard to its conflict of law provisions. Any disputes arising under or in connection with this policy shall be subject to the exclusive jurisdiction of the courts of Quebec, Canada.",
       "questions": "We are happy to answer any questions regarding our products before your purchase to ensure they will meet your needs. Thank you for your understanding.",
       "additionalQuestions": "If you have any additional questions or concerns, please feel free to contact us through our dedicated contact form.",
       "contactButton": "Contact Us"
@@ -173,7 +174,7 @@
       "website": "This Website (or this Application)",
       "websiteDesc": "The property that enables the provision of the Service.",
       "owner": "Owner (or We or Us)",
-      "ownerDesc": "NJAE Plume GP - The natural person(s) or legal entity that provides this Website and/or the Service to Users.",
+      "ownerDesc": "NJAE Plume G.P. - The natural person(s) or legal entity that provides this Website and/or the Service to Users.",
       "product": "Product (or Service)",
       "productDesc": "Product (or Service) refers to the digital goods or services provided by this Website as described on this Website.",
       "user": "User (or You)",
@@ -187,6 +188,36 @@
       "understanding": "Thank you for your understanding.",
       "additionalQuestions": "If you have any additional questions, feel free to contact us through our dedicated contact form.",
       "contactButton": "Contact Us"
+    }
+  },
+  "LicenseAgreement": {
+    "title": "End-User License Agreement (EULA)",
+    "lastUpdated": "Last Updated: March 17, 2025",
+    "definitions": {
+      "title": "Definitions and Legal References",
+      "website": "This Website (or this Application)",
+      "websiteDesc": "The property that enables the provision of the Service.",
+      "owner": "Owner (or We or Us)",
+      "ownerDesc": "NJAE Plume G.P. - The natural person(s) or legal entity that provides this Website and/or the Service to Users.",
+      "product": "Product (or Service)",
+      "productDesc": "Product (or Service) refers to the digital goods or services provided by this Website as described on this Website.",
+      "user": "User (or You)",
+      "userDesc": "The natural person or legal entity that uses this Website."
+    },
+    "policy": {
+      "intro": "Thank you for purchasing our digital products at njaeplume.com, operated by NJAE Plume G.P..",
+      "acceptance": "By purchasing and downloading our digital product, you acknowledge that you have read, understood, and agree to be bound by this License Agreement.",
+      "licenseGrant": "Upon purchase, you are granted a limited, non-exclusive, non-transferable license to use the digital product for personal purposes only.",
+      "usageRestrictions": "You are not permitted to resell, reproduce, distribute, modify, or create derivative works of the product without prior written consent from NJAE Plume G.P..",
+      "personalUseClarification": "Personal use as permitted under this license means using the digital product for your own individual, non-commercial purposes. This includes but is not limited to using templates for personal projects, decorating your personal devices with stickers, etc. It explicitly excludes using the product for any commercial endeavors, including but not limited to creating products for sale, using the product in business branding or marketing, or distributing the product to others.",
+      "copyright": "All copyrights and intellectual property rights in the product remain the exclusive property of NJAE Plume G.P..",
+      "termination": "This license is effective until terminated by NJAE Plume G.P.. We may terminate this license immediately without notice if you fail to comply with any term of this License Agreement. Upon termination, you must cease all use of the digital product and destroy all copies, whether in electronic or physical form.",
+      "warrantyDisclaimer": "The product is provided 'as-is' without any warranties, either express or implied. NJAE Plume G.P. shall not be liable for any damages arising from the use of the product.",
+      "limitationOfLiability": "To the maximum extent permitted by applicable law, in no event shall NJAE Plume G.P. be liable for any indirect, incidental, special, consequential, or punitive damages (including, without limitation, damages for loss of profits, data, use, goodwill, or other intangible losses) arising out of or relating to your use of or inability to use the product, even if NJAE Plume G.P. has been advised of the possibility of such damages. Our total liability to you for all claims arising out of or relating to this License Agreement or the product shall not exceed the amount you paid for the product.",
+      "indemnification": "You agree to indemnify and hold harmless NJAE Plume G.P., its affiliates, officers, directors, employees, agents, and licensors from and against any and all claims, liabilities, damages, losses, costs, expenses, or fees (including reasonable attorneys' fees) arising out of or relating to your breach of this License Agreement or your use of the digital product.",
+      "governingLaw": "This Agreement is governed by and construed in accordance with the laws of the Province of Quebec and the federal laws of Canada applicable therein, without regard to its conflict of law provisions. Any disputes arising under or in connection with this policy shall be subject to the exclusive jurisdiction of the courts of Quebec, Canada.",
+      "entireAgreement": "This License Agreement constitutes the entire agreement between you and NJAE Plume G.P. concerning the product and supersedes all prior or contemporaneous communications and proposals, whether oral or written, between you and NJAE Plume G.P. with respect to the product.",
+      "severability": "If any provision of this License Agreement is held to be invalid or unenforceable, such provision shall be struck and the remaining provisions shall remain in full force and effect."
     }
   }
 }

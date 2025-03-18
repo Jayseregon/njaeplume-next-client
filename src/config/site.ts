@@ -66,6 +66,11 @@ export const siteConfig = {
       label: "Shipping",
       href: "/policies/shipping",
     },
+    {
+      key: "eula",
+      label: "EULA",
+      href: "/policies/eula",
+    },
   ],
   links: {},
   // Add castle routes for admin area

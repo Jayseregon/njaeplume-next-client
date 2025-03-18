@@ -8,6 +8,7 @@ import {
   AccordionItem,
   AccordionTrigger,
 } from "@/components/ui/accordion";
+import { getSubItemByKey } from "@/src/config/site";
 
 // Bullet point component for consistent styling with protection against text justification
 const BulletPoint: React.FC = () => (
@@ -26,7 +27,10 @@ const SpecItem: React.FC<{ children: React.ReactNode }> = ({ children }) => (
 const CustomDemandSection: React.FC = () => (
   <div>
     For any custom art demand, please reach out to us through our{" "}
-    <Link className="text-foreground hover:text-primary" href="/contact">
+    <Link
+      className="text-foreground hover:text-primary"
+      href={getSubItemByKey("contact").href}
+    >
       contact form
     </Link>
     , before purchase.
@@ -36,11 +40,17 @@ const CustomDemandSection: React.FC = () => (
 const FAQSection: React.FC = () => (
   <div>
     Check our{" "}
-    <Link className="text-foreground hover:text-primary" href="/faq">
+    <Link
+      className="text-foreground hover:text-primary"
+      href={getSubItemByKey("faq").href}
+    >
       FAQ page
     </Link>{" "}
     for more information on how to use our products, or feel free to{" "}
-    <Link className="text-foreground hover:text-primary" href="/contact">
+    <Link
+      className="text-foreground hover:text-primary"
+      href={getSubItemByKey("contact").href}
+    >
       contact us
     </Link>
     .
@@ -51,12 +61,22 @@ const CopyrightSection: React.FC = () => {
   const currentYear = new Date().getFullYear();
 
   return (
-    <div>
-      Original design. You may not resell or reproduce.
-      <div className="mt-1">
+    <div className="flex flex-col space-y-1">
+      <span>Original design. You may not resell or reproduce.</span>
+      <span>
+        For full terms, please refere to our{" "}
+        <Link
+          className="text-foreground hover:text-primary"
+          href={getSubItemByKey("eula").href}
+        >
+          End-User License Agreement &#40;EULA&#41;
+        </Link>
+        .
+      </span>
+      <span>
         &copy; 2021 - {currentYear} Nathalie Tran, aka Niniefy. All Rights
         Reserved.
-      </div>
+      </span>
     </div>
   );
 };
