@@ -140,49 +140,53 @@
     }
   },
   "ReturnsRefunds": {
-    "title": "Retours & Remboursements",
-    "lastUpdated": "Dernière mise à jour : 19 novembre 2023",
+    "title": "Retours et Remboursements",
+    "lastUpdated": "Dernière mise à jour : 17 mars 2025",
     "definitions": {
-      "title": "Définitions et références légales",
-      "website": "Ce site web (ou cette application)",
-      "websiteDesc": "La propriété qui permet la fourniture du service.",
+      "title": "Définitions et Références Légales",
+      "website": "Ce Site Web (ou cette Application)",
+      "websiteDesc": "L'entité permettant la fourniture du Service.",
       "owner": "Propriétaire (ou Nous)",
-      "ownerDesc": "NJAE Plume S.E.N.C. - La ou les personnes physiques ou l'entité juridique qui fournit ce site web et/ou le service aux utilisateurs.",
+      "ownerDesc": "NJAE Plume S.E.N.C. - La ou les personnes physiques ou morales qui fournissent ce Site Web et/ou le Service aux Utilisateurs.",
       "product": "Produit (ou Service)",
-      "productDesc": "Le produit (ou service) fait référence aux articles fournis par ce site web comme décrit sur ce site web.",
+      "productDesc": "Produit (ou Service) désigne les biens numériques ou services fournis par ce Site Web tels que décrits sur ce dernier.",
       "user": "Utilisateur (ou Vous)",
-      "userDesc": "La personne physique ou l'entité juridique qui utilise ce site web."
+      "userDesc": "La personne physique ou morale qui utilise ce Site Web."
     },
     "policy": {
-      "intro": "Merci d'avoir acheté nos produits sur njaeplume.com exploité par NJAE Plume S.E.N.C..",
-      "noRefunds": "En raison de la nature de notre activité, malheureusement, il n'y a pas de moyen efficace pour nous de délivrer des remboursements.",
-      "questions": "Nous serons heureux de répondre à vos questions concernant nos produits avant votre achat pour s'assurer qu'il répondra à vos besoins. Merci de votre compréhension.",
-      "additionalQuestions": "Si vous avez des questions supplémentaires, n'hésitez pas à nous contacter en utilisant notre formulaire de contact.",
-      "contactButton": "Contactez-nous"
+      "intro": "Merci d'avoir acheté nos produits numériques sur njaeplume.com, exploité par NJAE Plume S.E.N.C..",
+      "noRefunds": "En raison de la nature numérique de nos produits, qui peuvent être immédiatement consultés et utilisés après l'achat, toutes les ventes sont définitives. Une fois l'achat effectué et le produit numérique mis à disposition en téléchargement, il ne peut être ni retourné ni remboursé.",
+      "clarification": "Nous vous encourageons vivement à examiner attentivement la description du produit, les images de prévisualisation et toute démonstration disponible avant de procéder à l'achat, afin de vous assurer qu'il correspond à vos besoins spécifiques et est compatible avec votre logiciel. Nous sommes à votre disposition pour répondre à toutes vos questions avant l'achat.",
+      "faultyFiles": "Dans le cas peu probable où vous rencontreriez un problème avec un fichier téléchargé (par exemple, un fichier corrompu ou incomplet), veuillez nous contacter immédiatement via notre formulaire de contact dédié. Nous évaluerons le problème et, à notre discrétion, pourrons fournir un fichier de remplacement. Cela ne constitue pas un remboursement.",
+      "termsOfServiceLink": "Veuillez également consulter nos Conditions Générales d'Utilisation pour plus de détails concernant votre achat et l'utilisation de nos produits numériques.",
+      "governingLaw": "La présente politique de Retours et Remboursements est régie et interprétée conformément aux lois de la province de Québec, Canada. Tout litige découlant de ou en lien avec cette politique sera soumis à la juridiction exclusive des tribunaux du Québec, Canada.",
+      "questions": "Nous sommes disponibles pour répondre à toutes vos questions sur nos produits avant votre achat afin de vous assurer qu'ils correspondent à vos besoins. Merci de votre compréhension.",
+      "additionalQuestions": "Si vous avez des questions ou préoccupations supplémentaires, n'hésitez pas à nous contacter via notre formulaire de contact dédié.",
+      "contactButton": "Nous Contacter"
     }
   },
   "Shipping": {
-    "title": "Livraison",
-    "lastUpdated": "Dernière mise à jour : 19 novembre 2023",
+    "title": "Expédition",
+    "lastUpdated": "Dernière mise à jour : 17 mars 2025",
     "definitions": {
-      "title": "Définitions et références légales",
-      "website": "Ce site web (ou cette application)",
-      "websiteDesc": "La propriété qui permet la fourniture du service.",
+      "title": "Définitions et Références Légales",
+      "website": "Ce Site Web (ou cette Application)",
+      "websiteDesc": "L'entité qui permet la fourniture du Service.",
       "owner": "Propriétaire (ou Nous)",
-      "ownerDesc": "NJAE Plume S.E.N.C. - La ou les personnes physiques ou l'entité juridique qui fournit ce site web et/ou le service aux utilisateurs.",
+      "ownerDesc": "NJAE Plume S.E.N.C. - La ou les personnes physiques ou morales qui fournissent ce Site Web et/ou le Service aux Utilisateurs.",
       "product": "Produit (ou Service)",
-      "productDesc": "Le produit (ou service) fait référence aux articles fournis par ce site web comme décrit sur ce site web.",
+      "productDesc": "Produit (ou Service) désigne les biens numériques ou services fournis par ce Site Web tels que décrits sur ce Site Web.",
       "user": "Utilisateur (ou Vous)",
-      "userDesc": "La personne physique ou l'entité juridique qui utilise ce site web."
+      "userDesc": "La personne physique ou morale qui utilise ce Site Web."
     },
     "policy": {
-      "intro": "Merci d'avoir acheté nos produits sur njaeplume.com exploité par NJAE Plume S.E.N.C..",
-      "noShipping": "En raison de la nature de notre activité, et tous nos produits étant de nature numérique, nous ne fournissons aucun service d'expédition.",
-      "download": "Chaque produit est directement téléchargeable après l'achat.",
-      "technicalIssue": "En cas de problème technique, si vous n'avez reçu aucun lien ou ne pouvez pas télécharger vos produits, nous pourrions vous les envoyer directement par email, ou par un service cloud si la taille totale dépasse 20Mo, à condition que vous nous envoyiez une preuve d'achat.",
-      "understanding": "Merci de votre compréhension.",
-      "additionalQuestions": "Si vous avez des questions supplémentaires, n'hésitez pas à nous contacter en utilisant notre formulaire de contact.",
-      "contactButton": "Contactez-nous"
+      "intro": "Merci d'avoir acheté nos produits sur njaeplume.com, exploité par NJAE Plume GP.",
+      "noShipping": "En raison de la nature numérique de nos produits, nous ne fournissons aucun service d'expédition et aucun frais de livraison n'est applicable.",
+      "download": "Chaque produit est disponible en téléchargement direct immédiatement après l'achat.",
+      "technicalIssue": "En cas de problème technique (par exemple, si vous ne recevez pas le lien de téléchargement ou si vous n'êtes pas en mesure de télécharger votre produit), veuillez nous contacter immédiatement via notre formulaire de contact dédié en fournissant votre preuve d'achat. Nous pourrons vous fournir une méthode de téléchargement alternative, telle que l'envoi direct par e-mail ou via un service de cloud si la taille du fichier dépasse 20 Mo.",
+      "understanding": "Nous vous remercions de votre compréhension.",
+      "additionalQuestions": "Si vous avez des questions supplémentaires, n'hésitez pas à nous contacter via notre formulaire de contact dédié.",
+      "contactButton": "Nous Contacter"
     }
   }
 }

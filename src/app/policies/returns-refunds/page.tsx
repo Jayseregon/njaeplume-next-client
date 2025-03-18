@@ -72,6 +72,10 @@ export default function ReturnsPage() {
             <div className="mb-6 text-justify">
               <p className="mb-4">{t("policy.intro")}</p>
               <p className="mb-4">{t("policy.noRefunds")}</p>
+              <p className="mb-4">{t("policy.clarification")}</p>
+              <p className="mb-4">{t("policy.faultyFiles")}</p>
+              <p className="mb-4">{t("policy.termsOfServiceLink")}</p>
+              <p className="mb-4">{t("policy.governingLaw")}</p>
               <p className="mb-4">{t("policy.questions")}</p>
               <p className="mb-4">{t("policy.additionalQuestions")}</p>
             </div>

@@ -143,21 +143,25 @@
     "title": "Returns & Refunds",
     "lastUpdated": "Last Updated: March 17, 2025",
     "definitions": {
-      "title": "Definitions and legal references",
+      "title": "Definitions and Legal References",
       "website": "This Website (or this Application)",
       "websiteDesc": "The property that enables the provision of the Service.",
       "owner": "Owner (or We or Us)",
-      "ownerDesc": "NJAE Plume GP - The natural person(s) or legal entity that provides this Website and/or the Service to Users.",
+      "ownerDesc": "NJAE Plume G.P. - The natural person(s) or legal entity that provides this Website and/or the Service to Users.",
       "product": "Product (or Service)",
-      "productDesc": "Product (or Service) refers to the items provided by this Website as described on this Website.",
+      "productDesc": "Product (or Service) refers to the digital goods or services provided by this Website as described on this Website.",
       "user": "User (or You)",
       "userDesc": "The natural person or legal entity that uses this Website."
     },
     "policy": {
-      "intro": "Thanks for purchasing our products at njaeplume.com operated by NJAE Plume GP.",
-      "noRefunds": "Due to the nature of our business, unfortunately, there is no effective way for us to issue refunds.",
-      "questions": "We will be happy to answer questions regarding our products before your purchase to ensure it will meet your needs. Thank you for your understanding.",
-      "additionalQuestions": "If you have any additional questions, feel free to contact us through our dedicated contact form.",
+      "intro": "Thank you for purchasing our digital products at njaeplume.com, operated by NJAE Plume G.P..",
+      "noRefunds": "Due to the digital nature of our products, which can be immediately accessed and used upon purchase, all sales are final. Once a purchase is completed and the digital product is made available for download, it cannot be returned or refunded.",
+      "clarification": "We strongly encourage you to carefully review the product description, preview images, and any available demonstrations before making a purchase to ensure the product meets your specific needs and software compatibility. We are happy to answer any pre-purchase questions you may have.",
+      "faultyFiles": "In the unlikely event that you experience issues with a downloaded file (e.g., it is corrupted or incomplete), please contact us immediately through our dedicated contact form. We will assess the issue and, at our discretion, may provide a replacement file. This does not constitute a refund.",
+      "termsOfServiceLink": "Please also refer to our comprehensive Terms of Service for further details regarding your purchase and use of our digital products.",
+      "governingLaw": "This Returns & Refunds policy is governed by and construed in accordance with the laws of the Province of Quebec, Canada. Any disputes arising under or in connection with this policy shall be subject to the exclusive jurisdiction of the courts of Quebec, Canada.",
+      "questions": "We are happy to answer any questions regarding our products before your purchase to ensure they will meet your needs. Thank you for your understanding.",
+      "additionalQuestions": "If you have any additional questions or concerns, please feel free to contact us through our dedicated contact form.",
       "contactButton": "Contact Us"
     }
   },
@@ -171,15 +175,15 @@
       "owner": "Owner (or We or Us)",
       "ownerDesc": "NJAE Plume GP - The natural person(s) or legal entity that provides this Website and/or the Service to Users.",
       "product": "Product (or Service)",
-      "productDesc": "Product (or Service) refers to the items provided by this Website as described on this Website.",
+      "productDesc": "Product (or Service) refers to the digital goods or services provided by this Website as described on this Website.",
       "user": "User (or You)",
       "userDesc": "The natural person or legal entity that uses this Website."
     },
     "policy": {
-      "intro": "Thanks for purchasing our products at njaeplume.com operated by NJAE Plume GP.",
-      "noShipping": "Due to the nature of our business, and all our products being of digital nature, we do not provide any shipping services.",
-      "download": "Each product is directly downloadable upon purchase.",
-      "technicalIssue": "In case of technical issue, if you have not received any link or are not able to download your products, we might directly send them to you by email, or cloud service if the total size exceed 20Mo, providing you send us proof of purchase.",
+      "intro": "Thank you for purchasing our products at njaeplume.com operated by NJAE Plume G.P..",
+      "noShipping": "Due to the digital nature of our products, we do not provide any shipping services, and no shipping fees are applicable.",
+      "download": "Each product is available for direct download immediately upon purchase.",
+      "technicalIssue": "In the event of a technical issue (for example, if you do not receive a download link or are unable to download your product), please contact us immediately through our dedicated contact form with your proof of purchase. We may provide an alternative download method, such as sending the file directly via email or through a cloud service if the file size exceeds 20 MB.",
       "understanding": "Thank you for your understanding.",
       "additionalQuestions": "If you have any additional questions, feel free to contact us through our dedicated contact form.",
       "contactButton": "Contact Us"
