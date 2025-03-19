@@ -18,7 +18,7 @@ export default function FreebiesPage() {
         const freebies = await getProductsByCategory("freebies");
 
         if (!freebies) {
-          throw new Error("No stickers found");
+          throw new Error("No freebies found");
         }
         setProducts(freebies);
       } catch (err) {
@@ -30,9 +30,9 @@ export default function FreebiesPage() {
 
   return (
     <div>
-      <PageTitle title="Stickers" />
+      <PageTitle title="Free Downloads" />
       <div className="py-5" />
-      <CategoryGallery products={products} />
+      <CategoryGallery products={products} showAsFreebies={true} />
     </div>
   );
 }

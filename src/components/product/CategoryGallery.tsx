@@ -2,8 +2,17 @@ import ErrorBoundary from "@/src/components/root/ErrorBoundary";
 import { ErrorDefaultDisplay } from "@/components/root/ErrorDefaultDisplay";
 import { Product } from "@/src/interfaces/Products";
 import { ProductCard } from "@/src/components/product/ProductCard";
+import { FreebieCard } from "@/src/components/product/FreebieCard";
 
-export const CategoryGallery = ({ products }: { products: Product[] }) => {
+interface CategoryGalleryProps {
+  products: Product[];
+  showAsFreebies?: boolean;
+}
+
+export const CategoryGallery = ({
+  products,
+  showAsFreebies = false,
+}: CategoryGalleryProps) => {
   if (!products?.length) {
     return (
       <div className="flex justify-center">
@@ -15,9 +24,13 @@ export const CategoryGallery = ({ products }: { products: Product[] }) => {
   return (
     <ErrorBoundary fallback={<ErrorDefaultDisplay />}>
       <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-5 mx-10 md:gap-10 md:mx-20">
-        {products.map((product) => (
-          <ProductCard key={product.id} product={product} />
-        ))}
+        {products.map((product) =>
+          showAsFreebies || product.category === "freebies" ? (
+            <FreebieCard key={product.id} product={product} />
+          ) : (
+            <ProductCard key={product.id} product={product} />
+          ),
+        )}
       </div>
     </ErrorBoundary>
   );
