@@ -147,7 +147,7 @@ export function ProductDetail({ product }: { product: Product }) {
           <div className="hidden md:flex items-center justify-between">
             <p className="text-3xl font-bold">{formattedPrice}</p>
             {/* <Button className="w-40">Add to Cart</Button> */}
-            <Button className="w-40">Comming Soon...</Button>
+            <Button className="w-40">Coming Soon...</Button>
           </div>
 
           <Separator className="my-10" />
