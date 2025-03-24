@@ -1,9 +1,8 @@
 {
   "HomePage": {
-    "title": "Personnalisation comme vous le souhaitez",
-    "subtitle": "Nous nous réinventons pour vous offrir une expérience unique.",
-    "redirect": "Pendant ce temps, vous pouvez toujours visiter notre Portfolio contenant toutes les créations précédentes.",
-    "code": "En cours de développement"
+    "noticeTitle": "Des changements excitants arrivent !",
+    "noticeMessage": "Nous réorganisons notre boutique pour vous offrir une expérience encore meilleure.",
+    "noticeCTA": "Restez à l'écoute et revenez bientôt pour des mises à jour !"
   },
   "Utils": {
     "LoadingButton": "Veuillez patienter",
@@ -13,13 +12,31 @@
     }
   },
   "Footer": {
-    "copyright1": "NJAE Plume S.E.N.C.",
+    "copyright1": "NJAE Plume",
     "copyright2": "Tous droits réservés",
     "google1": "Ce site est protégé par reCAPTCHA et Google ",
     "gpp": "Politique de confidentialité",
     "gts": "Conditions d'utilisation",
     "gtxt1": " et ",
-    "gtxt2": " s'appliquent."
+    "gtxt2": " s'appliquent.",
+    "about": "À Propos",
+    "ourStory": "Notre Histoire",
+    "humanMadeProducts": "Produits 100% faits par des Humains - Aucun IA",
+    "policies": "Politiques",
+    "privacy": "Confidentialité",
+    "terms": "Conditions d'utilisation",
+    "cookies": "Politique de cookies",
+    "returns": "Retours & Remboursements",
+    "shipping": "Livraison",
+    "disclaimer": "Avis juridiques",
+    "eula": "Contrat de Licence d'Utilisateur Final",
+    "help": "Aide & Support",
+    "faq": "FAQ",
+    "contact": "Contactez-nous",
+    "digital": "statut",
+    "location": "emplacement",
+    "locationAddress": "partout://espace-numérique",
+    "online": "en ligne"
   },
   "LocaleSwitcher": {
     "label": "Changer de langue",
@@ -45,8 +62,161 @@
     "error2": "Il y a eu un problème lors de l'envoi de votre e-mail.",
     "error3": "Veuillez réessayer plus tard."
   },
-  "Themes": {
-    "h1_title": "Themes",
-    "subtitle": "Test des couleurs des thèmes Dark et Light."
+  "About": {
+    "title": "Notre Histoire",
+    "intro": "Nous sommes une petite famille composée d'adultes non conventionnels, d'une petite fille totalement mignonne et curieuse, et d'une adorable boule de fourrure ronronnante. 🐾",
+    "artist": "Vous pouvez m'appeler Ninie, prononcé 'nee-nee', l'artiste derrière ces produits. Et le PDG, le manager, ma moitié est Jay. Sans lui, il n'y aurait rien.",
+    "background": "Nous sommes basés au Canada mais venons de l'autre côté de l'océan. J'ai commencé à dessiner il y a moins de deux ans. Je me sens épanouie lorsque je suis en train de créer quoi que ce soit. Donnez-moi un crayon et un iPad et voilà! Tout ici est entièrement fait à la main par moi-même.",
+    "customization": "Il m'est aussi arrivé de réaliser qu'ayant un goût spécifique et le besoin de personnaliser mes possessions, je ne trouve pas vraiment de moyens faciles de le faire en ligne autrement que par moi-même. Comme l'option n'est généralement pas présentée, les gens ne peuvent pas la demander. C'est pourquoi je veux offrir à d'autres la possibilité de personnaliser tout ce qui se trouve ici selon leurs désirs et leurs besoins.",
+    "digital": "Pour le moment, nous nous concentrons uniquement sur les produits numériques. Vous pouvez télécharger immédiatement après l'achat et l'utiliser comme vous le souhaitez: l'imprimer ou le conserver numériquement.",
+    "conclusion": "Pour toute demande ou suggestion, n'hésitez pas à nous contacter en utilisant le formulaire. Dans l'espoir que vous trouverez tout ce dont vous avez besoin ici, nous vous souhaitons le meilleur!",
+    "signature": "- Ninie, Jay et co.",
+    "cta": "Laissez-nous créer quelque chose d'unique pour vous.",
+    "contactButton": "Contactez-nous"
+  },
+  "FAQ": {
+    "title": "FAQ",
+    "lastUpdated": "Dernière mise à jour: 19 novembre 2023",
+    "questions": {
+      "usage": {
+        "question": "Que pouvons-nous faire avec ces produits?",
+        "answer1": "Après l'achat de l'un de nos produits, même ceux personnalisés, vous pouvez les utiliser pour vos projets personnels. La plupart d'entre eux sont créés pour offrir une variété d'utilisations dans les planificateurs, tout ce dont vous avez besoin, utilisez, créez et possédez personnellement.",
+        "answer2": "Vous pouvez le présenter, mais vous ne pouvez pas le revendre, le reproduire ou le copier. Les droits et crédits sont toujours réservés à Niniefy (Nathalie Tran). Si vous souhaitez utiliser quoi que ce soit que vous avez acheté ici d'une autre manière que personnelle, contactez nous d'abord.",
+        "answer3": "Si vous êtes une entreprise et souhaitez collaborer, n'hésitez pas à nous contacter.",
+        "answer4": "Les polices ont cependant des conditions spéciales. Il sera précisé lesquelles vous pouvez utiliser personnellement ou commercialement, en fonction de la licence que vous achetez."
+      },
+      "unique": {
+        "question": "Les produits sont-ils uniques?",
+        "answer1": "Chaque produit sur ce site a été entièrement fait à la main et est unique.",
+        "answer2": "Vous ne trouverez pas de copie ailleurs. Si une référence a été utilisée, à des fins de précision, elle sera spécifiée dans la description du produit.",
+        "answer3": "Cependant, s'il y a des similitudes, ou une forte ressemblance quelque part, c'est purement une coïncidence, car le Web est un vaste endroit. Mais, ces produits n'ont pas été créés en copiant ou en trichant."
+      },
+      "logos": {
+        "question": "Pourquoi y a-t-il deux logos différents?",
+        "answer1": "L'un est le logo principal du site web, tandis que l'autre, qui apparaît sur les produits, est le logo de l'illustrateur : Niniefy. Le site web est une entreprise familiale : le PDG est le mari, Jay ; la designer est la femme, Nathalie (alias Ninie)."
+      },
+      "niniefy": {
+        "question": "Qui est Niniefy?",
+        "answer1": "Niniefy est le surnom de Nathalie Tran pour la partie illustration. Elle est celle qui conçoit absolument tout sur le site web, que ce soient les produits, les images, les logos, les photos, même les séparateurs. Tout est fait entièrement à la main, donc il n'y aura jamais d'infractions aux droits d'auteur."
+      },
+      "shipping": {
+        "question": "Quelle est la politique de livraison?",
+        "answer1": "Comme tous les produits sont entièrement numériques, il n'y a pas de livraison disponible. Au moins, pour le moment, vous devez imprimer les œuvres d'art ou les autocollants vous-même, à moins que vous ne soyez prêt à payer plus, si vous le souhaitez. Si c'est le cas, n'hésitez pas à utiliser notre formulaire de contact pour que nous puissions nous mettre d'accord sur les détails et réaliser votre souhait.",
+        "answer2": "L'utilisation des autres produits restera numérique, donc pas besoin de les expédier! En revanche, vous recevrez le lien pour le télécharger immédiatement après l'achat. Pas de temps d'attente!"
+      },
+      "returns": {
+        "question": "Quelle est la politique de retour?",
+        "answer1": "Aucun retour ne sera accepté.",
+        "answer2": "La nature de nos produits ne permet aucun remboursement ou retour, car vous pouvez immédiatement voir ce que vous achetez, à partir des photos des produits, vous ne pouvez pas prouver que vous n'avez jamais dupliqué les fichiers ou entièrement supprimé les produits en question.",
+        "answer3": "Cependant, s'il y avait un problème, vous avez besoin d'aide sur quoi que ce soit en rapport avec ce que notre entreprise offre, contactez-nous dès que vous le pouvez et nous serons ravis de vous aider.",
+        "answer4": "Enfin, si vous n'êtes pas satisfait d'un produit, contactez-nous également et dites-nous pourquoi, afin que nous puissions essayer de le régler et de le réparer.",
+        "answer5": "Nous nous réservons le droit de refuser d'aider tout client abusif et agressif."
+      },
+      "custom": {
+        "question": "Comment obtenir des produits personnalisés?",
+        "answer1": "Si vous avez quelque chose en tête, vous voulez quelque chose fait à partir de zéro, ou vous aimez un produit préexistant mais vous en avez besoin d'un unique, juste pour vous, à votre goût, veuillez nous contacter en utilisant notre formulaire de contact, avant de faire tout achat.",
+        "answer2": "Nous vous poserons quelques questions pour comprendre vos désirs et besoins pour s'assurer que vous serez satisfait de votre produit personnalisé sur demande."
+      },
+      "fewProducts": {
+        "question": "Pourquoi y a-t-il si peu de produits?",
+        "answer1": "Ce site web est uniquement créé par deux personnes : l'une est le créateur des produits, et l'autre est le créateur du site web. L'un doit créer des produits et des mises en page, tout en s'occupant d'un bébé, cela prend du temps. L'autre a un travail à temps plein, donc nous avons très peu de temps pour ajouter des produits de manière à assurer qu'il n'y ait pas de vol.",
+        "answer2": "Patience avec nous, il y a beaucoup plus de produits en route."
+      },
+      "fanArt": {
+        "question": "Pourquoi certaines œuvres sont-elles en vente tandis que d'autres ne le sont pas?",
+        "answer1": "Vous remarquerez peut-être un lien vers niniefy.com présentant un portfolio de œuvres d'art. Certaines seront en vente sur njaeplume.com, ici même, tandis que d'autres n'apparaîtront que sur niniefy.com.",
+        "answer2": "Ce seront en fait des fan arts créés uniquement par Niniefy (Nathalie Tran) mais, comme ils sont des représentations de produits sous licence comme Harry Potter (tout ce qui concerne le monde des sorciers, vraiment), Disney et d'autres films, nous n'avons pas les droits de les vendre, malgré le fait qu'ils soient faits à la main.",
+        "answer3": "Nous les présenterons toujours pour que vous puissiez voir les compétences ou les possibilités. Jusqu'à ce que nous puissions détenir les licences, nous espérons que vous comprendrez.",
+        "answer4": "Si vous avez des questions, n'hésitez pas à nous contacter."
+      },
+      "howToUse": {
+        "question": "Comment utiliser les produits?",
+        "answer1": "La plupart des produits proposés sont en fait faciles à utiliser. Ils sont envoyés sous forme de fichier ZIP : décompressez le fichier en cliquant dessus, puis ouvrez tout ce qu'il révèle en cliquant directement dessus à nouveau.",
+        "answer2": "Les brosses, les nuanciers, pour Procreate®, s'importeront automatiquement dans l'application appropriée, lorsque vous cliquez sur ceux-ci.",
+        "answer3": "Les polices devront être partagées pour être utilisées soit sur Procreate® ou d'autres applications/systèmes : long clic, puis partager (ou Ouvrir avec), puis sélectionnez l'application sur laquelle vous souhaitez installer la police.",
+        "answer4": "Les œuvres d'art et les autocollants seront ouverts par un simple ou double clic, et vous pouvez les enregistrer en tant que images.",
+        "answer5": "Si vous souhaitez des vidéos tutorielles sur ce sujet, ou sur Procreate® et GoodNotes, faites-le nous savoir!"
+      }
+    }
+  },
+  "ReturnsRefunds": {
+    "title": "Retours et Remboursements",
+    "lastUpdated": "Dernière mise à jour : 17 mars 2025",
+    "definitions": {
+      "title": "Définitions et Références Légales",
+      "website": "Ce Site Web (ou cette Application)",
+      "websiteDesc": "L'entité permettant la fourniture du Service.",
+      "owner": "Propriétaire (ou Nous)",
+      "ownerDesc": "NJAE Plume S.E.N.C. - La ou les personnes physiques ou morales qui fournissent ce Site Web et/ou le Service aux Utilisateurs.",
+      "product": "Produit (ou Service)",
+      "productDesc": "Produit (ou Service) désigne les biens numériques ou services fournis par ce Site Web tels que décrits sur ce dernier.",
+      "user": "Utilisateur (ou Vous)",
+      "userDesc": "La personne physique ou morale qui utilise ce Site Web."
+    },
+    "policy": {
+      "intro": "Merci d'avoir acheté nos produits numériques sur njaeplume.com, exploité par NJAE Plume S.E.N.C..",
+      "noRefunds": "En raison de la nature numérique de nos produits, qui peuvent être immédiatement consultés et utilisés après l'achat, toutes les ventes sont définitives. Une fois l'achat effectué et le produit numérique mis à disposition en téléchargement, il ne peut être ni retourné ni remboursé.",
+      "clarification": "Nous vous encourageons vivement à examiner attentivement la description du produit, les images de prévisualisation et toute démonstration disponible avant de procéder à l'achat, afin de vous assurer qu'il correspond à vos besoins spécifiques et est compatible avec votre logiciel. Nous sommes à votre disposition pour répondre à toutes vos questions avant l'achat.",
+      "faultyFiles": "Dans le cas peu probable où vous rencontreriez un problème avec un fichier téléchargé (par exemple, un fichier corrompu ou incomplet), veuillez nous contacter immédiatement via notre formulaire de contact dédié. Nous évaluerons le problème et, à notre discrétion, pourrons fournir un fichier de remplacement. Cela ne constitue pas un remboursement.",
+      "termsOfServiceLink": "Veuillez également consulter nos Conditions Générales d'Utilisation pour plus de détails concernant votre achat et l'utilisation de nos produits numériques.",
+      "governingLaw": "This Returns & Refunds policy is governed by and construed in accordance with the laws of the Province of Quebec and the federal laws of Canada applicable therein, without regard to its conflict of law provisions. Any disputes arising under or in connection with this policy shall be subject to the exclusive jurisdiction of the courts of Quebec, Canada.",
+      "questions": "Nous sommes disponibles pour répondre à toutes vos questions sur nos produits avant votre achat afin de vous assurer qu'ils correspondent à vos besoins. Merci de votre compréhension.",
+      "additionalQuestions": "Si vous avez des questions ou préoccupations supplémentaires, n'hésitez pas à nous contacter via notre formulaire de contact dédié.",
+      "contactButton": "Nous Contacter"
+    }
+  },
+  "Shipping": {
+    "title": "Expédition",
+    "lastUpdated": "Dernière mise à jour : 17 mars 2025",
+    "definitions": {
+      "title": "Définitions et Références Légales",
+      "website": "Ce Site Web (ou cette Application)",
+      "websiteDesc": "L'entité qui permet la fourniture du Service.",
+      "owner": "Propriétaire (ou Nous)",
+      "ownerDesc": "NJAE Plume S.E.N.C. - La ou les personnes physiques ou morales qui fournissent ce Site Web et/ou le Service aux Utilisateurs.",
+      "product": "Produit (ou Service)",
+      "productDesc": "Produit (ou Service) désigne les biens numériques ou services fournis par ce Site Web tels que décrits sur ce Site Web.",
+      "user": "Utilisateur (ou Vous)",
+      "userDesc": "La personne physique ou morale qui utilise ce Site Web."
+    },
+    "policy": {
+      "intro": "Merci d'avoir acheté nos produits sur njaeplume.com, exploité par NJAE Plume GP.",
+      "noShipping": "En raison de la nature numérique de nos produits, nous ne fournissons aucun service d'expédition et aucun frais de livraison n'est applicable.",
+      "download": "Chaque produit est disponible en téléchargement direct immédiatement après l'achat.",
+      "technicalIssue": "En cas de problème technique (par exemple, si vous ne recevez pas le lien de téléchargement ou si vous n'êtes pas en mesure de télécharger votre produit), veuillez nous contacter immédiatement via notre formulaire de contact dédié en fournissant votre preuve d'achat. Nous pourrons vous fournir une méthode de téléchargement alternative, telle que l'envoi direct par e-mail ou via un service de cloud si la taille du fichier dépasse 20 Mo.",
+      "understanding": "Nous vous remercions de votre compréhension.",
+      "additionalQuestions": "Si vous avez des questions supplémentaires, n'hésitez pas à nous contacter via notre formulaire de contact dédié.",
+      "contactButton": "Nous Contacter"
+    }
+  },
+  "LicenseAgreement": {
+    "title": "Contrat de Licence d'Utilisateur Final (CLUF)",
+    "lastUpdated": "Dernière mise à jour : 17 mars 2025",
+    "definitions": {
+      "title": "Définitions et Références Légales",
+      "website": "Ce Site Web (ou cette Application)",
+      "websiteDesc": "L'entité qui permet la fourniture du Service.",
+      "owner": "Propriétaire (ou Nous)",
+      "ownerDesc": "NJAE Plume S.E.N.C. - La ou les personnes physiques ou morales qui fournissent ce Site Web et/ou le Service aux Utilisateurs.",
+      "product": "Produit (ou Service)",
+      "productDesc": "Produit (ou Service) désigne les biens numériques ou services fournis par ce Site Web tels que décrits sur ce Site Web.",
+      "user": "Utilisateur (ou Vous)",
+      "userDesc": "La personne physique ou morale qui utilise ce Site Web."
+    },
+    "policy": {
+      "intro": "Merci d'avoir acheté nos produits numériques sur njaeplume.com, exploité par NJAE Plume S.E.N.C..",
+      "acceptance": "En achetant et en téléchargeant notre produit numérique, vous reconnaissez avoir lu, compris et accepté d'être lié par le présent Contrat de Licence.",
+      "licenseGrant": "Lors de l'achat, vous bénéficiez d'une licence limitée, non-exclusive et non transférable vous autorisant à utiliser le produit numérique à des fins personnelles uniquement.",
+      "usageRestrictions": "Il vous est interdit de revendre, reproduire, distribuer, modifier ou créer des œuvres dérivées du produit sans le consentement écrit préalable de NJAE Plume S.E.N.C..",
+      "personalUseClarification": "L'utilisation personnelle autorisée par cette licence signifie utiliser le produit numérique pour vos besoins individuels et non commerciaux. Cela inclut, sans s'y limiter, l'utilisation de modèles pour des projets personnels ou la décoration de vos appareils personnels avec des stickers. Il est expressément interdit d'utiliser le produit à des fins commerciales, telles que la création de produits à vendre, l'utilisation du produit dans le cadre du branding ou du marketing de votre entreprise, ou la distribution du produit à des tiers.",
+      "copyright": "Tous les droits d'auteur et droits de propriété intellectuelle relatifs au produit demeurent la propriété exclusive de NJAE Plume S.E.N.C..",
+      "termination": "Cette licence est valable jusqu'à sa résiliation par NJAE Plume S.E.N.C.. Nous nous réservons le droit de résilier cette licence immédiatement et sans préavis si vous ne respectez pas l'une des conditions du présent Contrat de Licence. En cas de résiliation, vous devez cesser toute utilisation du produit numérique et détruire toutes les copies, qu'elles soient sous forme électronique ou physique.",
+      "warrantyDisclaimer": "Le produit est fourni « en l'état » sans aucune garantie, expresse ou implicite. NJAE Plume S.E.N.C. ne pourra être tenu responsable des dommages découlant de l'utilisation du produit.",
+      "limitationOfLiability": "Dans la mesure maximale permise par la loi applicable, NJAE Plume S.E.N.C. ne pourra en aucun cas être tenu responsable de tout dommage indirect, accessoire, spécial, consécutif ou punitif (y compris, sans limitation, les dommages liés à la perte de profits, de données, d'utilisation, de réputation ou autres pertes incorporelles) découlant de ou en relation avec votre utilisation ou l'incapacité à utiliser le produit, même si NJAE Plume S.E.N.C. a été informé de la possibilité de tels dommages. Notre responsabilité totale envers vous pour toutes les réclamations découlant du présent Contrat de Licence ou du produit ne pourra en aucun cas dépasser le montant que vous avez payé pour le produit.",
+      "indemnification": "Vous acceptez d'indemniser et de dégager de toute responsabilité NJAE Plume S.E.N.C., ses affiliés, dirigeants, administrateurs, employés, agents et concédants de licence contre toute réclamation, responsabilité, dommage, perte, coût, dépense ou frais (y compris les honoraires raisonnables d'avocat) découlant de ou en relation avec votre violation du présent Contrat de Licence ou votre utilisation du produit numérique.",
+      "governingLaw": "Le présent Accord est régi et interprété conformément aux lois de la province de Québec et aux lois fédérales du Canada applicables, sans égard aux dispositions relatives aux conflits de lois. Tout litige découlant de ou en relation avec le présent Accord sera soumis à la juridiction exclusive des tribunaux du Québec, Canada.",
+      "entireAgreement": "Le présent Contrat de Licence constitue l'intégralité de l'accord entre vous et NJAE Plume S.E.N.C. concernant le produit et remplace toutes les communications et propositions antérieures ou contemporaines, orales ou écrites, entre vous et NJAE Plume S.E.N.C. relatives au produit.",
+      "severability": "Si une disposition du présent Contrat de Licence est jugée invalide ou inapplicable, ladite disposition sera supprimée et les autres dispositions resteront en vigueur et de plein effet."
+    }
   }
 }

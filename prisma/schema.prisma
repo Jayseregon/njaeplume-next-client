@@ -37,7 +37,7 @@ model Product {
   createdAt     DateTime       @default(now())
   updatedAt     DateTime       @updatedAt
   zip_file_name String
-  slug          String
+  slug          String         @unique
   tags          Tag[]          @relation("ProductToTag")
   images        ProductImage[]
 

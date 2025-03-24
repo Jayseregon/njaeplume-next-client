@@ -5,7 +5,7 @@ import { toast } from "sonner";
 import { Button } from "@/src/components/ui/button";
 import { Input } from "@/src/components/ui/input";
 import { Label } from "@/src/components/ui/label";
-import { ImageStatusIndicator } from "@/src/components/product/ImageStatusIndicator";
+import { ImageStatusIndicator } from "@/src/components/castle/ImageStatusIndicator";
 import { useImageUpload } from "@/src/hooks/useImageUpload";
 
 interface ProductImageUploaderProps {
