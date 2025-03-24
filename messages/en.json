@@ -1,25 +1,42 @@
 {
   "HomePage": {
-    "title": "Personalization like you want it",
-    "subtitle": "We are reinventing ourselves to offer you a unique experience.",
-    "redirect": "In the mean time, you can still visit our Portfolio containing all previous creations.",
-    "code": "Currently in development"
+    "noticeTitle": "Exciting Changes Are Coming!",
+    "noticeMessage": "We're currently revamping our shop to bring you an even better experience.",
+    "noticeCTA": "Stay tuned and check back soon for updates!"
   },
-  "Utils" : {
-    "LoadingButton": "Please wait", 
+  "Utils": {
+    "LoadingButton": "Please wait",
     "ErrorDefaultDisplay": {
       "title": "Something went wrong!",
       "message": "Please try again later."
-    } 
+    }
   },
   "Footer": {
-    "copyright1": "NJAE Plume G.P.",
+    "copyright1": "NJAE Plume",
     "copyright2": "All rights reserved",
     "google1": "This site is protected by reCAPTCHA and the Google ",
     "gpp": "Privacy Policy",
     "gts": "Terms of Service",
     "gtxt1": " and ",
-    "gtxt2": " apply."
+    "gtxt2": " apply.",
+    "about": "About Us",
+    "ourStory": "Our Story",
+    "humanMadeProducts": "100% Human-Made Products - No AI",
+    "policies": "Policies",
+    "privacy": "Privacy Policy",
+    "terms": "Terms of Service",
+    "cookies": "Cookies Policy",
+    "returns": "Returns & Refunds",
+    "shipping": "Shipping",
+    "disclaimer": "Disclaimers",
+    "eula": "End-User License Agreement",
+    "help": "Help & Support",
+    "faq": "FAQ",
+    "contact": "Contact Us",
+    "digital": "status",
+    "location": "location",
+    "locationAddress": "everywhere://digital-space",
+    "online": "online"
   },
   "LocaleSwitcher": {
     "label": "Change language",
@@ -41,12 +58,165 @@
     "btn": "Send",
     "btn_pending": "Sending...",
     "success": "Email sent successfully!",
-    "error1": "Oops!", 
+    "error1": "Oops!",
     "error2": "There was a problem sending your email.",
     "error3": "Please try again later."
   },
-  "Themes": {
-    "h1_title": "Themes",
-    "subtitle": "Testing the Dark & Light themes color scheme."
+  "About": {
+    "title": "Our Story",
+    "intro": "We are a little family composed of unconventional adults, a totally cute and curious baby girl, and an adorable purring ball of fur. 🐾",
+    "artist": "You can call me Ninie, pronounced 'nee-nee', the artist behind these products. And the CEO, manager, my better-half is Jay. Without him, there would be nothing.",
+    "background": "We are based in Canada but come from across the ocean. I've only started drawing less than two years ago. I feel fulfilled when I'm in my process of creating anything. Give me a pencil and an iPad and voilà! Everything in here is completely handmade by myself.",
+    "customization": "It also occurred to me that having a specific taste and a need to have my possessions customized, I can't really find easy ways to do it online other than by myself. As the option is not usually presented, people can't ask for it. Which is why I want to offer others the opportunity to have anything here customized according to their wants and needs.",
+    "digital": "At the moment, we are focusing on digital products only. You can download immediately after purchase and use it as you want to: print it or keep it digitally.",
+    "conclusion": "For any inquiries or suggestions, feel free to contact us using the form. In the hope you'll find everything you need here, we wish you the best!",
+    "signature": "- Ninie, Jay and co.",
+    "cta": "Let us tailor something unique for you.",
+    "contactButton": "Contact Us"
+  },
+  "FAQ": {
+    "title": "FAQ",
+    "lastUpdated": "Last Updated: November 19, 2023",
+    "questions": {
+      "usage": {
+        "question": "What can we do with these products?",
+        "answer1": "After you purchase any of our products, even custom ones, you can use it for your personal projects. Most of them are created to offer variety to use in planners, anything you need, use, create and own personally.",
+        "answer2": "You can showcase it, but you can not resell it, reproduce or copy. The rights and credits are still reserved to Niniefy (Nathalie Tran). If you want to use anything you purchased here in any other way than personal, contact us first.",
+        "answer3": "If you are a company and want to make a collaboration, feel free to reach out to us.",
+        "answer4": "Fonts have special conditions, though. It will be specified which ones you can use personally or commercially, depending on the license you buy."
+      },
+      "unique": {
+        "question": "Are the products unique?",
+        "answer1": "Every single product in this website has been handmade entirely and is unique.",
+        "answer2": "You won't find a copy anywhere. If a reference has been used, for precision purpose, it will be specified in the product's description.",
+        "answer3": "However, if there are any similarities, or strong resemblance somewhere, this is purely a coincidence, as the Web is a wide place. But, these products have not been created by copying or cheating."
+      },
+      "logos": {
+        "question": "Why are there two different logos?",
+        "answer1": "One is the main logo of the website, while the other, that appears on products, is the illustrator's logo: Niniefy. The website is a family owned company : the CEO is the husband, Jay ; the designer is the wife, Nathalie (aka Ninie)."
+      },
+      "niniefy": {
+        "question": "Who is Niniefy?",
+        "answer1": "Niniefy is Nathalie Tran's nickname for the illustration part. She is the one designing absolutely everything on the website, be it products, images, logos, photos, even separators. Everything is done entirely by hand, so there will never be copyrights infringements."
+      },
+      "shipping": {
+        "question": "What is the shipping policy?",
+        "answer1": "As the products are all completely digital, there is no shipping available. At least, for the time being, you are required to print the artworks or stickers yourselves, unless you're willing to pay extra, if you want us to. If so, feel free to use our contact form so we can agree on details and make your wish come true.",
+        "answer2": "The other products' use will remain digital, so no need to ship it! On the upside, you will receive the link to download it immediately upon purchase. No waiting time!"
+      },
+      "returns": {
+        "question": "What is the return policy?",
+        "answer1": "There won't be any return accepted.",
+        "answer2": "The nature of our products can't allow any refund or return, because you can immediately see what you are buying, from the products' pictures, you can't prove you never duplicated the files or entirely deleted the products in question.",
+        "answer3": "However, if there was a problem, you need assistance on anything related to what our company offers, contact us as soon as you can and we will gladly help you.",
+        "answer4": "Lastly, if you are unsatisfied with a product, contact us also and to tell us why, so we could try to arrange and fix it.",
+        "answer5": "We reserve ourselves the right to refuse to help any abusive and aggressive clients."
+      },
+      "custom": {
+        "question": "How to get custom products?",
+        "answer1": "If you have anything in mind, you want something from made scratch, or you like a preexisting product but you need it unique, just for you, at your taste, please reach out to us using our contact form, before making any purchase.",
+        "answer2": "We will ask you a few questions to understand your wants and needs to make sure you'll be satisfied with your on-demand custom product."
+      },
+      "fewProducts": {
+        "question": "Why is there so few products?",
+        "answer1": "This website is only created by two persons: one is the creator of the products, and the other is the creator of the website. One has to create products and the layouts, while taking care of a baby, it takes time. The other has a full time working job, so we have very few time to add products in a way to ensure no thievery.",
+        "answer2": "Bear with us, there is a lot more products on the way."
+      },
+      "fanArt": {
+        "question": "Why some artworks are for sale while others aren't?",
+        "answer1": "You may notice a link to niniefy.com showcasing a portfolio of artworks. Some will be for sale on njaeplume.com, right here, while others will only appear on niniefy.com.",
+        "answer2": "These will actually be some fan arts solely created by Niniefy (Nathalie Tran) but, as they are representations of licensed products like Harry Potter (anything Wizarding World, really), Disney and other movies, we don't have the rights to sell these, despite the fact that they're handmade.",
+        "answer3": "We will still showcase them for you to see the skills or possibilities. Until we can hold the licenses, we hope you will understand.",
+        "answer4": "If you have any question, don't hesitate to contact us."
+      },
+      "howToUse": {
+        "question": "How to use the products?",
+        "answer1": "Most of the products offered are actually easy to use. They are sent as a ZIP file: unzip the file by clicking on it, and then, open anything it uncovers by clicking directly on it again.",
+        "answer2": "Brushes, swatches, for Procreate®, will import automatically in the appropriate app, when you click on these.",
+        "answer3": "Fonts will need to be shared to use either on Procreate® of other apps/systems: long click, then share (or Open with), then select the app you want to install the font on.",
+        "answer4": "Artworks and stickers will be open by a simple or double click, and you can save them as images.",
+        "answer5": "If you would like tutorial videos on this subject, or about Procreate® and GoodNotes, let us now!"
+      }
+    }
+  },
+  "ReturnsRefunds": {
+    "title": "Returns & Refunds",
+    "lastUpdated": "Last Updated: March 17, 2025",
+    "definitions": {
+      "title": "Definitions and Legal References",
+      "website": "This Website (or this Application)",
+      "websiteDesc": "The property that enables the provision of the Service.",
+      "owner": "Owner (or We or Us)",
+      "ownerDesc": "NJAE Plume G.P. - The natural person(s) or legal entity that provides this Website and/or the Service to Users.",
+      "product": "Product (or Service)",
+      "productDesc": "Product (or Service) refers to the digital goods or services provided by this Website as described on this Website.",
+      "user": "User (or You)",
+      "userDesc": "The natural person or legal entity that uses this Website."
+    },
+    "policy": {
+      "intro": "Thank you for purchasing our digital products at njaeplume.com, operated by NJAE Plume G.P..",
+      "noRefunds": "Due to the digital nature of our products, which can be immediately accessed and used upon purchase, all sales are final. Once a purchase is completed and the digital product is made available for download, it cannot be returned or refunded.",
+      "clarification": "We strongly encourage you to carefully review the product description, preview images, and any available demonstrations before making a purchase to ensure the product meets your specific needs and software compatibility. We are happy to answer any pre-purchase questions you may have.",
+      "faultyFiles": "In the unlikely event that you experience issues with a downloaded file (e.g., it is corrupted or incomplete), please contact us immediately through our dedicated contact form. We will assess the issue and, at our discretion, may provide a replacement file. This does not constitute a refund.",
+      "termsOfServiceLink": "Please also refer to our comprehensive Terms of Service for further details regarding your purchase and use of our digital products.",
+      "governingLaw": "This Returns & Refunds policy is governed by and construed in accordance with the laws of the Province of Quebec and the federal laws of Canada applicable therein, without regard to its conflict of law provisions. Any disputes arising under or in connection with this policy shall be subject to the exclusive jurisdiction of the courts of Quebec, Canada.",
+      "questions": "We are happy to answer any questions regarding our products before your purchase to ensure they will meet your needs. Thank you for your understanding.",
+      "additionalQuestions": "If you have any additional questions or concerns, please feel free to contact us through our dedicated contact form.",
+      "contactButton": "Contact Us"
+    }
+  },
+  "Shipping": {
+    "title": "Shipping",
+    "lastUpdated": "Last Updated: March 17, 2025",
+    "definitions": {
+      "title": "Definitions and legal references",
+      "website": "This Website (or this Application)",
+      "websiteDesc": "The property that enables the provision of the Service.",
+      "owner": "Owner (or We or Us)",
+      "ownerDesc": "NJAE Plume G.P. - The natural person(s) or legal entity that provides this Website and/or the Service to Users.",
+      "product": "Product (or Service)",
+      "productDesc": "Product (or Service) refers to the digital goods or services provided by this Website as described on this Website.",
+      "user": "User (or You)",
+      "userDesc": "The natural person or legal entity that uses this Website."
+    },
+    "policy": {
+      "intro": "Thank you for purchasing our products at njaeplume.com operated by NJAE Plume G.P..",
+      "noShipping": "Due to the digital nature of our products, we do not provide any shipping services, and no shipping fees are applicable.",
+      "download": "Each product is available for direct download immediately upon purchase.",
+      "technicalIssue": "In the event of a technical issue (for example, if you do not receive a download link or are unable to download your product), please contact us immediately through our dedicated contact form with your proof of purchase. We may provide an alternative download method, such as sending the file directly via email or through a cloud service if the file size exceeds 20 MB.",
+      "understanding": "Thank you for your understanding.",
+      "additionalQuestions": "If you have any additional questions, feel free to contact us through our dedicated contact form.",
+      "contactButton": "Contact Us"
+    }
+  },
+  "LicenseAgreement": {
+    "title": "End-User License Agreement (EULA)",
+    "lastUpdated": "Last Updated: March 17, 2025",
+    "definitions": {
+      "title": "Definitions and Legal References",
+      "website": "This Website (or this Application)",
+      "websiteDesc": "The property that enables the provision of the Service.",
+      "owner": "Owner (or We or Us)",
+      "ownerDesc": "NJAE Plume G.P. - The natural person(s) or legal entity that provides this Website and/or the Service to Users.",
+      "product": "Product (or Service)",
+      "productDesc": "Product (or Service) refers to the digital goods or services provided by this Website as described on this Website.",
+      "user": "User (or You)",
+      "userDesc": "The natural person or legal entity that uses this Website."
+    },
+    "policy": {
+      "intro": "Thank you for purchasing our digital products at njaeplume.com, operated by NJAE Plume G.P..",
+      "acceptance": "By purchasing and downloading our digital product, you acknowledge that you have read, understood, and agree to be bound by this License Agreement.",
+      "licenseGrant": "Upon purchase, you are granted a limited, non-exclusive, non-transferable license to use the digital product for personal purposes only.",
+      "usageRestrictions": "You are not permitted to resell, reproduce, distribute, modify, or create derivative works of the product without prior written consent from NJAE Plume G.P..",
+      "personalUseClarification": "Personal use as permitted under this license means using the digital product for your own individual, non-commercial purposes. This includes but is not limited to using templates for personal projects, decorating your personal devices with stickers, etc. It explicitly excludes using the product for any commercial endeavors, including but not limited to creating products for sale, using the product in business branding or marketing, or distributing the product to others.",
+      "copyright": "All copyrights and intellectual property rights in the product remain the exclusive property of NJAE Plume G.P..",
+      "termination": "This license is effective until terminated by NJAE Plume G.P.. We may terminate this license immediately without notice if you fail to comply with any term of this License Agreement. Upon termination, you must cease all use of the digital product and destroy all copies, whether in electronic or physical form.",
+      "warrantyDisclaimer": "The product is provided 'as-is' without any warranties, either express or implied. NJAE Plume G.P. shall not be liable for any damages arising from the use of the product.",
+      "limitationOfLiability": "To the maximum extent permitted by applicable law, in no event shall NJAE Plume G.P. be liable for any indirect, incidental, special, consequential, or punitive damages (including, without limitation, damages for loss of profits, data, use, goodwill, or other intangible losses) arising out of or relating to your use of or inability to use the product, even if NJAE Plume G.P. has been advised of the possibility of such damages. Our total liability to you for all claims arising out of or relating to this License Agreement or the product shall not exceed the amount you paid for the product.",
+      "indemnification": "You agree to indemnify and hold harmless NJAE Plume G.P., its affiliates, officers, directors, employees, agents, and licensors from and against any and all claims, liabilities, damages, losses, costs, expenses, or fees (including reasonable attorneys' fees) arising out of or relating to your breach of this License Agreement or your use of the digital product.",
+      "governingLaw": "This Agreement is governed by and construed in accordance with the laws of the Province of Quebec and the federal laws of Canada applicable therein, without regard to its conflict of law provisions. Any disputes arising under or in connection with this policy shall be subject to the exclusive jurisdiction of the courts of Quebec, Canada.",
+      "entireAgreement": "This License Agreement constitutes the entire agreement between you and NJAE Plume G.P. concerning the product and supersedes all prior or contemporaneous communications and proposals, whether oral or written, between you and NJAE Plume G.P. with respect to the product.",
+      "severability": "If any provision of this License Agreement is held to be invalid or unenforceable, such provision shall be struck and the remaining provisions shall remain in full force and effect."
+    }
   }
 }

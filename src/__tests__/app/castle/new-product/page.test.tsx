@@ -92,7 +92,7 @@ jest.mock("@/components/ui/button", () => ({
   ),
 }));
 
-jest.mock("@/components/product/TagInput", () => ({
+jest.mock("@/components/castle/TagInput", () => ({
   TagInput: ({ selectedTags, onChange }: any) => (
     <div data-testid="tag-input">
       <div>
@@ -116,7 +116,7 @@ jest.mock("@/components/product/TagInput", () => ({
   ),
 }));
 
-jest.mock("@/components/product/FormField", () => ({
+jest.mock("@/components/castle/FormField", () => ({
   FormField: ({ id, label, name, inputType, inputProps, className }: any) => (
     <div className={className} data-testid={`form-field-${name}`}>
       <label htmlFor={id}>{label}</label>
@@ -140,7 +140,7 @@ jest.mock("@/components/product/FormField", () => ({
   ),
 }));
 
-jest.mock("@/components/product/CategoryField", () => ({
+jest.mock("@/components/castle/CategoryField", () => ({
   CategoryField: ({ selectedCategory, onChange }: any) => (
     <div data-testid="category-field">
       <select
@@ -157,7 +157,7 @@ jest.mock("@/components/product/CategoryField", () => ({
   ),
 }));
 
-jest.mock("@/components/product/ProductImageUploader", () => ({
+jest.mock("@/components/castle/ProductImageUploader", () => ({
   ProductImageUploader: ({ productName, category, imageUploadHook }: any) => (
     <div
       data-category={category}
@@ -174,7 +174,7 @@ jest.mock("@/components/product/ProductImageUploader", () => ({
   ),
 }));
 
-jest.mock("@/components/product/ProductZipUploader", () => ({
+jest.mock("@/components/castle/ProductZipUploader", () => ({
   ProductZipUploader: ({ productName, category, zipUploadHook }: any) => (
     <div
       data-category={category}

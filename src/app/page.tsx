@@ -4,19 +4,19 @@ import { useTranslations } from "next-intl";
 import Image from "next/image";
 import Link from "next/link";
 import { useContext } from "react";
+import { Store } from "lucide-react";
 
 import { Button } from "@/components/ui/button";
-import { PortfolioIcon } from "@/components/icons";
-import { getNavItemByKey } from "@/config/site";
-import { title, subtitle } from "@/components/typography";
+import { getHomeItemByKey } from "@/config/site";
 import { LoadingButton } from "@/components/root/LoadingButton";
+import { PageTitle } from "@/components/root/PageTitle";
 
 import { NonceContext } from "./providers";
 
 export default function RootPage() {
   const nonce = useContext(NonceContext);
   const t = useTranslations("HomePage");
-  const portfolio = getNavItemByKey("portfolio");
+  const shop = getHomeItemByKey("shop");
 
   return (
     <div className="flex flex-col items-center w-full">
@@ -49,25 +49,27 @@ export default function RootPage() {
 
       <div className="flex flex-col items-center justify-center max-w-7xl gap-4">
         <div className="inline-block text-center justify-center">
-          <h1 className={title({ color: "pink", size: "lg" })}>{t("title")}</h1>
-          <div className={subtitle({ class: "mt-4" })}>
-            {t("subtitle")}
+          <PageTitle title={t("noticeTitle")} />
+          <div className="text-xl text-center">
+            {t("noticeMessage")}
             <br />
-            {t("redirect")}
+            {t("noticeCTA")}
           </div>
         </div>
 
         <div className="py-1" />
 
-        {portfolio && portfolio.href ? (
-          <Button asChild className="w-1/4" variant="form">
-            <Link href={portfolio.href}>
-              <PortfolioIcon /> {portfolio.label}
+        {shop && shop.href ? (
+          <Button asChild className="w-auto" variant="form">
+            <Link href={shop.href}>
+              <Store /> {shop.label}
             </Link>
           </Button>
         ) : (
           <LoadingButton />
         )}
+
+        <div className="py-5" />
       </div>
     </div>
   );
