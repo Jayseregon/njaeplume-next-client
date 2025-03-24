@@ -202,8 +202,7 @@ const config: Config = {
 
   // An array of regexp pattern strings that are matched against all source file paths, matched files will skip transformation
   transformIgnorePatterns: [
-    // "/node_modules/(?!(next-auth|@auth)/)",
-    // "/node_modules/(?!(@nextui-org|@radix-ui|framer-motion|next-auth|@auth|@lottiefiles|@auth/core)/)",
+    "/node_modules/(?!(next-intl|next-auth|@auth|use-intl)/)",
   ],
 
   // An array of regexp pattern strings that are matched against all modules before the module loader will automatically return a mock for them

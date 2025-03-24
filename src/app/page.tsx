@@ -8,8 +8,8 @@ import { Store } from "lucide-react";
 
 import { Button } from "@/components/ui/button";
 import { getHomeItemByKey } from "@/config/site";
-import { title, subtitle } from "@/components/typography";
 import { LoadingButton } from "@/components/root/LoadingButton";
+import { PageTitle } from "@/components/root/PageTitle";
 
 import { NonceContext } from "./providers";
 
@@ -49,11 +49,11 @@ export default function RootPage() {
 
       <div className="flex flex-col items-center justify-center max-w-7xl gap-4">
         <div className="inline-block text-center justify-center">
-          <h1 className={title({ color: "pink", size: "lg" })}>{t("title")}</h1>
-          <div className={subtitle({ class: "mt-4" })}>
-            {t("subtitle")}
+          <PageTitle title={t("noticeTitle")} />
+          <div className="text-xl text-center">
+            {t("noticeMessage")}
             <br />
-            {t("redirect")}
+            {t("noticeCTA")}
           </div>
         </div>
 

@@ -1,6 +1,6 @@
 import Image from "next/image";
 import Link from "next/link";
-import { CircleEllipsis, ShoppingCart } from "lucide-react";
+import { CircleEllipsis, Hourglass } from "lucide-react";
 
 import {
   Card,
@@ -15,17 +15,17 @@ import { Product } from "@/interfaces/Products";
 export const ProductCard = ({ product }: { product: Product }) => {
   const pullZone = process.env.NEXT_PUBLIC_BUNNY_PUBLIC_ASSETS_PULL_ZONE_URL;
 
-  const handleAddToCart = (e: React.MouseEvent) => {
-    // Prevent the card link from being triggered
-    e.preventDefault();
-    e.stopPropagation();
+  // const handleAddToCart = (e: React.MouseEvent) => {
+  //   // Prevent the card link from being triggered
+  //   e.preventDefault();
+  //   e.stopPropagation();
 
-    // Add to cart logic would go here
-    console.log(`Added ${product.name} to cart`);
+  //   // Add to cart logic would go here
+  //   console.log(`Added ${product.name} to cart`);
 
-    // You could also call a function from props or use context
-    // addToCart(product);
-  };
+  //   // You could also call a function from props or use context
+  //   // addToCart(product);
+  // };
 
   return (
     <Link
@@ -74,7 +74,7 @@ export const ProductCard = ({ product }: { product: Product }) => {
           </div>
         </CardContent>
         <CardFooter className="justify-center items-center pt-0 pb-3">
-          <Button
+          {/* <Button
             className="flex items-center space-x-2 w-full sm:w-auto"
             size="sm"
             title="Add to cart"
@@ -83,6 +83,15 @@ export const ProductCard = ({ product }: { product: Product }) => {
           >
             <ShoppingCart className="h-4 w-4" />
             <span>${product.price.toFixed(2)}</span>
+          </Button> */}
+          <Button
+            className="flex items-center space-x-2 w-full sm:w-auto"
+            size="sm"
+            title="Add to cart"
+            variant="form"
+          >
+            <Hourglass className="h-4 w-4" />
+            <span>Coming Soon...</span>
           </Button>
         </CardFooter>
       </Card>

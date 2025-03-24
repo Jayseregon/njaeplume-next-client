@@ -1,9 +1,8 @@
 {
   "HomePage": {
-    "title": "Personnalisation comme vous le souhaitez",
-    "subtitle": "Nous nous réinventons pour vous offrir une expérience unique.",
-    "redirect": "Pendant ce temps, vous pouvez toujours visiter notre Portfolio contenant toutes les créations précédentes.",
-    "code": "En cours de développement"
+    "noticeTitle": "Des changements excitants arrivent !",
+    "noticeMessage": "Nous réorganisons notre boutique pour vous offrir une expérience encore meilleure.",
+    "noticeCTA": "Restez à l'écoute et revenez bientôt pour des mises à jour !"
   },
   "Utils": {
     "LoadingButton": "Veuillez patienter",
