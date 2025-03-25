@@ -37,3 +37,8 @@ export interface GenerateUploadUrlResult {
   error?: string;
   expiresAt?: number;
 }
+
+export interface CategoryRowProps {
+  category: Category;
+  products: Product[];
+}

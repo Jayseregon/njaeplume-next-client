@@ -115,7 +115,9 @@ const DEFAULT_NAV_ITEM: NavItemProps = {
 };
 
 export function getNavItemByKey(key: string) {
-  return siteConfig.navItems.find((item) => item.key === key);
+  return (
+    siteConfig.navItems.find((item) => item.key === key) || DEFAULT_NAV_ITEM
+  );
 }
 
 export function getCastleNavItemByKey(key: string): NavItemProps {
