@@ -20,6 +20,7 @@ import {
   fontSansAlt,
 } from "@/config/fonts";
 import { Toaster } from "@/components/ui/sonner";
+import DisableRightClick from "@/components/DisableRightClick";
 
 import { Providers } from "./providers";
 
@@ -113,6 +114,7 @@ export default async function RootLayout({
                 className="container mx-auto max-w-full px-6 grow"
                 nonce={nonce || undefined}
               >
+                <DisableRightClick />
                 {children}
               </main>
 
