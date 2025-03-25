@@ -2,8 +2,8 @@
 import { z } from "zod";
 import { Resend } from "resend";
 
-import { EmailTemplate } from "@/src/components/contact/EmailTemplate";
 import { verifyRecaptcha } from "@/src/lib/actionHelpers";
+import ContactFormEmailTemplate from "@/src/components/contact/ContactFormEmailTemplate";
 
 const RECAPTCHA_SECRET = process.env.RECAPTCHA_SECRET_KEY;
 const resend = new Resend(process.env.RESEND_API_KEY);
@@ -65,7 +65,7 @@ export async function sendContactEmail(
       to: process.env.CONTACT_DEFAULT_TO,
       subject: data.subject,
       text: data.subject,
-      react: EmailTemplate(data),
+      react: ContactFormEmailTemplate(data),
     });
 
     if (error) {
