@@ -1,6 +1,6 @@
 {
   "name": "njaeplume-next-client",
-  "version": "2.5.15",
+  "version": "2.5.16",
   "private": true,
   "type": "module",
   "scripts": {
@@ -38,6 +38,7 @@
     "class-variance-authority": "^0.7.1",
     "clsx": "^2.1.1",
     "concurrently": "^9.1.2",
+    "date-fns": "^4.1.0",
     "dotenv": "^16.4.7",
     "intl-messageformat": "^10.7.16",
     "lucide-react": "^0.483.0",

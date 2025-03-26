@@ -52,6 +52,11 @@ export const siteConfig = {
       href: "/contact",
     },
     {
+      key: "account",
+      label: "Account",
+      href: "/account",
+    },
+    {
       key: "faq",
       label: "FAQ",
       href: "/faq",

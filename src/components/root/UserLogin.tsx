@@ -1,5 +1,10 @@
 import React, { JSX } from "react";
-import { CircleUserRound, LayoutDashboard, Mail } from "lucide-react";
+import {
+  CircleUserRound,
+  LayoutDashboard,
+  Mail,
+  UserRound,
+} from "lucide-react";
 import {
   SignInButton,
   SignedIn,
@@ -15,6 +20,7 @@ export const UserLogin = ({ nonce }: { nonce?: string }): JSX.Element => {
   const { isSignedIn, user } = useUser();
   const castleItem = getCastleNavItemByKey("castle");
   const contactItem = getSubItemByKey("contact");
+  const accountItem = getSubItemByKey("account");
 
   return (
     <>
@@ -51,6 +57,15 @@ export const UserLogin = ({ nonce }: { nonce?: string }): JSX.Element => {
                 />
               </UserButton.MenuItems>
             )}
+          {isSignedIn && accountItem && (
+            <UserButton.MenuItems>
+              <UserButton.Link
+                href={accountItem.href}
+                label={accountItem.label}
+                labelIcon={<UserRound />}
+              />
+            </UserButton.MenuItems>
+          )}
           <UserButton.MenuItems>
             <UserButton.Link
               href={contactItem.href}
