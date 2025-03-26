@@ -83,7 +83,8 @@ describe("ProductsPage", () => {
     (getProducts as jest.Mock).mockResolvedValue(mockProducts);
 
     // Import page component
-    const Page = (await import("@/app/castle/products/page")).default;
+    const Page = (await import("@/src/app/(secured)/castle/products/page"))
+      .default;
 
     // Render the page
     render(await Page());
@@ -114,7 +115,8 @@ describe("ProductsPage", () => {
     // Setup mock to return empty array
     (getProducts as jest.Mock).mockResolvedValue([]);
 
-    const Page = (await import("@/app/castle/products/page")).default;
+    const Page = (await import("@/src/app/(secured)/castle/products/page"))
+      .default;
 
     // Render the page
     render(await Page());
@@ -132,7 +134,8 @@ describe("ProductsPage", () => {
 
     (getProducts as jest.Mock).mockRejectedValue(mockError);
 
-    const Page = (await import("@/app/castle/products/page")).default;
+    const Page = (await import("@/src/app/(secured)/castle/products/page"))
+      .default;
 
     // Expect the render to throw an error
     await expect(Page()).rejects.toThrow("Failed to fetch products");
@@ -142,7 +145,8 @@ describe("ProductsPage", () => {
     // Setup mock
     (getProducts as jest.Mock).mockResolvedValue([]);
 
-    const Page = (await import("@/app/castle/products/page")).default;
+    const Page = (await import("@/src/app/(secured)/castle/products/page"))
+      .default;
 
     // Render the page
     render(await Page());
