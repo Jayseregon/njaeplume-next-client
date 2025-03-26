@@ -54,8 +54,11 @@ export function ProductDetail({ product }: { product: Product }) {
         <PageTitle title={product.name} />
         <div className="flex items-center justify-between mt-4">
           <p className="text-3xl font-bold">{formattedPrice}</p>
-          <Button className="whitespace-nowrap w-32" size="sm">
+          {/* <Button className="whitespace-nowrap w-32" size="sm">
             Add to Cart
+          </Button> */}
+          <Button className="whitespace-nowrap w-32" size="sm">
+            Coming Soon...
           </Button>
         </div>
       </div>

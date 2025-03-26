@@ -2,7 +2,7 @@ import React from "react";
 import { render, screen, fireEvent, waitFor } from "@testing-library/react";
 import { toast } from "sonner";
 
-import NewProductPage from "@/app/castle/new-product/page";
+import NewProductPage from "@/src/app/(secured)/castle/new-product/page";
 import { createProduct } from "@/actions/prisma/action";
 import * as imageUploadHook from "@/hooks/useImageUpload";
 import * as zipUploadHook from "@/hooks/useZipFileUpload";

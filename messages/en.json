@@ -218,5 +218,24 @@
       "entireAgreement": "This License Agreement constitutes the entire agreement between you and NJAE Plume G.P. concerning the product and supersedes all prior or contemporaneous communications and proposals, whether oral or written, between you and NJAE Plume G.P. with respect to the product.",
       "severability": "If any provision of this License Agreement is held to be invalid or unenforceable, such provision shall be struck and the remaining provisions shall remain in full force and effect."
     }
+  },
+  "Shop": {
+    "title": "Shop",
+    "pageIntro": "Discover our collection of digital resources to enhance your creativity",
+    "comingSoon": "Products coming soon...",
+    "seeAllButton": {
+      "brushes": "See all Brushes",
+      "stickers": "See all Stickers",
+      "templates": "See all Templates",
+      "planners": "See all Planners",
+      "freebies": "See all Freebies"
+    },
+    "categoryTitles": {
+      "brushes": "Our latest Brushes",
+      "stickers": "Our latest Stickers",
+      "templates": "Our latest Templates",
+      "planners": "Our latest Planners",
+      "freebies": "Our latest Freebies"
+    }
   }
 }

@@ -218,5 +218,24 @@
       "entireAgreement": "Le présent Contrat de Licence constitue l'intégralité de l'accord entre vous et NJAE Plume S.E.N.C. concernant le produit et remplace toutes les communications et propositions antérieures ou contemporaines, orales ou écrites, entre vous et NJAE Plume S.E.N.C. relatives au produit.",
       "severability": "Si une disposition du présent Contrat de Licence est jugée invalide ou inapplicable, ladite disposition sera supprimée et les autres dispositions resteront en vigueur et de plein effet."
     }
+  },
+  "Shop": {
+    "title": "Boutique",
+    "pageIntro": "Découvrez notre collection de ressources numériques pour booster votre créativité",
+    "comingSoon": "Produits à venir bientôt...",
+    "seeAllButton": {
+      "brushes": "Voir toutes les Brosses",
+      "stickers": "Voir tous les Autocollants",
+      "templates": "Voir tous les Modèles",
+      "planners": "Voir tous les Planificateurs",
+      "freebies": "Voir tous les Gratuits"
+    },
+    "categoryTitles": {
+      "brushes": "Nos dernières Brosses",
+      "stickers": "Nos derniers Autocollants",
+      "templates": "Nos derniers Modèles",
+      "planners": "Nos derniers Planificateurs",
+      "freebies": "Nos derniers Gratuits"
+    }
   }
 }

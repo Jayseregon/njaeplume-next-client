@@ -60,7 +60,8 @@ describe("UsersPage", () => {
     (getUsersWithRole as jest.Mock).mockResolvedValue(mockUsers);
 
     // Import page component
-    const Page = (await import("@/app/castle/customers/page")).default;
+    const Page = (await import("@/src/app/(secured)/castle/customers/page"))
+      .default;
 
     // Render the page
     render(await Page());
@@ -75,7 +76,8 @@ describe("UsersPage", () => {
     // Setup mock to return empty array
     (getUsersWithRole as jest.Mock).mockResolvedValue([]);
 
-    const Page = (await import("@/app/castle/customers/page")).default;
+    const Page = (await import("@/src/app/(secured)/castle/customers/page"))
+      .default;
 
     // Render the page
     render(await Page());
@@ -92,7 +94,8 @@ describe("UsersPage", () => {
     // Setup mock
     (getUsersWithRole as jest.Mock).mockResolvedValue([]);
 
-    const Page = (await import("@/app/castle/customers/page")).default;
+    const Page = (await import("@/src/app/(secured)/castle/customers/page"))
+      .default;
 
     // Render the page
     render(await Page());
@@ -111,7 +114,8 @@ describe("UsersPage", () => {
 
     (getUsersWithRole as jest.Mock).mockRejectedValue(mockError);
 
-    const Page = (await import("@/app/castle/customers/page")).default;
+    const Page = (await import("@/src/app/(secured)/castle/customers/page"))
+      .default;
 
     // Expect the render to throw an error
     await expect(Page()).rejects.toThrow("Failed to fetch users");
