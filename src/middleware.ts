@@ -4,7 +4,7 @@ import { NextResponse } from "next/server";
 import { clerkMiddleware, createRouteMatcher } from "@clerk/nextjs/server";
 
 // Helper to apply CSP headers to any response
-function applyCsp(response: NextResponse, _req: NextRequest): NextResponse {
+function applyCsp(response: Response, _req: NextRequest): Response {
   const nonce = Buffer.from(crypto.randomUUID()).toString("base64");
   const cspHeader = `
     default-src 'self';
@@ -34,19 +34,32 @@ function applyCsp(response: NextResponse, _req: NextRequest): NextResponse {
 const isDev = process.env.NODE_ENV === "development";
 
 const isAdminCastleRoute = createRouteMatcher(["/castle(.*)"]);
+const isUserAccountRoute = createRouteMatcher(["/account(.*)"]);
 
 export default clerkMiddleware(async (auth, req) => {
-  // Role protection logic
+  const { userId, redirectToSignIn } = await auth();
   let response;
 
-  if (
-    isAdminCastleRoute(req) &&
-    (await auth()).sessionClaims?.metadata?.role !== "castleAdmin"
-  ) {
-    const url = new URL("/", req.url);
+  // Castle routes: check for admin role
+  if (isAdminCastleRoute(req)) {
+    if ((await auth()).sessionClaims?.metadata?.role !== "castleAdmin") {
+      const url = new URL("/", req.url);
 
-    response = NextResponse.redirect(url);
-  } else {
+      response = NextResponse.redirect(url);
+    } else {
+      response = NextResponse.next();
+    }
+  }
+  // Account routes: check for authentication
+  else if (isUserAccountRoute(req)) {
+    if (!userId) {
+      response = redirectToSignIn();
+    } else {
+      response = NextResponse.next();
+    }
+  }
+  // Non-protected routes
+  else {
     response = NextResponse.next();
   }
 

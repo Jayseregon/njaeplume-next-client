@@ -52,6 +52,11 @@ export const siteConfig = {
       href: "/contact",
     },
     {
+      key: "account",
+      label: "Account",
+      href: "/account",
+    },
+    {
       key: "faq",
       label: "FAQ",
       href: "/faq",
@@ -115,7 +120,9 @@ const DEFAULT_NAV_ITEM: NavItemProps = {
 };
 
 export function getNavItemByKey(key: string) {
-  return siteConfig.navItems.find((item) => item.key === key);
+  return (
+    siteConfig.navItems.find((item) => item.key === key) || DEFAULT_NAV_ITEM
+  );
 }
 
 export function getCastleNavItemByKey(key: string): NavItemProps {

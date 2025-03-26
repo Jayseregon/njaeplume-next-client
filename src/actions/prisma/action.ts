@@ -8,6 +8,10 @@ import { slugifyProductName, normalizeTagName } from "@/src/lib/actionHelpers";
 // New cache implementations
 const productsCache = new Map<string, { data: any; timestamp: number }>();
 const productSlugCache = new Map<string, { data: any; timestamp: number }>();
+const categoryProductsCache = new Map<
+  string,
+  { data: any; timestamp: number }
+>();
 const CACHE_DURATION = 60000 * 5; // cache duration in ms (60s * 5: 5 minutes)
 
 const prisma = new PrismaClient();
@@ -244,6 +248,70 @@ export async function getProductBySlug(slug: string) {
     productSlugCache.set(slug, { data, timestamp: Date.now() });
 
     return data;
+  } finally {
+    await prisma.$disconnect();
+  }
+}
+
+/**
+ * Fetches up to three latest products for each category that has products.
+ * Optimized for the shop page with caching.
+ */
+export async function getLatestProductsByCategory(limit = 3) {
+  const cacheKey = `latest_${limit}`;
+  const cacheEntry = categoryProductsCache.get(cacheKey);
+
+  // Return cached data if valid
+  if (cacheEntry && Date.now() - cacheEntry.timestamp < CACHE_DURATION) {
+    return cacheEntry.data;
+  }
+
+  try {
+    // Get all categories
+    const categories = Object.values(Category);
+
+    // Prepare query to get latest products for each category with limit
+    const categoryProducts = await Promise.all(
+      categories.map(async (category) => {
+        try {
+          const products = await prisma.product.findMany({
+            where: { category: category as Category },
+            include: { images: true, tags: true },
+            orderBy: { createdAt: "desc" },
+            take: limit,
+          });
+
+          return {
+            category,
+            products: products.length > 0 ? products : [],
+          };
+        } catch (error) {
+          console.error(
+            `Error fetching products for category ${category}:`,
+            error,
+          );
+
+          return { category, products: [] };
+        }
+      }),
+    );
+
+    // Filter out categories with no products
+    const populatedCategories = categoryProducts.filter(
+      ({ products }) => products && products.length > 0,
+    );
+
+    // Cache the result
+    categoryProductsCache.set(cacheKey, {
+      data: populatedCategories,
+      timestamp: Date.now(),
+    });
+
+    return populatedCategories;
+  } catch (error) {
+    console.error("Error fetching latest products by category:", error);
+
+    return [];
   } finally {
     await prisma.$disconnect();
   }

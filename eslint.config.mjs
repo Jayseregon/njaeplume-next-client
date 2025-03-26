@@ -161,6 +161,13 @@ const eslintConfig = [
           "no-useless-escape": 0,
         },
       },
+      // Add this new override for email template files
+      {
+        files: ["**/*EmailTemplate*.tsx", "**/*email-template*.tsx", "**/email/**.tsx"],
+        rules: {
+          "@next/next/no-head-element": "off"
+        }
+      }
     ],
   }),
 ];
