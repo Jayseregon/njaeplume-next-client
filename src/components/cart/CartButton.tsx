@@ -1,11 +1,11 @@
 "use client";
 
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { ShoppingCart } from "lucide-react";
 
 import { Button } from "@/components/ui/button";
-import { useCartStore } from "@/stores/cartStore";
 import { cn } from "@/lib/utils";
+import { useCartStore } from "@/providers/CartStoreProvider";
 
 interface CartButtonProps {
   className?: string;
@@ -13,8 +13,18 @@ interface CartButtonProps {
 }
 
 export function CartButton({ className, nonce }: CartButtonProps) {
+  // Track hydration status
+  const [isHydrated, setIsHydrated] = useState(false);
+
+  // Get cart state directly - this will re-render when items change
   const toggleCart = useCartStore((state) => state.toggleCart);
-  const itemsCount = useCartStore((state) => state.getItemsCount());
+  const items = useCartStore((state) => state.items);
+  const itemsCount = items.length;
+
+  // Set hydrated state once component mounts on client
+  useEffect(() => {
+    setIsHydrated(true);
+  }, []);
 
   return (
     <Button
@@ -23,10 +33,10 @@ export function CartButton({ className, nonce }: CartButtonProps) {
       nonce={nonce}
       size="icon"
       variant="ghost"
-      onClick={toggleCart}
-    >
+      onClick={toggleCart}>
       <ShoppingCart className="h-5 w-5" />
-      {itemsCount > 0 && (
+      {/* Only show the badge after hydration */}
+      {isHydrated && itemsCount > 0 && (
         <span className="absolute -top-1 -right-1 flex h-5 w-5 items-center justify-center rounded-full bg-primary text-xs text-primary-foreground">
           {itemsCount}
         </span>

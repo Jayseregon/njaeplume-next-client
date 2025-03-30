@@ -24,8 +24,9 @@ export function NavbarCenter({ currentPath }: NavbarCenterProps) {
                 asChild
                 className={clsx(
                   "px-4 py-2 hover:text-primary",
-                  currentPath === item.href && "text-primary font-medium"
-                )}>
+                  currentPath === item.href && "text-primary font-medium",
+                )}
+              >
                 <NextLink href={item.href}>{item.label}</NextLink>
               </NavigationMenuLink>
             </NavigationMenuItem>

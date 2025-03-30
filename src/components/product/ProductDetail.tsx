@@ -3,7 +3,13 @@
 import { useState } from "react";
 import Image from "next/image";
 import Link from "next/link";
-import { ChevronLeft, ChevronRight, ArrowLeft } from "lucide-react";
+import {
+  ChevronLeft,
+  ChevronRight,
+  ArrowLeft,
+  ShoppingCart,
+} from "lucide-react";
+import { toast } from "sonner";
 
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
@@ -12,16 +18,18 @@ import { Product } from "@/src/interfaces/Products";
 import ErrorBoundary from "@/src/components/root/ErrorBoundary";
 import { PageTitle } from "@/src/components/root/PageTitle";
 import { getProductSpecificationsByCategory } from "@/src/lib/specsSelector";
+import { useCartStore } from "@/providers/CartStoreProvider";
+import { formatPrice } from "@/lib/utils";
 
 export function ProductDetail({ product }: { product: Product }) {
   const [currentImageIndex, setCurrentImageIndex] = useState(0);
   const pullZone = process.env.NEXT_PUBLIC_BUNNY_PUBLIC_ASSETS_PULL_ZONE_URL;
 
+  // Extract only the specific functions we need from the store
+  const addToCart = useCartStore((state) => state.addToCart);
+  const toggleCart = useCartStore((state) => state.toggleCart);
+
   const hasMultipleImages = product.images.length > 1;
-  const formattedPrice = new Intl.NumberFormat("en-CA", {
-    style: "currency",
-    currency: "CAD",
-  }).format(product.price);
 
   const navigateImage = (direction: number) => {
     setCurrentImageIndex((prev) => {
@@ -32,6 +40,14 @@ export function ProductDetail({ product }: { product: Product }) {
 
       return newIndex;
     });
+  };
+
+  const handleAddToCart = () => {
+    addToCart(product);
+    toast.info(`${product.name} has been added to your cart.`);
+
+    // Optional: open the cart drawer after adding the item
+    setTimeout(() => toggleCart(), 300);
   };
 
   return (
@@ -53,12 +69,14 @@ export function ProductDetail({ product }: { product: Product }) {
       <div className="md:hidden mb-6">
         <PageTitle title={product.name} />
         <div className="flex items-center justify-between mt-4">
-          <p className="text-3xl font-bold">{formattedPrice}</p>
-          {/* <Button className="whitespace-nowrap w-32" size="sm">
+          <p className="text-3xl font-bold">{formatPrice(product.price)}</p>
+          <Button
+            className="whitespace-nowrap w-32 flex items-center gap-2"
+            size="sm"
+            onClick={handleAddToCart}
+          >
+            <ShoppingCart className="h-4 w-4" />
             Add to Cart
-          </Button> */}
-          <Button className="whitespace-nowrap w-32" size="sm">
-            Coming Soon...
           </Button>
         </div>
       </div>
@@ -148,9 +166,14 @@ export function ProductDetail({ product }: { product: Product }) {
 
           {/* Price and add to cart for desktop */}
           <div className="hidden md:flex items-center justify-between">
-            <p className="text-3xl font-bold">{formattedPrice}</p>
-            {/* <Button className="w-40">Add to Cart</Button> */}
-            <Button className="w-40">Coming Soon...</Button>
+            <p className="text-3xl font-bold">{formatPrice(product.price)}</p>
+            <Button
+              className="w-40 flex items-center gap-2"
+              onClick={handleAddToCart}
+            >
+              <ShoppingCart className="h-4 w-4" />
+              Add to Cart
+            </Button>
           </div>
 
           <Separator className="my-10" />

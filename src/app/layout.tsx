@@ -21,8 +21,8 @@ import {
 } from "@/config/fonts";
 import { Toaster } from "@/components/ui/sonner";
 import DisableRightClick from "@/components/DisableRightClick";
-
-import { Providers } from "./providers";
+import { CartStoreProvider } from "@/providers/CartStoreProvider";
+import { RootProviders } from "@/providers/RootProviders";
 
 export const metadata: Metadata = {
   title: {
@@ -99,29 +99,31 @@ export default async function RootLayout({
         nonce={nonce}
       >
         <SpeedInsights />
-        <Providers
+        <RootProviders
           nonce={nonce}
           themeProps={{ attribute: "class", defaultTheme: "dark", children }}
         >
           <NextIntlClientProvider messages={messages}>
-            <div
-              className="flex flex-col justify-between min-h-screen"
-              nonce={nonce || undefined}
-            >
-              <Navbar />
-
-              <main
-                className="container mx-auto max-w-full px-6 grow"
+            <CartStoreProvider>
+              <div
+                className="flex flex-col justify-between min-h-screen"
                 nonce={nonce || undefined}
               >
-                <DisableRightClick />
-                {children}
-              </main>
+                <Navbar />
 
-              <Footer nonce={nonce || undefined} />
-            </div>
+                <main
+                  className="container mx-auto max-w-full px-6 grow"
+                  nonce={nonce || undefined}
+                >
+                  <DisableRightClick />
+                  {children}
+                </main>
+
+                <Footer nonce={nonce || undefined} />
+              </div>
+            </CartStoreProvider>
           </NextIntlClientProvider>
-        </Providers>
+        </RootProviders>
         <Toaster />
       </body>
     </html>

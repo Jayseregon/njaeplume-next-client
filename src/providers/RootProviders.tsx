@@ -12,13 +12,17 @@ const NonceContext = React.createContext<string | undefined>(undefined);
 
 export { NonceContext };
 
-export interface ProvidersProps {
+export interface RootProvidersProps {
   children: React.ReactNode;
   themeProps?: ThemeProviderProps;
   nonce?: string;
 }
 
-export function Providers({ children, themeProps, nonce }: ProvidersProps) {
+export function RootProviders({
+  children,
+  themeProps,
+  nonce,
+}: RootProvidersProps) {
   return (
     <ClerkProvider nonce={nonce}>
       <NonceContext.Provider value={nonce}>
@@ -26,8 +30,7 @@ export function Providers({ children, themeProps, nonce }: ProvidersProps) {
           defaultTheme="dark"
           enableSystem={false}
           nonce={nonce}
-          {...themeProps}
-        >
+          {...themeProps}>
           {children}
         </NextThemesProvider>
       </NonceContext.Provider>

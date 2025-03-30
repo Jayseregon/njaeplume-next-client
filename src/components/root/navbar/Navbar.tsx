@@ -3,7 +3,7 @@
 import React, { useContext } from "react";
 import { usePathname } from "next/navigation";
 
-import { NonceContext } from "@/app/providers";
+import { NonceContext } from "@/providers/RootProviders";
 import { ThemeSwitch } from "@/components/root/ThemeSwitch";
 import LocaleSwitcher from "@/components/root/LocaleSwitcher";
 import { NavbarContent } from "@/components/root/navbar/NavbarContent";
