@@ -5,7 +5,6 @@ import { useFormStatus } from "react-dom";
 import ReCAPTCHA from "react-google-recaptcha";
 import { useTranslations } from "next-intl";
 
-import { NonceContext } from "@/src/app/providers";
 import { Button } from "@/src/components/ui/button";
 import { EmailIcon } from "@/src/components/icons";
 import { ContactFormData } from "@/src/interfaces/Contact";
@@ -18,6 +17,7 @@ import { HoneypotField } from "@/src/components/contact/HoneypotField";
 import ErrorBoundary from "@/src/components/root/ErrorBoundary";
 import { ErrorDefaultDisplay } from "@/src/components/root/ErrorDefaultDisplay";
 import { PageTitle } from "@/src/components/root/PageTitle";
+import { NonceContext } from "@/src/providers/RootProviders";
 
 const initialState = {
   success: false,

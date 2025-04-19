@@ -1,6 +1,12 @@
 "use client";
 
-import { createContext, useContext, useRef, type ReactNode, useEffect } from "react";
+import {
+  createContext,
+  useContext,
+  useRef,
+  type ReactNode,
+  useEffect,
+} from "react";
 import { useStore } from "zustand";
 
 import { type CartStore, createCartStore } from "@/stores/cartStore";

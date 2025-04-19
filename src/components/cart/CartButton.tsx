@@ -33,7 +33,8 @@ export function CartButton({ className, nonce }: CartButtonProps) {
       nonce={nonce}
       size="icon"
       variant="ghost"
-      onClick={toggleCart}>
+      onClick={toggleCart}
+    >
       <ShoppingCart className="h-5 w-5" />
       {/* Only show the badge after hydration */}
       {isHydrated && itemsCount > 0 && (

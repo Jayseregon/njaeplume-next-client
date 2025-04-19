@@ -30,7 +30,8 @@ export function RootProviders({
           defaultTheme="dark"
           enableSystem={false}
           nonce={nonce}
-          {...themeProps}>
+          {...themeProps}
+        >
           {children}
         </NextThemesProvider>
       </NonceContext.Provider>

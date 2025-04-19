@@ -2,6 +2,7 @@ import { render, screen } from "@testing-library/react";
 
 import { MobileMenu } from "@/components/root/navbar/MobileMenu";
 import { siteConfig } from "@/config/site";
+import { CartStoreProvider } from "@/providers/CartStoreProvider"; // Import the provider
 
 // Mock Lucide icon
 jest.mock("lucide-react", () => ({
@@ -104,6 +105,20 @@ jest.mock("@/components/root/UserLogin", () => ({
   ),
 }));
 
+// Mock CartButton component
+jest.mock("@/components/cart/CartButton", () => ({
+  CartButton: ({ nonce }: { nonce?: string }) => (
+    <div data-nonce={nonce} data-testid="cart-button">
+      Cart Button
+    </div>
+  ),
+}));
+
+// Mock CartDrawer component
+jest.mock("@/components/cart/CartDrawer", () => ({
+  CartDrawer: () => <div data-testid="cart-drawer">Cart Drawer</div>,
+}));
+
 // Mock next/link
 jest.mock("next/link", () => ({
   __esModule: true,
@@ -125,15 +140,22 @@ describe("MobileMenu", () => {
     nonce: "test-nonce-123",
   };
 
+  // Helper function to render with provider
+  const renderWithProvider = (ui: React.ReactElement) => {
+    return render(<CartStoreProvider>{ui}</CartStoreProvider>);
+  };
+
   it("renders mobile menu trigger button", () => {
-    render(<MobileMenu {...mockProps} />);
+    renderWithProvider(<MobileMenu {...mockProps} />);
 
     expect(screen.getByTestId("mobile-menu-button")).toBeInTheDocument();
     expect(screen.getByTestId("menu-icon")).toBeInTheDocument();
+    expect(screen.getByTestId("cart-button")).toBeInTheDocument(); // Check for cart button
+    expect(screen.getByTestId("cart-drawer")).toBeInTheDocument(); // Check for cart drawer
   });
 
   it("has correct mobile-only classes", () => {
-    const { container } = render(<MobileMenu {...mockProps} />);
+    const { container } = renderWithProvider(<MobileMenu {...mockProps} />);
 
     const mobileContainer = container.firstChild as HTMLElement;
 
@@ -141,7 +163,7 @@ describe("MobileMenu", () => {
   });
 
   it("renders all navigation items from siteConfig", () => {
-    render(<MobileMenu {...mockProps} />);
+    renderWithProvider(<MobileMenu {...mockProps} />);
 
     const navLinks = screen.getAllByTestId("nav-link");
 
@@ -154,7 +176,7 @@ describe("MobileMenu", () => {
   });
 
   it("highlights current path with correct styling", () => {
-    render(<MobileMenu {...mockProps} />);
+    renderWithProvider(<MobileMenu {...mockProps} />);
 
     const links = screen.getAllByTestId("nav-link");
 
@@ -176,7 +198,7 @@ describe("MobileMenu", () => {
   });
 
   it("renders search input with correct props", () => {
-    render(<MobileMenu {...mockProps} />);
+    renderWithProvider(<MobileMenu {...mockProps} />);
 
     const searchInput = screen.getByTestId("search-input");
 
@@ -185,14 +207,14 @@ describe("MobileMenu", () => {
   });
 
   it("renders theme switch and locale switcher", () => {
-    render(<MobileMenu {...mockProps} />);
+    renderWithProvider(<MobileMenu {...mockProps} />);
 
     expect(screen.getByTestId("theme-switch")).toBeInTheDocument();
     expect(screen.getByTestId("locale-switcher")).toBeInTheDocument();
   });
 
   it("passes nonce to child components", () => {
-    render(<MobileMenu {...mockProps} />);
+    renderWithProvider(<MobileMenu {...mockProps} />);
 
     expect(screen.getByTestId("search-input")).toHaveAttribute(
       "data-nonce",
@@ -206,10 +228,18 @@ describe("MobileMenu", () => {
       "data-nonce",
       mockProps.nonce,
     );
+    expect(screen.getByTestId("cart-button")).toHaveAttribute(
+      "data-nonce",
+      mockProps.nonce,
+    );
+    expect(screen.getByTestId("user-login")).toHaveAttribute(
+      "data-nonce",
+      mockProps.nonce,
+    );
   });
 
   it("renders brand with correct props", () => {
-    render(<MobileMenu {...mockProps} />);
+    renderWithProvider(<MobileMenu {...mockProps} />);
 
     expect(screen.getByTestId("brand")).toBeInTheDocument();
     expect(screen.getByTestId("brand")).toHaveAttribute(
@@ -219,7 +249,7 @@ describe("MobileMenu", () => {
   });
 
   it("renders user login component with correct nonce", () => {
-    render(<MobileMenu {...mockProps} />);
+    renderWithProvider(<MobileMenu {...mockProps} />);
 
     expect(screen.getByTestId("user-login")).toBeInTheDocument();
     expect(screen.getByTestId("user-login")).toHaveAttribute(
@@ -229,7 +259,7 @@ describe("MobileMenu", () => {
   });
 
   it("sheet title has correct styling classes", () => {
-    render(<MobileMenu {...mockProps} />);
+    renderWithProvider(<MobileMenu {...mockProps} />);
 
     const sheetTitle = screen.getByTestId("sheet-title");
 

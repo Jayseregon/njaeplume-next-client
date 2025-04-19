@@ -10,7 +10,6 @@ import { Button } from "@/components/ui/button";
 import { getHomeItemByKey } from "@/config/site";
 import { LoadingButton } from "@/components/root/LoadingButton";
 import { PageTitle } from "@/components/root/PageTitle";
-
 import { NonceContext } from "@/providers/RootProviders";
 
 export default function RootPage() {

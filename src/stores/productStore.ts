@@ -1,4 +1,5 @@
 import { create } from "zustand";
+
 import { Product } from "@/interfaces/Products";
 
 // Separate state interface for better type safety
@@ -22,7 +23,7 @@ export const useProductStore = create<ProductStore>((set) => ({
   // State
   selectedProduct: null,
   isDialogOpen: false,
-  
+
   // Actions
   setSelectedProduct: (product) => set({ selectedProduct: product }),
   openDialog: () => set({ isDialogOpen: true }),
