@@ -1,4 +1,4 @@
-import { Category, Tag } from "@prisma/client";
+import { Category, Tag, Order, OrderItem } from "@prisma/client";
 
 export interface Product {
   id: string;
@@ -41,4 +41,13 @@ export interface GenerateUploadUrlResult {
 export interface CategoryRowProps {
   category: Category;
   products: Product[];
+}
+
+export interface OrderWithItems extends Order {
+  displayId: string; // Add the displayId field
+  items: OrderItemWithProduct[];
+}
+
+export interface OrderItemWithProduct extends OrderItem {
+  product: Product;
 }

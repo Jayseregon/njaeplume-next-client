@@ -6,7 +6,7 @@ generator client {
 datasource db {
   provider = "postgresql"
   url      = env("DATABASE_URL_AIVEN")
-  schemas  = ["products"]
+  schemas  = ["products", "orders"]
 }
 
 enum Category {
@@ -40,6 +40,7 @@ model Product {
   slug          String         @unique
   tags          Tag[]          @relation("ProductToTag")
   images        ProductImage[]
+  OrderItem     OrderItem[]
 
   @@schema("products")
 }
@@ -52,4 +53,39 @@ model ProductImage {
   url       String
 
   @@schema("products")
+}
+
+enum OrderStatus {
+  PENDING
+  COMPLETED
+  FAILED
+
+  @@schema("orders")
+}
+
+model Order {
+  id             String      @id @default(cuid())
+  displayId      String      @unique
+  userId         String // Clerk User ID
+  amount         Float
+  status         OrderStatus @default(PENDING)
+  stripeChargeId String?     @unique // Store Stripe Charge ID for reference
+  createdAt      DateTime    @default(now())
+  updatedAt      DateTime    @updatedAt
+  items          OrderItem[]
+
+  @@index([userId])
+  @@schema("orders")
+}
+
+model OrderItem {
+  id        String  @id @default(cuid())
+  orderId   String
+  order     Order   @relation(fields: [orderId], references: [id], onDelete: Cascade)
+  productId String
+  product   Product @relation(fields: [productId], references: [id]) // Don't cascade delete product if order item is deleted
+  quantity  Int     @default(1) // Quantity is always 1 for digital products
+  price     Float
+
+  @@schema("orders")
 }
