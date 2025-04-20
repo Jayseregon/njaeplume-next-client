@@ -52,7 +52,8 @@ export function AdminSidebarTrigger() {
   return (
     <button
       className="h-8 w-8 rounded-md p-0 flex items-center justify-center hover:bg-muted"
-      onClick={toggleSidebar}>
+      onClick={toggleSidebar}
+    >
       <PanelLeftIcon className="h-4 w-4" />
     </button>
   );
@@ -74,15 +75,14 @@ export function AdminSidebar() {
     <div
       className={cn(
         "h-full border-r bg-background transition-all duration-300",
-        isCollapsed ? "w-16" : "w-64"
-      )}>
+        isCollapsed ? "w-16" : "w-64",
+      )}
+    >
       {/* Header */}
       <div className="p-4 border-b">
         <h2
-          className={cn(
-            "font-semibold truncate",
-            isCollapsed && "text-center"
-          )}>
+          className={cn("font-semibold truncate", isCollapsed && "text-center")}
+        >
           <AdminSidebarTrigger />
         </h2>
       </div>
@@ -100,9 +100,10 @@ export function AdminSidebar() {
                   "flex items-center px-3 py-2 text-sm rounded-md transition-colors",
                   pathname === item.href
                     ? "bg-primary/10 text-primary font-medium"
-                    : "hover:bg-muted"
+                    : "hover:bg-muted",
                 )}
-                href={item.href}>
+                href={item.href}
+              >
                 {isCollapsed ? (
                   <Icon className="h-5 w-5" />
                 ) : (
