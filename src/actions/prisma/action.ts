@@ -1,8 +1,9 @@
 "use server";
 
-import { PrismaClient, Category } from "@prisma/client";
 import { auth } from "@clerk/nextjs/server";
 
+import { Category } from "@/generated/client";
+import { prisma } from "@/src/lib/prismaClient";
 import { Product, OrderWithItems } from "@/src/interfaces/Products";
 import { slugifyProductName, normalizeTagName } from "@/src/lib/actionHelpers";
 
@@ -14,8 +15,6 @@ const categoryProductsCache = new Map<
   { data: any; timestamp: number }
 >();
 const CACHE_DURATION = 60000 * 5; // cache duration in ms (60s * 5: 5 minutes)
-
-const prisma = new PrismaClient();
 
 async function generateUniqueSlug(
   name: string,

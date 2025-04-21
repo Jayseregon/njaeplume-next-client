@@ -1,11 +1,11 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { Tag } from "@prisma/client";
 import { useRouter } from "next/navigation";
 import { Save, Trash2 } from "lucide-react";
 import { toast } from "sonner";
 
+import { Tag } from "@/generated/client";
 import { useProductStore } from "@/src/stores/productStore";
 import { updateProduct } from "@/actions/prisma/action";
 import { deleteProductWithFiles } from "@/src/actions/bunny/action";

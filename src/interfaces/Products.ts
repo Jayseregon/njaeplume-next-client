@@ -1,4 +1,4 @@
-import { Category, Tag, Order, OrderItem } from "@prisma/client";
+import { Category, Tag, Order, OrderItem } from "@/generated/client";
 
 export interface Product {
   id: string;

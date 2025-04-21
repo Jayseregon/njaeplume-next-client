@@ -2,8 +2,8 @@
 
 import crypto from "crypto";
 
-import { Category, PrismaClient } from "@prisma/client";
-
+import { Category } from "@/generated/client";
+import { prisma } from "@/src/lib/prismaClient";
 import { ProductFormState } from "@/src/interfaces/Products";
 import { GenerateUploadUrlResult } from "@/src/interfaces/Products";
 import { getProductZipFileName } from "@/src/lib/actionHelpers";
@@ -168,8 +168,6 @@ export async function deleteProductWithFiles(
 ): Promise<{ success: boolean; error?: string }> {
   try {
     // 1. Get the product details to know which files to delete
-    const prisma = new PrismaClient();
-
     const product = await prisma.product.findUnique({
       where: { id: productId },
       include: { images: true },

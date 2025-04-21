@@ -2,8 +2,8 @@ import { NextRequest, NextResponse } from "next/server";
 import { auth, currentUser } from "@clerk/nextjs/server"; // Import currentUser
 import { z } from "zod";
 import Stripe from "stripe";
-import { Category } from "@prisma/client";
 
+import { Category } from "@/generated/client";
 import { stripe } from "@/lib/stripe"; // Correct: Import server-side client
 
 const checkoutSchema = z.object({

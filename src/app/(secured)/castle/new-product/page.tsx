@@ -1,5 +1,4 @@
 "use client";
-
 import {
   useActionState,
   useState,
@@ -7,9 +6,9 @@ import {
   startTransition,
   useEffect,
 } from "react";
-import { Category, Tag } from "@prisma/client";
 import { toast } from "sonner";
 
+import { Category, Tag } from "@/generated/client";
 import { PageTitle } from "@/src/components/root/PageTitle";
 import ErrorBoundary from "@/src/components/root/ErrorBoundary";
 import { ErrorDefaultDisplay } from "@/src/components/root/ErrorDefaultDisplay";

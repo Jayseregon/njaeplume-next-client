@@ -1,14 +1,10 @@
 import { NextRequest, NextResponse } from "next/server";
 import Stripe from "stripe";
 import { headers } from "next/headers";
-import { PrismaClient } from "@prisma/client";
-import { format } from "date-fns"; // Import date-fns for formatting
+import { format } from "date-fns";
 
-import { stripe } from "@/lib/stripe"; // Correct: Import server-side client
-
-// Initialize Prisma client directly for webhook handler
-// Ensure DATABASE_URL_AIVEN is set in your environment
-const prisma = new PrismaClient();
+import { prisma } from "@/src/lib/prismaClient";
+import { stripe } from "@/lib/stripe";
 
 export async function POST(req: NextRequest) {
   const body = await req.text();
