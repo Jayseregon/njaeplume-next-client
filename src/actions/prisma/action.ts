@@ -1,8 +1,9 @@
 "use server";
 
 import { PrismaClient, Category } from "@prisma/client";
+import { auth } from "@clerk/nextjs/server";
 
-import { Product } from "@/src/interfaces/Products";
+import { Product, OrderWithItems } from "@/src/interfaces/Products";
 import { slugifyProductName, normalizeTagName } from "@/src/lib/actionHelpers";
 
 // New cache implementations
@@ -253,12 +254,8 @@ export async function getProductBySlug(slug: string) {
   }
 }
 
-/**
- * Fetches up to three latest products for each category that has products.
- * Optimized for the shop page with caching.
- */
 export async function getLatestProductsByCategory(limit = 3) {
-  const cacheKey = `latest_${limit}`;
+  const cacheKey = `latest_${limit}_no_freebies`; // Updated cache key
   const cacheEntry = categoryProductsCache.get(cacheKey);
 
   // Return cached data if valid
@@ -267,8 +264,10 @@ export async function getLatestProductsByCategory(limit = 3) {
   }
 
   try {
-    // Get all categories
-    const categories = Object.values(Category);
+    // Get all categories EXCEPT freebies
+    const categories = Object.values(Category).filter(
+      (cat) => cat !== Category.freebies,
+    );
 
     // Prepare query to get latest products for each category with limit
     const categoryProducts = await Promise.all(
@@ -314,5 +313,45 @@ export async function getLatestProductsByCategory(limit = 3) {
     return [];
   } finally {
     await prisma.$disconnect();
+  }
+}
+
+export async function getUserOrders(options?: {
+  limit?: number;
+}): Promise<OrderWithItems[]> {
+  const { userId } = await auth();
+
+  if (!userId) {
+    throw new Error("User not authenticated");
+  }
+
+  try {
+    const orders = await prisma.order.findMany({
+      where: {
+        userId: userId,
+        status: "COMPLETED",
+      },
+      include: {
+        items: {
+          include: {
+            product: {
+              include: {
+                images: true,
+                tags: true,
+              },
+            },
+          },
+        },
+      },
+      orderBy: {
+        createdAt: "desc",
+      },
+      take: options?.limit,
+    });
+
+    return orders as OrderWithItems[];
+  } catch (error) {
+    console.error("Error fetching user orders:", error);
+    throw new Error("Failed to fetch orders.");
   }
 }
