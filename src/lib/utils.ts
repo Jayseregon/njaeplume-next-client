@@ -18,10 +18,12 @@ export function formatDate(input: string | number | Date | null): string {
 }
 
 export function formatPrice(price: number) {
-  return new Intl.NumberFormat("en-CA", {
+  const formatted = new Intl.NumberFormat("en-CA", {
     style: "currency",
     currency: "CAD",
   }).format(price);
+
+  return `CA${formatted}`;
 }
 
 export function getRandomSubset<T>(items: T[], maxCount: number = 5): T[] {

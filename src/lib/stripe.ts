@@ -1,0 +1,14 @@
+import Stripe from "stripe";
+
+if (!process.env.STRIPE_SECRET_KEY) {
+  throw new Error("STRIPE_SECRET_KEY environment variable is not set");
+}
+
+export const stripe = new Stripe(process.env.STRIPE_SECRET_KEY, {
+  apiVersion: "2025-03-31.basil",
+  typescript: true,
+  appInfo: {
+    name: "njaeplume-next-client",
+    version: "2.5.20",
+  },
+});
