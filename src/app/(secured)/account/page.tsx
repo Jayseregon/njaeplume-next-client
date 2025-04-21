@@ -2,39 +2,61 @@
 
 import { useEffect, useState } from "react";
 import { useUser } from "@clerk/nextjs";
+import Link from "next/link"; // Import Link
 
 import { PageTitle } from "@/src/components/root/PageTitle";
 import ErrorBoundary from "@/src/components/root/ErrorBoundary";
 import { ErrorDefaultDisplay } from "@/src/components/root/ErrorDefaultDisplay";
 import { Button } from "@/components/ui/button";
+import { getUserOrders } from "@/src/actions/prisma/action";
+import { OrderWithItems } from "@/interfaces/Products";
+import { formatPrice, formatDate } from "@/lib/utils";
+import { Badge } from "@/components/ui/badge";
 
 export default function AccountDashboard() {
   const { user, isLoaded } = useUser();
+  const [latestOrder, setLatestOrder] = useState<OrderWithItems | null>(null);
+  const [totalOrdersCount, setTotalOrdersCount] = useState<number>(0);
+  const [isLoadingData, setIsLoadingData] = useState(true);
   const [recentOrders, setRecentOrders] = useState([]);
   const [recentDownloads, setRecentDownloads] = useState([]);
 
   useEffect(() => {
-    // Fetch recent orders and downloads
     async function fetchUserData() {
       if (user?.id) {
+        setIsLoadingData(true);
         try {
-          // Replace with your actual data fetching
-          // const orders = await getUserOrders(user.id, { limit: 3 });
-          // const downloads = await getUserDownloads(user.id, { limit: 3 });
-          // setRecentOrders(orders);
-          // setRecentDownloads(downloads);
+          // Fetch latest order (limit 1) and total count
+          const [ordersResult, countResult] = await Promise.allSettled([
+            getUserOrders({ limit: 1 }),
+            getUserOrders(), // Fetch all to get the count (could be optimized later)
+          ]);
+
+          if (
+            ordersResult.status === "fulfilled" &&
+            ordersResult.value.length > 0
+          ) {
+            setLatestOrder(ordersResult.value[0]);
+          }
+          if (countResult.status === "fulfilled") {
+            setTotalOrdersCount(countResult.value.length);
+          }
         } catch (error) {
           console.error("Error fetching user data:", error);
+        } finally {
+          setIsLoadingData(false);
         }
       }
     }
 
-    if (isLoaded) {
+    if (isLoaded && user) {
       fetchUserData();
+    } else if (isLoaded && !user) {
+      setIsLoadingData(false); // Stop loading if user is loaded but not present
     }
   }, [user, isLoaded]);
 
-  if (!isLoaded) {
+  if (!isLoaded || isLoadingData) {
     return (
       <div className="p-8 text-center">Loading your account information...</div>
     );
@@ -60,17 +82,17 @@ export default function AccountDashboard() {
               Welcome, {user.firstName}
             </h2>
             <p className="text-gray-600 dark:text-gray-300">
-              Manage your digital products and order history from your personal
+              Manage your digital downloads and order history from your personal
               dashboard.
             </p>
           </div>
 
-          {/* Stats Card */}
+          {/* Stats Card - Updated */}
           <div className="border rounded-md p-6">
             <h2 className="text-2xl font-bold mb-4">Your Account</h2>
             <div className="flex justify-between">
               <div className="text-center">
-                <p className="text-3xl font-bold">0</p>
+                <p className="text-3xl font-bold">{totalOrdersCount}</p>
                 <p className="text-sm text-gray-600 dark:text-gray-300">
                   Orders
                 </p>
@@ -85,19 +107,34 @@ export default function AccountDashboard() {
           </div>
         </div>
 
-        {/* Recent Orders */}
+        {/* Recent Orders - Updated */}
         <div className="border rounded-md p-6">
           <div className="flex justify-between items-center mb-4">
-            <h2 className="text-2xl font-bold">Recent Orders</h2>
-            <Button disabled className="text-sm" variant="outline">
-              Coming Soon
+            <h2 className="text-2xl font-bold">Recent Order</h2>
+            {/* Updated Button to Link */}
+            <Button asChild className="max-w-fit" variant="form">
+              <Link href="/account/orders">View All Orders</Link>
             </Button>
           </div>
 
-          {recentOrders.length > 0 ? (
+          {latestOrder ? (
             <div className="divide-y">
-              {/* Map through recent orders here */}
-              <p className="py-4">No orders yet</p>
+              <div className="py-4 flex flex-col sm:flex-row justify-between items-start sm:items-center gap-2">
+                <div className="text-start">
+                  <p className="font-medium">
+                    Order ID: {latestOrder.displayId}
+                  </p>
+                  <p className="text-gray-500">
+                    Date: {formatDate(latestOrder.createdAt)}
+                  </p>
+                </div>
+                <div className="flex flex-col items-center gap-2">
+                  <p className="font-semibold text-lg">
+                    {formatPrice(latestOrder.amount)}
+                  </p>
+                  <Badge variant="bordered">{latestOrder.status}</Badge>
+                </div>
+              </div>
             </div>
           ) : (
             <p className="py-4 text-gray-500">
@@ -110,7 +147,7 @@ export default function AccountDashboard() {
         <div className="border rounded-md p-6">
           <div className="flex justify-between items-center mb-4">
             <h2 className="text-2xl font-bold">Your Downloads</h2>
-            <Button disabled className="text-sm" variant="outline">
+            <Button disabled className="max-w-fit" variant="form">
               Coming Soon
             </Button>
           </div>
