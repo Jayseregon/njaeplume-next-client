@@ -76,7 +76,7 @@ export async function POST(req: NextRequest) {
       // Create the Order and OrderItems in the database
       await prisma.order.create({
         data: {
-          displayId: finalDisplayId, // Add the generated displayId
+          displayId: finalDisplayId,
           userId: userId,
           amount: totalAmount,
           status: "COMPLETED",
@@ -84,8 +84,8 @@ export async function POST(req: NextRequest) {
           items: {
             create: cartItems.map((item) => ({
               productId: item.id,
-              price: item.price, // Use price from metadata (price at time of purchase)
-              quantity: 1, // Assuming quantity 1
+              price: item.price,
+              quantity: 1, // Always 1 for digital items
             })),
           },
         },

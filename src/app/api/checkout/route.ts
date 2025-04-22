@@ -1,10 +1,10 @@
 import { NextRequest, NextResponse } from "next/server";
-import { auth, currentUser } from "@clerk/nextjs/server"; // Import currentUser
+import { auth, currentUser } from "@clerk/nextjs/server";
 import { z } from "zod";
 import Stripe from "stripe";
 
 import { Category } from "@/generated/client";
-import { stripe } from "@/lib/stripe"; // Correct: Import server-side client
+import { stripe } from "@/lib/stripe";
 
 const checkoutSchema = z.object({
   items: z.array(
@@ -12,10 +12,10 @@ const checkoutSchema = z.object({
       id: z.string(),
       name: z.string(),
       price: z.number(),
-      category: z.nativeEnum(Category), // Assuming Category enum is imported or available
+      category: z.nativeEnum(Category),
       description: z.string(),
-      createdAt: z.string().datetime(), // Or z.date() if you parse it
-      updatedAt: z.string().datetime(), // Or z.date()
+      createdAt: z.string().datetime(),
+      updatedAt: z.string().datetime(),
       zip_file_name: z.string(),
       slug: z.string(),
       tags: z.array(
@@ -36,11 +36,12 @@ const checkoutSchema = z.object({
 export async function POST(req: NextRequest) {
   try {
     const { userId } = await auth();
-    const user = await currentUser(); // Fetch current user details
+    const user = await currentUser();
     const pullZone = process.env.NEXT_PUBLIC_BUNNY_PUBLIC_ASSETS_PULL_ZONE_URL;
 
     if (!userId || !user) {
-      return new NextResponse("Unauthorized", { status: 401 });
+      // Return structured JSON error for unauthorized
+      return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
     }
 
     // Get the primary email address
@@ -54,14 +55,19 @@ export async function POST(req: NextRequest) {
     if (!validation.success) {
       console.error("Checkout validation failed:", validation.error.errors);
 
-      return new NextResponse("Invalid input", { status: 400 });
+      // Return structured JSON error for validation failure
+      return NextResponse.json(
+        { error: "Invalid input", details: validation.error.flatten() },
+        { status: 400 },
+      );
     }
 
     // Correctly extract only the items array
     const { items } = validation.data;
 
     if (!items || items.length === 0) {
-      return new NextResponse("Cart is empty", { status: 400 });
+      // Return structured JSON error for empty cart
+      return NextResponse.json({ error: "Cart is empty" }, { status: 400 });
     }
 
     // Ensure the items map uses the validated data structure
@@ -70,13 +76,13 @@ export async function POST(req: NextRequest) {
         price_data: {
           currency: "cad",
           product_data: {
-            images: [`${pullZone}/${item.images[0].url}`], // Ensure URL is absolute
+            images: [`${pullZone}/${item.images[0].url}`],
             name: item.name,
             description: item.category,
           },
           unit_amount: Math.round(item.price * 100), // Price in cents
         },
-        quantity: 1, // Assuming quantity is always 1 for digital items
+        quantity: 1, // Always 1 for digital products
       }));
 
     // Create metadata string - ensure it doesn't exceed Stripe's limit (500 chars total key/value)
@@ -86,13 +92,15 @@ export async function POST(req: NextRequest) {
     }));
     const metadataString = JSON.stringify(metadataItems);
 
+    // Check metadata length
     if (metadataString.length > 450) {
-      // Leave some room for userId key
-      console.error("Metadata string too long");
+      console.error("Metadata string too long for Stripe Checkout");
 
-      return new NextResponse("Internal Server Error - Metadata too long", {
-        status: 500,
-      });
+      // Return structured JSON error for internal issue
+      return NextResponse.json(
+        { error: "Checkout failed due to internal error (metadata)." },
+        { status: 500 }, // Internal server error
+      );
     }
 
     const session = await stripe.checkout.sessions.create({
@@ -109,10 +117,15 @@ export async function POST(req: NextRequest) {
       customer_email: customerEmail,
     });
 
+    // Return success with the session URL
     return NextResponse.json({ url: session.url });
   } catch (error) {
-    console.error("[CHECKOUT_POST]", error);
+    console.error("[CHECKOUT_POST] Error creating checkout session:", error);
 
-    return new NextResponse("Internal Server Error", { status: 500 });
+    // Return structured JSON error for generic server errors
+    return NextResponse.json(
+      { error: "Could not create checkout session." },
+      { status: 500 },
+    );
   }
 }
