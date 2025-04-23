@@ -65,17 +65,21 @@ enum OrderStatus {
 }
 
 model Order {
-  id             String      @id @default(cuid())
-  displayId      String      @unique
-  userId         String // Clerk User ID
-  amount         Float
-  status         OrderStatus @default(PENDING)
-  stripeChargeId String?     @unique // Store Stripe Charge ID for reference
-  createdAt      DateTime    @default(now())
-  updatedAt      DateTime    @updatedAt
-  items          OrderItem[]
+  id                      String      @id @default(cuid())
+  displayId               String      @unique
+  userId                  String // Clerk User ID
+  amount                  Float
+  status                  OrderStatus @default(PENDING)
+  stripeCheckoutSessionId String      @unique
+  stripeChargeId          String?     @unique 
+  stripeCustomerId        String? 
+  createdAt               DateTime    @default(now())
+  updatedAt               DateTime    @updatedAt
+  items                   OrderItem[]
 
+  // Add indexes for faster lookups
   @@index([userId])
+  @@index([stripeCheckoutSessionId]) 
   @@schema("orders")
 }
 

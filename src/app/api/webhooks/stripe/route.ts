@@ -1,10 +1,18 @@
 import { NextRequest, NextResponse } from "next/server";
-import Stripe from "stripe";
 import { headers } from "next/headers";
+import Stripe from "stripe";
 import { format } from "date-fns";
 
-import { prisma } from "@/src/lib/prismaClient";
 import { stripe } from "@/lib/stripe";
+import { prisma } from "@/lib/prismaClient";
+// import { sendOrderConfirmationEmail, sendPaymentFailedEmail } from "@/actions/resend/emails"; // Import email functions when ready
+
+const relevantEvents = new Set([
+  "checkout.session.completed",
+  "checkout.session.async_payment_failed", // Added for async failures
+  "charge.failed", // Keep for direct charge failures if applicable
+  // Add other events as needed, e.g., payment_intent.succeeded, payment_intent.payment_failed
+]);
 
 export async function POST(req: NextRequest) {
   const body = await req.text();
@@ -12,10 +20,13 @@ export async function POST(req: NextRequest) {
   const signature = headersList.get("Stripe-Signature") as string;
   const webhookSecret = process.env.STRIPE_WEBHOOK_SECRET;
 
-  if (!webhookSecret) {
-    console.error("Stripe webhook secret not set.");
+  if (!signature || !webhookSecret) {
+    console.error("[WEBHOOK] Stripe webhook secret or signature missing.");
 
-    return new NextResponse("Webhook Error: Missing secret", { status: 400 });
+    return NextResponse.json(
+      { error: "Webhook secret not configured." },
+      { status: 400 },
+    );
   }
 
   let event: Stripe.Event;
@@ -23,101 +34,240 @@ export async function POST(req: NextRequest) {
   try {
     event = stripe.webhooks.constructEvent(body, signature, webhookSecret);
   } catch (err: any) {
-    console.error(`Webhook signature verification failed: ${err.message}`);
+    console.error(
+      `[WEBHOOK] Webhook signature verification failed: ${err.message}`,
+    );
 
-    return new NextResponse(`Webhook Error: ${err.message}`, { status: 400 });
+    return NextResponse.json(
+      { error: `Webhook Error: ${err.message}` },
+      { status: 400 },
+    );
   }
 
-  const session = event.data.object as Stripe.Checkout.Session;
+  console.log(`[WEBHOOK] Received event: ${event.type}`);
 
-  // Handle the checkout.session.completed event
-  if (event.type === "checkout.session.completed") {
-    console.log("Processing checkout.session.completed event...");
-
-    if (!session?.metadata?.userId || !session?.metadata?.cartItems) {
-      console.error("Missing metadata in Stripe session:", session.id);
-
-      return new NextResponse("Webhook Error: Missing metadata", {
-        status: 400,
-      });
-    }
-
-    const userId = session.metadata.userId;
-    const cartItemsString = session.metadata.cartItems;
-    const chargeId =
-      typeof session.payment_intent === "string"
-        ? session.payment_intent
-        : session.payment_intent?.id;
-
-    if (!chargeId) {
-      console.error("Missing charge ID in Stripe session:", session.id);
-
-      return new NextResponse("Webhook Error: Missing charge ID", {
-        status: 400,
-      });
-    }
-
+  if (relevantEvents.has(event.type)) {
     try {
-      const cartItems: { id: string; price: number }[] =
-        JSON.parse(cartItemsString);
-      const totalAmount = session.amount_total ? session.amount_total / 100 : 0;
+      switch (event.type) {
+        case "checkout.session.completed": {
+          const session = event.data.object as Stripe.Checkout.Session;
 
-      // --- Generate Display ID ---
-      const now = new Date();
-      const displayId = `NJAE${format(now, "yyyy")}-OID${format(now, "MMdd-HHmmss")}`;
-      // Add a small random suffix to decrease collision chance in high concurrency
-      const randomSuffix = Math.random()
-        .toString(36)
-        .substring(2, 6)
-        .toUpperCase();
-      const finalDisplayId = `${displayId}${randomSuffix}`;
-      // --- End Generate Display ID ---
+          console.log(
+            `[WEBHOOK] Handling checkout.session.completed: ${session.id}`,
+          );
 
-      // Create the Order and OrderItems in the database
-      await prisma.order.create({
-        data: {
-          displayId: finalDisplayId,
-          userId: userId,
-          amount: totalAmount,
-          status: "COMPLETED",
-          stripeChargeId: chargeId,
-          items: {
-            create: cartItems.map((item) => ({
-              productId: item.id,
-              price: item.price,
-              quantity: 1, // Always 1 for digital items
-            })),
-          },
-        },
-        include: {
-          items: true, // Include items to confirm creation
-        },
-      });
+          const userId = session.metadata?.userId;
+          const cartItemsString = session.metadata?.cartItems;
+          const stripeCustomerId = session.customer as string; // Can be null if customer wasn't created/attached
+          const amountTotal = session.amount_total;
+          const customerEmail = session.customer_details?.email; // Email used in checkout
+          const paymentIntentId = session.payment_intent as string;
 
-      console.log(
-        `Order ${finalDisplayId} created successfully for user ${userId}, charge ${chargeId}`,
-      );
+          if (!userId || !cartItemsString || !amountTotal || !paymentIntentId) {
+            console.error(
+              "[WEBHOOK] Missing metadata, amount, or payment intent in checkout session:",
+              session.id,
+            );
 
-      // TODO: Optionally trigger email confirmation here
+            return NextResponse.json(
+              { error: "Missing required session data" },
+              { status: 400 },
+            ); // Bad request, don't retry
+          }
+
+          // Idempotency Check
+          const existingOrder = await prisma.order.findFirst({
+            where: { stripeCheckoutSessionId: session.id },
+          });
+
+          if (existingOrder) {
+            console.log(
+              `[WEBHOOK] Order already exists for session ${session.id}. Skipping.`,
+            );
+
+            return NextResponse.json({ received: true });
+          }
+
+          let parsedCartItems: { id: string; price: number }[] = [];
+
+          try {
+            parsedCartItems = JSON.parse(cartItemsString);
+          } catch (parseError) {
+            console.error(
+              "[WEBHOOK] Failed to parse cartItems metadata:",
+              session.id,
+              parseError,
+            );
+
+            return NextResponse.json(
+              { error: "Invalid metadata format" },
+              { status: 400 },
+            ); // Bad request
+          }
+
+          if (!Array.isArray(parsedCartItems) || parsedCartItems.length === 0) {
+            console.error(
+              "[WEBHOOK] Parsed cartItems metadata is empty or not an array:",
+              session.id,
+            );
+
+            return NextResponse.json(
+              { error: "Invalid metadata content" },
+              { status: 400 },
+            ); // Bad request
+          }
+
+          // --- Generate Display ID ---
+          const now = new Date();
+          const displayId = `NJAE${format(now, "yyyy")}-OID${format(now, "MMdd-HHmmss")}`;
+          // Add a small random suffix to decrease collision chance in high concurrency
+          const randomSuffix = Math.random()
+            .toString(36)
+            .substring(2, 6)
+            .toUpperCase();
+          const finalDisplayId = `${displayId}${randomSuffix}`;
+          // --- End Generate Display ID ---
+
+          // Create Order and Items in a Transaction
+          try {
+            const newOrder = await prisma.$transaction(async (tx) => {
+              const order = await tx.order.create({
+                data: {
+                  displayId: finalDisplayId,
+                  userId: userId,
+                  amount: amountTotal / 100, // Convert from cents
+                  status: "COMPLETED",
+                  stripeCheckoutSessionId: session.id,
+                  stripeChargeId: paymentIntentId,
+                  stripeCustomerId: stripeCustomerId,
+                },
+              });
+
+              await tx.orderItem.createMany({
+                data: parsedCartItems.map((item) => ({
+                  orderId: order.id,
+                  productId: item.id,
+                  price: item.price, // Store price paid at time of checkout
+                })),
+              });
+
+              // Return the created order with necessary includes for email
+              return await tx.order.findUniqueOrThrow({
+                where: { id: order.id },
+                include: {
+                  items: { include: { product: true } },
+                },
+              });
+            });
+
+            console.log(
+              `[WEBHOOK] Order ${newOrder.displayId} created successfully via transaction.`,
+            );
+
+            // --- Send Success Email (Placeholder) ---
+            // Use customerEmail from session details as primary source
+            // const userEmailForSuccess = customerEmail;
+            // if (userEmailForSuccess) {
+            //   await sendOrderConfirmationEmail(userEmailForSuccess, newOrder);
+            //   console.log(`[WEBHOOK] Sent order confirmation email to ${userEmailForSuccess}`);
+            // } else {
+            //   console.warn(`[WEBHOOK] No email found to send confirmation for order ${newOrder.displayId}`);
+            // }
+            // ----------------------------------------
+          } catch (dbError) {
+            console.error(
+              "[WEBHOOK] Database transaction failed for order creation:",
+              session.id,
+              dbError,
+            );
+
+            return NextResponse.json(
+              { error: "Database error during order creation" },
+              { status: 500 },
+            ); // Internal server error, trigger retry
+          }
+          break;
+        }
+
+        case "checkout.session.async_payment_failed": {
+          const session = event.data.object as Stripe.Checkout.Session;
+          const customerEmail = session.customer_details?.email;
+
+          console.warn(
+            `[WEBHOOK] Handling checkout.session.async_payment_failed: ${session.id}`,
+          );
+          // Log relevant details for debugging
+          console.warn(
+            `[WEBHOOK] Failure details: Session ID: ${session.id}, Customer Email: ${customerEmail}`,
+          );
+
+          // --- Send Failure Email (Placeholder) ---
+          // if (customerEmail) {
+          //   await sendPaymentFailedEmail(customerEmail, "Your recent payment attempt failed. Please update your payment method or try again.");
+          //   console.log(`[WEBHOOK] Sent payment failure email to ${customerEmail} for session ${session.id}`);
+          // } else {
+          //   console.warn(`[WEBHOOK] No customer email found on session ${session.id} to send failure notification.`);
+          // }
+          // ----------------------------------------
+          // No order is created, so just acknowledge the event
+          break;
+        }
+
+        case "charge.failed": {
+          const charge = event.data.object as Stripe.Charge;
+          const customerId = charge.customer as string;
+          const customerEmail: string | null = charge.billing_details?.email;
+
+          console.warn(
+            `[WEBHOOK] Handling charge.failed: ${charge.id}, Reason: ${charge.failure_message}`,
+          );
+
+          // Attempt to get email from customer object if not on charge
+          // if (!customerEmail && customerId) {
+          //   try {
+          //     const customer = await stripe.customers.retrieve(customerId);
+          //     if (!customer.deleted) {
+          //       customerEmail = customer.email;
+          //     }
+          //   } catch (customerError) {
+          //     console.error(`[WEBHOOK] Error retrieving customer ${customerId} for failed charge ${charge.id}:`, customerError);
+          //   }
+          // }
+
+          // --- Send Failure Email (Placeholder) ---
+          // if (customerEmail) {
+          //   await sendPaymentFailedEmail(customerEmail, `A charge attempt failed. Reason: ${charge.failure_message || 'Unknown'}. Please update your payment method.`);
+          //   console.log(`[WEBHOOK] Sent charge failure email to ${customerEmail} for charge ${charge.id}`);
+          // } else {
+          //   console.warn(`[WEBHOOK] No customer email found for failed charge ${charge.id} to send notification.`);
+          // }
+          // ----------------------------------------
+          // No order is created
+          break;
+        }
+
+        default:
+          console.warn(
+            `[WEBHOOK] Unhandled relevant event type: ${event.type}`,
+          );
+      }
     } catch (error) {
-      console.error("Error processing webhook and creating order:", error);
-
-      // Don't return 500 immediately, Stripe might retry.
-      // Log the error thoroughly.
-      // Consider specific error handling (e.g., if product ID doesn't exist)
-      return new NextResponse("Webhook Error: Failed to process order", {
-        status: 500,
-      });
+      console.error(
+        "[WEBHOOK] Error handling webhook event:",
+        event.type,
+        error,
+      );
+      // Don't return 500 for errors during failure handling, as the primary event (payment) already failed.
+      // Only return 500 for unexpected errors during *success* processing that need retry.
+      if (event.type === "checkout.session.completed") {
+        return NextResponse.json(
+          { error: "Internal server error handling event." },
+          { status: 500 },
+        );
+      }
     }
   }
-  // Handle other event types if needed (e.g., payment_intent.succeeded, payment_intent.payment_failed)
-  else if (event.type === "checkout.session.async_payment_failed") {
-    console.warn("Checkout session payment failed:", session.id);
-    // Optionally update order status to FAILED if you created a PENDING order earlier
-  } else {
-    console.log(`Unhandled event type ${event.type}`);
-  }
 
-  // Return a 200 response to acknowledge receipt of the event
-  return new NextResponse(null, { status: 200 });
+  // Acknowledge receipt of the event to Stripe
+  return NextResponse.json({ received: true });
 }
