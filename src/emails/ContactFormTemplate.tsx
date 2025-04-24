@@ -1,14 +1,14 @@
 import * as React from "react";
 
-import { EmailTemplateProps } from "@/src/interfaces/Contact";
+import { ContactFormTemplateProps } from "@/src/interfaces/Contact";
 
-const ContactFormEmailTemplate = ({
+const ContactFormTemplate = ({
   firstName,
   lastName,
   subject,
   email,
   message,
-}: EmailTemplateProps) => {
+}: ContactFormTemplateProps) => {
   const currentYear = new Date().getFullYear();
 
   return (
@@ -131,4 +131,4 @@ const ContactFormEmailTemplate = ({
   );
 };
 
-export default ContactFormEmailTemplate;
+export default ContactFormTemplate;

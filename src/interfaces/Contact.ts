@@ -30,7 +30,7 @@ export interface SuccessDisplayProps {
   t: ReturnType<typeof useTranslations>;
 }
 
-export interface EmailTemplateProps {
+export interface ContactFormTemplateProps {
   firstName: string;
   lastName: string;
   subject: string;
