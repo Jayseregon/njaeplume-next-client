@@ -10,11 +10,9 @@ import {
   Heading,
 } from "@react-email/components";
 
-interface FailedPaymentProps {
-  customerName: string;
-}
+import { FailedPaymentProps } from "@/interfaces/StripeWebhook";
 
-const FailedPaymentEmail = ({
+const PaymentFailureEmail = ({
   customerName = "John Doe",
 }: FailedPaymentProps) => {
   const currentYear = new Date().getFullYear();
@@ -54,7 +52,7 @@ const FailedPaymentEmail = ({
                 marginBottom: "8px",
               }}
             >
-              Payment Failed
+              Payment Was Not Successful
             </Heading>
             <Text
               style={{
@@ -94,10 +92,21 @@ const FailedPaymentEmail = ({
                 margin: "4px 0 16px",
               }}
             >
-              Your recent payment attempt failed. Please update your payment
-              method or try again.
+              Your recent payment attempt failed. This could be due to
+              insufficient funds, expired card details, or security measures
+              from your bank.
             </Text>
 
+            <Text
+              style={{
+                color: "rgb(196, 146, 136)",
+                fontSize: "14px",
+                fontWeight: "500",
+                margin: "0",
+              }}
+            >
+              What to do next:
+            </Text>
             <Text
               style={{
                 color: "#000000",
@@ -106,7 +115,9 @@ const FailedPaymentEmail = ({
               }}
             >
               No charges have been processed, and no order has been created. You
-              can return to our website to complete your purchase.
+              can try again with a different payment method or check with your
+              bank to ensure there are no issues with your current payment
+              method.
             </Text>
           </Section>
 
@@ -118,8 +129,8 @@ const FailedPaymentEmail = ({
                 margin: "8px 0",
               }}
             >
-              If you need assistance, please contact our support team at
-              support@njaeplume.com
+              If you have any questions or need assistance, please don&apos;t
+              hesitate to contact our support team at support@njaeplume.com
             </Text>
             <Text
               style={{
@@ -156,4 +167,4 @@ const FailedPaymentEmail = ({
   );
 };
 
-export default FailedPaymentEmail;
+export default PaymentFailureEmail;
