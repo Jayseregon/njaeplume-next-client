@@ -18,7 +18,6 @@ export default function AccountDashboard() {
   const [latestOrder, setLatestOrder] = useState<OrderWithItems | null>(null);
   const [totalOrdersCount, setTotalOrdersCount] = useState<number>(0);
   const [isLoadingData, setIsLoadingData] = useState(true);
-  const [recentOrders, setRecentOrders] = useState([]);
   const [recentDownloads, setRecentDownloads] = useState([]);
 
   useEffect(() => {

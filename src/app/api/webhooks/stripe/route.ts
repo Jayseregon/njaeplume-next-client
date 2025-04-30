@@ -2,10 +2,15 @@ import { NextRequest, NextResponse } from "next/server";
 import { headers } from "next/headers";
 import Stripe from "stripe";
 import { format } from "date-fns";
+import { currentUser } from "@clerk/nextjs/server";
 
-import { stripe } from "@/lib/stripe";
+import {
+  sendPaymentConfirmationNotification,
+  sendPaymentFailureNotification,
+  stripe,
+} from "@/lib/stripe";
 import { prisma } from "@/lib/prismaClient";
-// import { sendOrderConfirmationEmail, sendPaymentFailedEmail } from "@/actions/resend/emails"; // Import email functions when ready
+import { Order } from "@/interfaces/StripeWebhook";
 
 const relevantEvents = new Set([
   "checkout.session.completed",
@@ -17,6 +22,7 @@ const relevantEvents = new Set([
 export async function POST(req: NextRequest) {
   const body = await req.text();
   const headersList = await headers();
+  const user = await currentUser();
   const signature = headersList.get("Stripe-Signature") as string;
   const webhookSecret = process.env.STRIPE_WEBHOOK_SECRET;
 
@@ -60,7 +66,6 @@ export async function POST(req: NextRequest) {
           const cartItemsString = session.metadata?.cartItems;
           const stripeCustomerId = session.customer as string; // Can be null if customer wasn't created/attached
           const amountTotal = session.amount_total;
-          const customerEmail = session.customer_details?.email; // Email used in checkout
           const paymentIntentId = session.payment_intent as string;
 
           if (!userId || !cartItemsString || !amountTotal || !paymentIntentId) {
@@ -83,6 +88,11 @@ export async function POST(req: NextRequest) {
           if (existingOrder) {
             console.log(
               `[WEBHOOK] Order already exists for session ${session.id}. Skipping.`,
+            );
+
+            // Add a check for already sent emails to prevent duplicate emails
+            console.log(
+              `[WEBHOOK] Assuming email was already sent for existing order ${existingOrder.displayId}`,
             );
 
             return NextResponse.json({ received: true });
@@ -130,7 +140,7 @@ export async function POST(req: NextRequest) {
 
           // Create Order and Items in a Transaction
           try {
-            const newOrder = await prisma.$transaction(async (tx) => {
+            const newOrder = (await prisma.$transaction(async (tx) => {
               const order = await tx.order.create({
                 data: {
                   displayId: finalDisplayId,
@@ -158,22 +168,13 @@ export async function POST(req: NextRequest) {
                   items: { include: { product: true } },
                 },
               });
-            });
+            })) as unknown as Order;
 
             console.log(
               `[WEBHOOK] Order ${newOrder.displayId} created successfully via transaction.`,
             );
 
-            // --- Send Success Email (Placeholder) ---
-            // Use customerEmail from session details as primary source
-            // const userEmailForSuccess = customerEmail;
-            // if (userEmailForSuccess) {
-            //   await sendOrderConfirmationEmail(userEmailForSuccess, newOrder);
-            //   console.log(`[WEBHOOK] Sent order confirmation email to ${userEmailForSuccess}`);
-            // } else {
-            //   console.warn(`[WEBHOOK] No email found to send confirmation for order ${newOrder.displayId}`);
-            // }
-            // ----------------------------------------
+            await sendPaymentConfirmationNotification(newOrder, session, user);
           } catch (dbError) {
             console.error(
               "[WEBHOOK] Database transaction failed for order creation:",
@@ -201,47 +202,32 @@ export async function POST(req: NextRequest) {
             `[WEBHOOK] Failure details: Session ID: ${session.id}, Customer Email: ${customerEmail}`,
           );
 
-          // --- Send Failure Email (Placeholder) ---
-          // if (customerEmail) {
-          //   await sendPaymentFailedEmail(customerEmail, "Your recent payment attempt failed. Please update your payment method or try again.");
-          //   console.log(`[WEBHOOK] Sent payment failure email to ${customerEmail} for session ${session.id}`);
-          // } else {
-          //   console.warn(`[WEBHOOK] No customer email found on session ${session.id} to send failure notification.`);
-          // }
-          // ----------------------------------------
-          // No order is created, so just acknowledge the event
+          // Send failure email notification
+          await sendPaymentFailureNotification(
+            session,
+            user,
+            "Your recent payment attempt failed. Please update your payment method or try again.",
+          );
+
+          // No order is created, so just acknowledge the events
           break;
         }
 
         case "charge.failed": {
           const charge = event.data.object as Stripe.Charge;
-          const customerId = charge.customer as string;
-          const customerEmail: string | null = charge.billing_details?.email;
 
           console.warn(
             `[WEBHOOK] Handling charge.failed: ${charge.id}, Reason: ${charge.failure_message}`,
           );
 
-          // Attempt to get email from customer object if not on charge
-          // if (!customerEmail && customerId) {
-          //   try {
-          //     const customer = await stripe.customers.retrieve(customerId);
-          //     if (!customer.deleted) {
-          //       customerEmail = customer.email;
-          //     }
-          //   } catch (customerError) {
-          //     console.error(`[WEBHOOK] Error retrieving customer ${customerId} for failed charge ${charge.id}:`, customerError);
-          //   }
-          // }
+          // Send failure email notification
+          await sendPaymentFailureNotification(
+            charge,
+            user,
+            charge.failure_message ||
+              "Your payment could not be processed. Please try again with a different payment method.",
+          );
 
-          // --- Send Failure Email (Placeholder) ---
-          // if (customerEmail) {
-          //   await sendPaymentFailedEmail(customerEmail, `A charge attempt failed. Reason: ${charge.failure_message || 'Unknown'}. Please update your payment method.`);
-          //   console.log(`[WEBHOOK] Sent charge failure email to ${customerEmail} for charge ${charge.id}`);
-          // } else {
-          //   console.warn(`[WEBHOOK] No customer email found for failed charge ${charge.id} to send notification.`);
-          // }
-          // ----------------------------------------
           // No order is created
           break;
         }
