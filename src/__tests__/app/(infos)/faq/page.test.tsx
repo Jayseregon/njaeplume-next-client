@@ -58,16 +58,17 @@ jest.mock("next-intl", () => ({
     if (key.startsWith("questions.")) {
       const [_, sectionId, field] = key.split(".");
       const section = faqTranslations.questions[sectionId as keyof FAQSections];
-      
+
       if (!section) return key;
-      
+
       if (field === "question") {
         return section.question || key;
       }
-      
+
       // Safe access with type assertion
       return (section as Record<string, string>)[field] || key;
     }
+
     return key;
   },
 }));
@@ -81,34 +82,25 @@ jest.mock("@/components/ui/accordion", () => ({
       "data-collapsible": collapsible ? "true" : "false", // Convert boolean to data attribute
       "data-type": type || "single",
     };
-    
+
     return (
-      <div
-        data-testid="accordion"
-        {...safeProps}>
+      <div data-testid="accordion" {...safeProps}>
         {children}
       </div>
     );
   },
   AccordionItem: ({ children, value, ...props }: any) => (
-    <div
-      data-testid={`accordion-item-${value}`}
-      data-value={value}
-      {...props}>
+    <div data-testid={`accordion-item-${value}`} data-value={value} {...props}>
       {children}
     </div>
   ),
   AccordionTrigger: ({ children, ...props }: any) => (
-    <button
-      data-testid="accordion-trigger"
-      {...props}>
+    <button data-testid="accordion-trigger" {...props}>
       {children}
     </button>
   ),
   AccordionContent: ({ children, ...props }: any) => (
-    <div
-      data-testid="accordion-content"
-      {...props}>
+    <div data-testid="accordion-content" {...props}>
       {children}
     </div>
   ),
@@ -138,6 +130,7 @@ describe("FAQPage", () => {
     render(<FAQPage />);
     // The component defines 10 sections in faqStructure
     const accordionItems = screen.getAllByTestId(/^accordion-item/);
+
     expect(accordionItems).toHaveLength(10);
   });
 
@@ -145,7 +138,7 @@ describe("FAQPage", () => {
     render(<FAQPage />);
     // Check if the first two questions from our mock are rendered
     expect(
-      screen.getByText("What can we do with these products?")
+      screen.getByText("What can we do with these products?"),
     ).toBeInTheDocument();
     expect(screen.getByText("Are the products unique?")).toBeInTheDocument();
   });
@@ -155,6 +148,7 @@ describe("FAQPage", () => {
 
     // We should have multiple accordion content divs
     const accordionContents = screen.getAllByTestId("accordion-content");
+
     expect(accordionContents.length).toBe(10);
 
     // Get all triggers (question headers)
@@ -164,12 +158,14 @@ describe("FAQPage", () => {
     fireEvent.click(triggers[0]); // Click "What can we do with these products?"
     const usageItem = screen.getByTestId("accordion-item-usage");
     const usageAnswers = usageItem.querySelectorAll("p");
+
     expect(usageAnswers.length).toBe(4);
 
     // Check "unique" section has 3 paragraphs (answers)
     fireEvent.click(triggers[1]); // Click "Are the products unique?"
     const uniqueItem = screen.getByTestId("accordion-item-unique");
     const uniqueAnswers = uniqueItem.querySelectorAll("p");
+
     expect(uniqueAnswers.length).toBe(3);
   });
 
@@ -178,17 +174,18 @@ describe("FAQPage", () => {
 
     // Check content of first answer in "usage" section
     const triggers = screen.getAllByTestId("accordion-trigger");
+
     fireEvent.click(triggers[0]);
 
     expect(
       screen.getByText(
-        "After you purchase any of our products, even custom ones, you can use it for your personal projects."
-      )
+        "After you purchase any of our products, even custom ones, you can use it for your personal projects.",
+      ),
     ).toBeInTheDocument();
     expect(
       screen.getByText(
-        "You can showcase it, but you can not resell it, reproduce or copy."
-      )
+        "You can showcase it, but you can not resell it, reproduce or copy.",
+      ),
     ).toBeInTheDocument();
   });
 
@@ -204,7 +201,7 @@ describe("FAQPage", () => {
     expect(screen.getByTestId("accordion-item-returns")).toBeInTheDocument();
     expect(screen.getByTestId("accordion-item-custom")).toBeInTheDocument();
     expect(
-      screen.getByTestId("accordion-item-fewProducts")
+      screen.getByTestId("accordion-item-fewProducts"),
     ).toBeInTheDocument();
     expect(screen.getByTestId("accordion-item-fanArt")).toBeInTheDocument();
     expect(screen.getByTestId("accordion-item-howToUse")).toBeInTheDocument();

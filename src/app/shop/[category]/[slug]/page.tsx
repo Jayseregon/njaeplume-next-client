@@ -21,14 +21,14 @@ export async function generateMetadata({
 }: ProductPageProps): Promise<Metadata> {
   // Get the slug from params
   const { slug, category } = await params;
-  
+
   // Validate category
   if (!isCategoryValid(category)) {
     return {
       title: "Category Not Found",
     };
   }
-  
+
   const product = await getProductBySlug(slug);
 
   if (!product) {
@@ -47,12 +47,12 @@ export async function generateMetadata({
 
 export default async function ProductPage({ params }: ProductPageProps) {
   const { slug, category } = await params;
-  
+
   // Validate category
   if (!isCategoryValid(category)) {
     return notFound();
   }
-  
+
   const product = await getProductBySlug(slug);
 
   if (!product) {

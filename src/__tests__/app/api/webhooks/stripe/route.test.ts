@@ -1,18 +1,22 @@
-import { NextRequest, NextResponse } from "next/server";
+import { NextRequest } from "next/server";
 import { headers } from "next/headers";
 import { currentUser } from "@clerk/nextjs/server";
-import { stripe, sendPaymentConfirmationNotification, sendPaymentFailureNotification } from "@/lib/stripe";
-import { prisma } from "@/lib/prismaClient";
+
+import {
+  stripe,
+  sendPaymentConfirmationNotification,
+  sendPaymentFailureNotification,
+} from "@/lib/stripe";
 import { POST } from "@/app/api/webhooks/stripe/route";
 
 // Mock global Request object which is not available in Node.js environment
 global.Request = jest.fn().mockImplementation((url, options = {}) => ({
   url,
-  method: options.method || 'GET',
+  method: options.method || "GET",
   headers: new Map(Object.entries(options.headers || {})),
   body: options.body,
-  json: async () => JSON.parse(options.body || '{}'),
-  text: async () => options.body || '',
+  json: async () => JSON.parse(options.body || "{}"),
+  text: async () => options.body || "",
 }));
 
 // Mock NextRequest and NextResponse
@@ -22,12 +26,14 @@ jest.mock("next/server", () => {
       url: request.url,
       method: request.method,
       json: async () => {
-        return request.json ? await request.json() : JSON.parse(request.body || '{}');
+        return request.json
+          ? await request.json()
+          : JSON.parse(request.body || "{}");
       },
-      text: async () => request.body || '',
+      text: async () => request.body || "",
     })),
     NextResponse: {
-      json: (data: any, options: { status: any; }) => ({
+      json: (data: any, options: { status: any }) => ({
         status: options?.status || 200,
         json: async () => data,
       }),
@@ -71,7 +77,8 @@ jest.mock("@/lib/prismaClient", () => ({
     order: {
       findFirst: (...args: any[]) => mockOrderFindFirst(...args),
       create: (...args: any[]) => mockOrderCreate(...args),
-      findUniqueOrThrow: (...args: any[]) => mockOrderFindUniqueOrThrow(...args),
+      findUniqueOrThrow: (...args: any[]) =>
+        mockOrderFindUniqueOrThrow(...args),
     },
     orderItem: {
       createMany: (...args: any[]) => mockOrderItemCreateMany(...args),
@@ -89,12 +96,12 @@ describe("Stripe Webhook Handler", () => {
   beforeEach(() => {
     jest.resetModules();
     jest.clearAllMocks();
-    
+
     // Save original console methods
     originalConsoleLog = console.log;
     originalConsoleError = console.error;
     originalConsoleWarn = console.warn;
-    
+
     // Mock console methods to prevent output during tests
     console.log = jest.fn();
     console.error = jest.fn();
@@ -104,14 +111,15 @@ describe("Stripe Webhook Handler", () => {
       ...originalEnv,
       STRIPE_WEBHOOK_SECRET: "whsec_test_secret",
     };
-    
+
     (headers as jest.Mock).mockReturnValue({
       get: jest.fn().mockImplementation((header: string) => {
         if (header === "Stripe-Signature") return "sig_valid";
+
         return null;
       }),
     });
-    
+
     (currentUser as jest.Mock).mockResolvedValue({
       id: "user_123",
       emailAddresses: [{ id: "email_123", emailAddress: "user@example.com" }],
@@ -129,7 +137,7 @@ describe("Stripe Webhook Handler", () => {
   describe("Signature Verification", () => {
     it("returns 400 if Stripe signature is missing", async () => {
       (headers as jest.Mock).mockReturnValue({
-        get: jest.fn().mockImplementation((header: string) => {
+        get: jest.fn().mockImplementation(() => {
           return null;
         }),
       });
@@ -139,13 +147,15 @@ describe("Stripe Webhook Handler", () => {
         new Request("http://localhost/api/webhooks/stripe", {
           method: "POST",
           body: JSON.stringify({}),
-        })
+        }),
       );
-      
+
       const response = await POST(req);
+
       expect(response.status).toBe(400);
-      
+
       const data = await response.json();
+
       expect(data.error).toContain("Webhook secret not configured");
     });
 
@@ -159,13 +169,15 @@ describe("Stripe Webhook Handler", () => {
         new Request("http://localhost/api/webhooks/stripe", {
           method: "POST",
           body: JSON.stringify({}),
-        })
+        }),
       );
-      
+
       const response = await POST(req);
+
       expect(response.status).toBe(400);
-      
+
       const data = await response.json();
+
       expect(data.error).toContain("Webhook Error");
     });
   });
@@ -195,9 +207,11 @@ describe("Stripe Webhook Handler", () => {
           },
         },
       };
-      
-      (stripe.webhooks.constructEvent as jest.Mock).mockReturnValue(checkoutSessionCompletedEvent);
-      
+
+      (stripe.webhooks.constructEvent as jest.Mock).mockReturnValue(
+        checkoutSessionCompletedEvent,
+      );
+
       // Mock order creation transaction
       const mockCreatedOrder = {
         id: "ord_123",
@@ -249,9 +263,9 @@ describe("Stripe Webhook Handler", () => {
           },
         ],
       };
-      
+
       mockOrderFindFirst.mockResolvedValue(null); // No existing order
-      mockTransaction.mockImplementation((callback) => {
+      mockTransaction.mockImplementation(() => {
         return Promise.resolve(mockCreatedOrder);
       });
 
@@ -260,18 +274,20 @@ describe("Stripe Webhook Handler", () => {
         new Request("http://localhost/api/webhooks/stripe", {
           method: "POST",
           body: JSON.stringify({}),
-        })
+        }),
       );
-      
+
       const response = await POST(req);
+
       expect(response.status).toBe(200);
-      
+
       const data = await response.json();
+
       expect(data.received).toBe(true);
-      
+
       // Verify transaction was called
       expect(mockTransaction).toHaveBeenCalled();
-      
+
       // Verify confirmation email was sent
       expect(sendPaymentConfirmationNotification).toHaveBeenCalledWith(
         expect.objectContaining({
@@ -279,7 +295,7 @@ describe("Stripe Webhook Handler", () => {
           displayId: "NJAE2023-OID1225-123456ABCD",
         }),
         expect.objectContaining({ id: "cs_test_123" }),
-        expect.objectContaining({ id: "user_123" })
+        expect.objectContaining({ id: "user_123" }),
       );
     });
 
@@ -292,9 +308,7 @@ describe("Stripe Webhook Handler", () => {
             id: "cs_test_123",
             metadata: {
               userId: "user_123",
-              cartItems: JSON.stringify([
-                { id: "prod_123", price: 29.99 },
-              ]),
+              cartItems: JSON.stringify([{ id: "prod_123", price: 29.99 }]),
             },
             amount_total: 2999, // $29.99 in cents
             payment_intent: "pi_test_123",
@@ -302,33 +316,37 @@ describe("Stripe Webhook Handler", () => {
           },
         },
       };
-      
-      (stripe.webhooks.constructEvent as jest.Mock).mockReturnValue(checkoutSessionCompletedEvent);
-      
+
+      (stripe.webhooks.constructEvent as jest.Mock).mockReturnValue(
+        checkoutSessionCompletedEvent,
+      );
+
       // Mock existing order to trigger idempotency check
       mockOrderFindFirst.mockResolvedValue({
         id: "ord_123",
         displayId: "NJAE2023-OID1225-123456ABCD",
         stripeCheckoutSessionId: "cs_test_123",
       });
-      
+
       // Updated NextRequest construction
       const req = new NextRequest(
         new Request("http://localhost/api/webhooks/stripe", {
           method: "POST",
           body: JSON.stringify({}),
-        })
+        }),
       );
-      
+
       const response = await POST(req);
+
       expect(response.status).toBe(200);
-      
+
       const data = await response.json();
+
       expect(data.received).toBe(true);
-      
+
       // Verify transaction was NOT called (idempotency check prevented it)
       expect(mockTransaction).not.toHaveBeenCalled();
-      
+
       // Verify email was NOT sent again
       expect(sendPaymentConfirmationNotification).not.toHaveBeenCalled();
     });
@@ -347,23 +365,27 @@ describe("Stripe Webhook Handler", () => {
           },
         },
       };
-      
-      (stripe.webhooks.constructEvent as jest.Mock).mockReturnValue(asyncPaymentFailedEvent);
-      
+
+      (stripe.webhooks.constructEvent as jest.Mock).mockReturnValue(
+        asyncPaymentFailedEvent,
+      );
+
       // Updated NextRequest construction
       const req = new NextRequest(
         new Request("http://localhost/api/webhooks/stripe", {
           method: "POST",
           body: JSON.stringify({}),
-        })
+        }),
       );
-      
+
       const response = await POST(req);
+
       expect(response.status).toBe(200);
-      
+
       const data = await response.json();
+
       expect(data.received).toBe(true);
-      
+
       // Verify failure email was sent
       expect(sendPaymentFailureNotification).toHaveBeenCalled();
     });
@@ -383,28 +405,32 @@ describe("Stripe Webhook Handler", () => {
           },
         },
       };
-      
-      (stripe.webhooks.constructEvent as jest.Mock).mockReturnValue(chargeFailedEvent);
-      
+
+      (stripe.webhooks.constructEvent as jest.Mock).mockReturnValue(
+        chargeFailedEvent,
+      );
+
       // Updated NextRequest construction
       const req = new NextRequest(
         new Request("http://localhost/api/webhooks/stripe", {
           method: "POST",
           body: JSON.stringify({}),
-        })
+        }),
       );
-      
+
       const response = await POST(req);
+
       expect(response.status).toBe(200);
-      
+
       const data = await response.json();
+
       expect(data.received).toBe(true);
-      
+
       // Verify failure email was sent with the error message
       expect(sendPaymentFailureNotification).toHaveBeenCalledWith(
         expect.objectContaining({ id: "ch_test_failed" }),
         expect.anything(),
-        "Your card was declined"
+        "Your card was declined",
       );
     });
   });
@@ -426,22 +452,26 @@ describe("Stripe Webhook Handler", () => {
           },
         },
       };
-      
-      (stripe.webhooks.constructEvent as jest.Mock).mockReturnValue(incompleteSessionEvent);
+
+      (stripe.webhooks.constructEvent as jest.Mock).mockReturnValue(
+        incompleteSessionEvent,
+      );
       mockOrderFindFirst.mockResolvedValue(null);
-      
+
       // Updated NextRequest construction
       const req = new NextRequest(
         new Request("http://localhost/api/webhooks/stripe", {
           method: "POST",
           body: JSON.stringify({}),
-        })
+        }),
       );
-      
+
       const response = await POST(req);
+
       expect(response.status).toBe(400);
-      
+
       const data = await response.json();
+
       expect(data.error).toContain("Missing required session data");
     });
 
@@ -461,22 +491,26 @@ describe("Stripe Webhook Handler", () => {
           },
         },
       };
-      
-      (stripe.webhooks.constructEvent as jest.Mock).mockReturnValue(invalidCartItemsEvent);
+
+      (stripe.webhooks.constructEvent as jest.Mock).mockReturnValue(
+        invalidCartItemsEvent,
+      );
       mockOrderFindFirst.mockResolvedValue(null);
-      
+
       // Updated NextRequest construction
       const req = new NextRequest(
         new Request("http://localhost/api/webhooks/stripe", {
           method: "POST",
           body: JSON.stringify({}),
-        })
+        }),
       );
-      
+
       const response = await POST(req);
+
       expect(response.status).toBe(400);
-      
+
       const data = await response.json();
+
       expect(data.error).toContain("Invalid metadata format");
     });
 
@@ -496,22 +530,26 @@ describe("Stripe Webhook Handler", () => {
           },
         },
       };
-      
-      (stripe.webhooks.constructEvent as jest.Mock).mockReturnValue(emptyCartItemsEvent);
+
+      (stripe.webhooks.constructEvent as jest.Mock).mockReturnValue(
+        emptyCartItemsEvent,
+      );
       mockOrderFindFirst.mockResolvedValue(null);
-      
+
       // Updated NextRequest construction
       const req = new NextRequest(
         new Request("http://localhost/api/webhooks/stripe", {
           method: "POST",
           body: JSON.stringify({}),
-        })
+        }),
       );
-      
+
       const response = await POST(req);
+
       expect(response.status).toBe(400);
-      
+
       const data = await response.json();
+
       expect(data.error).toContain("Invalid metadata content");
     });
 
@@ -524,9 +562,7 @@ describe("Stripe Webhook Handler", () => {
             id: "cs_test_db_error",
             metadata: {
               userId: "user_123",
-              cartItems: JSON.stringify([
-                { id: "prod_123", price: 29.99 },
-              ]),
+              cartItems: JSON.stringify([{ id: "prod_123", price: 29.99 }]),
             },
             amount_total: 2999,
             payment_intent: "pi_test_123",
@@ -534,27 +570,31 @@ describe("Stripe Webhook Handler", () => {
           },
         },
       };
-      
-      (stripe.webhooks.constructEvent as jest.Mock).mockReturnValue(checkoutSessionCompletedEvent);
+
+      (stripe.webhooks.constructEvent as jest.Mock).mockReturnValue(
+        checkoutSessionCompletedEvent,
+      );
       mockOrderFindFirst.mockResolvedValue(null);
-      
+
       // Mock database transaction failure
       mockTransaction.mockRejectedValue(new Error("Database error"));
-      
+
       // Updated NextRequest construction
       const req = new NextRequest(
         new Request("http://localhost/api/webhooks/stripe", {
           method: "POST",
           body: JSON.stringify({}),
-        })
+        }),
       );
-      
+
       const response = await POST(req);
+
       expect(response.status).toBe(500);
-      
+
       const data = await response.json();
+
       expect(data.error).toContain("Database error during order creation");
-      
+
       // Verify error was logged
       expect(console.error).toHaveBeenCalled();
     });
@@ -570,23 +610,27 @@ describe("Stripe Webhook Handler", () => {
         },
       },
     };
-    
-    (stripe.webhooks.constructEvent as jest.Mock).mockReturnValue(irrelevantEvent);
-    
+
+    (stripe.webhooks.constructEvent as jest.Mock).mockReturnValue(
+      irrelevantEvent,
+    );
+
     // Updated NextRequest construction
     const req = new NextRequest(
       new Request("http://localhost/api/webhooks/stripe", {
         method: "POST",
         body: JSON.stringify({}),
-      })
+      }),
     );
-    
+
     const response = await POST(req);
+
     expect(response.status).toBe(200);
-    
+
     const data = await response.json();
+
     expect(data.received).toBe(true);
-    
+
     // Verify no actions were taken
     expect(mockTransaction).not.toHaveBeenCalled();
     expect(sendPaymentConfirmationNotification).not.toHaveBeenCalled();

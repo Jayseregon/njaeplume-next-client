@@ -2,6 +2,7 @@ import React from "react";
 import { render, screen, waitFor } from "@testing-library/react";
 import { useParams } from "next/navigation";
 import { notFound } from "next/navigation";
+
 import { Category } from "@/generated/client";
 import CategoryPage from "@/app/shop/[category]/page";
 
@@ -27,9 +28,7 @@ jest.mock("@/components/product/CategoryGallery", () => ({
       ) : (
         <ul>
           {products.map((product) => (
-            <li
-              key={product.id}
-              data-testid={`product-${product.id}`}>
+            <li key={product.id} data-testid={`product-${product.id}`}>
               {product.name} - ${product.price}
             </li>
           ))}
@@ -41,11 +40,12 @@ jest.mock("@/components/product/CategoryGallery", () => ({
 
 // Mock SimpleSpinner component
 jest.mock("@/components/root/SimpleSpinner", () => ({
-  SimpleSpinner: () => <div data-testid="spinner">Loading spinner</div>
+  SimpleSpinner: () => <div data-testid="spinner">Loading spinner</div>,
 }));
 
 // Mock getProductsByCategory
 const mockGetProductsByCategory = jest.fn();
+
 jest.mock("@/actions/prisma/action", () => ({
   getProductsByCategory: (category: string) =>
     mockGetProductsByCategory(category),
@@ -96,7 +96,7 @@ describe("Dynamic CategoryPage", () => {
       mockGetProductsByCategory.mockResolvedValue(
         mockProductsByCategory[
           category as keyof typeof mockProductsByCategory
-        ] || []
+        ] || [],
       );
 
       render(<CategoryPage />);
@@ -104,6 +104,7 @@ describe("Dynamic CategoryPage", () => {
       // Verify the page title is capitalized
       const expectedTitle =
         category.charAt(0).toUpperCase() + category.slice(1);
+
       expect(screen.getByTestId("page-title")).toHaveTextContent(expectedTitle);
 
       // Initially shows loading state with spinner
@@ -116,7 +117,7 @@ describe("Dynamic CategoryPage", () => {
 
       // Verify API was called with correct category
       expect(mockGetProductsByCategory).toHaveBeenCalledWith(category);
-    }
+    },
   );
 
   it("calls notFound() for invalid category parameter", () => {
@@ -136,7 +137,7 @@ describe("Dynamic CategoryPage", () => {
     await waitFor(() => {
       expect(console.error).toHaveBeenCalledWith(
         expect.stringContaining("Failed to fetch brushes products:"),
-        expect.any(Error)
+        expect.any(Error),
       );
     });
 

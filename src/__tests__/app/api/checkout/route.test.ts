@@ -1,5 +1,6 @@
 import { NextRequest } from "next/server";
 import { auth, currentUser } from "@clerk/nextjs/server";
+
 import { stripe } from "@/lib/stripe";
 import { POST } from "@/app/api/checkout/route";
 import { Category } from "@/generated/client";
@@ -57,6 +58,7 @@ jest.mock("@/lib/stripe", () => ({
 
 // Mock environment variables
 const originalEnv = process.env;
+
 beforeEach(() => {
   jest.resetModules();
   process.env = {
@@ -135,13 +137,15 @@ describe("Checkout API", () => {
       new Request("http://localhost/api/checkout", {
         method: "POST",
         body: JSON.stringify({ items: mockItems }),
-      })
+      }),
     );
 
     const response = await POST(req);
+
     expect(response.status).toBe(401);
 
     const data = await response.json();
+
     expect(data.error).toBe("Unauthorized");
   });
 
@@ -154,20 +158,22 @@ describe("Checkout API", () => {
       new Request("http://localhost/api/checkout", {
         method: "POST",
         body: JSON.stringify({ items: [{ id: "invalid" }] }),
-      })
+      }),
     );
 
     const response = await POST(req);
+
     expect(response.status).toBe(400);
 
     const data = await response.json();
+
     expect(data.error).toBe("Invalid input");
     expect(data.details).toBeDefined();
 
     // Verify error logging occurred
     expect(console.error).toHaveBeenCalledWith(
       "Checkout validation failed:",
-      expect.any(Array)
+      expect.any(Array),
     );
   });
 
@@ -179,13 +185,15 @@ describe("Checkout API", () => {
       new Request("http://localhost/api/checkout", {
         method: "POST",
         body: JSON.stringify({ items: [] }),
-      })
+      }),
     );
 
     const response = await POST(req);
+
     expect(response.status).toBe(400);
 
     const data = await response.json();
+
     expect(data.error).toBe("Cart is empty");
   });
 
@@ -197,20 +205,23 @@ describe("Checkout API", () => {
       id: "cs_test_123",
       url: "https://checkout.stripe.com/123",
     };
+
     (stripe.checkout.sessions.create as jest.Mock).mockResolvedValue(
-      mockSession
+      mockSession,
     );
     const req = new NextRequest(
       new Request("http://localhost/api/checkout", {
         method: "POST",
         body: JSON.stringify({ items: mockItems }),
-      })
+      }),
     );
 
     const response = await POST(req);
+
     expect(response.status).toBe(200);
 
     const data = await response.json();
+
     expect(data.url).toBe(mockSession.url);
 
     // Verify Stripe was called with correct parameters
@@ -234,7 +245,7 @@ describe("Checkout API", () => {
           userId: "user_123",
         }),
         customer_email: "test@example.com",
-      })
+      }),
     );
   });
 
@@ -255,18 +266,20 @@ describe("Checkout API", () => {
       new Request("http://localhost/api/checkout", {
         method: "POST",
         body: JSON.stringify({ items: manyItems }),
-      })
+      }),
     );
 
     const response = await POST(req);
+
     expect(response.status).toBe(500);
 
     const data = await response.json();
+
     expect(data.error).toContain("Checkout failed due to internal error");
 
     // Verify error logging occurred
     expect(console.error).toHaveBeenCalledWith(
-      "Metadata string too long for Stripe Checkout"
+      "Metadata string too long for Stripe Checkout",
     );
   });
 
@@ -275,26 +288,28 @@ describe("Checkout API", () => {
     (currentUser as jest.Mock).mockResolvedValue(mockUser);
 
     (stripe.checkout.sessions.create as jest.Mock).mockRejectedValue(
-      new Error("Stripe API error")
+      new Error("Stripe API error"),
     );
 
     const req = new NextRequest(
       new Request("http://localhost/api/checkout", {
         method: "POST",
         body: JSON.stringify({ items: mockItems }),
-      })
+      }),
     );
 
     const response = await POST(req);
+
     expect(response.status).toBe(500);
 
     const data = await response.json();
+
     expect(data.error).toBe("Could not create checkout session.");
 
     // Verify error logging occurred
     expect(console.error).toHaveBeenCalledWith(
       "[CHECKOUT_POST] Error creating checkout session:",
-      expect.any(Error)
+      expect.any(Error),
     );
   });
 
@@ -312,7 +327,7 @@ describe("Checkout API", () => {
       new Request("http://localhost/api/checkout", {
         method: "POST",
         body: JSON.stringify({ items: mockItems }),
-      })
+      }),
     );
 
     await POST(req);
@@ -320,12 +335,13 @@ describe("Checkout API", () => {
     expect(stripe.checkout.sessions.create).toHaveBeenCalledWith(
       expect.objectContaining({
         customer_email: "different@example.com",
-      })
+      }),
     );
   });
 
   it("mocks console.error for coverage of error handling", async () => {
     const originalConsoleError = console.error;
+
     console.error = jest.fn();
 
     try {
@@ -341,15 +357,16 @@ describe("Checkout API", () => {
         new Request("http://localhost/api/checkout", {
           method: "POST",
           body: JSON.stringify({ items: mockItems }),
-        })
+        }),
       );
 
       const response = await POST(req);
+
       expect(response.status).toBe(500);
 
       expect(console.error).toHaveBeenCalledWith(
         expect.stringContaining("[CHECKOUT_POST]"),
-        expect.any(Error)
+        expect.any(Error),
       );
     } finally {
       console.error = originalConsoleError;

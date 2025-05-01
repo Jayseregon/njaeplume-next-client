@@ -10,7 +10,7 @@ jest.mock("next/link", () => {
       <a href={href} {...rest} data-testid="link">
         {children}
       </a>
-    )
+    ),
   };
 });
 
@@ -25,44 +25,48 @@ const mockTranslations = {
   conclusion: "For any inquiries or suggestions, feel free to contact us...",
   signature: "- Ninie, Jay and co.",
   cta: "Let us tailor something unique for you.",
-  contactButton: "Contact Us"
+  contactButton: "Contact Us",
 };
 
 jest.mock("next-intl", () => ({
-  useTranslations: () => (key: string) => mockTranslations[key as keyof typeof mockTranslations] || key
+  useTranslations: () => (key: string) =>
+    mockTranslations[key as keyof typeof mockTranslations] || key,
 }));
 
 // Mock next/navigation
 jest.mock("next/navigation", () => ({
-  useRouter: jest.fn()
+  useRouter: jest.fn(),
 }));
 
 // Mock Lucide icon
 jest.mock("lucide-react", () => ({
-  Mail: () => <span data-testid="mail-icon">Mail Icon</span>
+  Mail: () => <span data-testid="mail-icon">Mail Icon</span>,
 }));
 
 // Mock Button component
 jest.mock("@/components/ui/button", () => ({
   Button: ({ children, asChild, className, variant, ...props }: any) => (
-    <button 
-      data-testid="button" 
-      data-as-child={asChild ? "true" : "false"}
-      data-variant={variant}
+    <button
       className={className}
-      {...props}>
+      data-as-child={asChild ? "true" : "false"}
+      data-testid="button"
+      data-variant={variant}
+      {...props}
+    >
       {children}
     </button>
-  )
+  ),
 }));
 
 // Mock components
-jest.mock("@/components/root/ErrorBoundary", () => (props: any) => <>{props.children}</>);
+jest.mock("@/components/root/ErrorBoundary", () => (props: any) => (
+  <>{props.children}</>
+));
 jest.mock("@/components/root/ErrorDefaultDisplay", () => ({
-  ErrorDefaultDisplay: () => <div data-testid="error-display">Error</div>
+  ErrorDefaultDisplay: () => <div data-testid="error-display">Error</div>,
 }));
 jest.mock("@/components/root/PageTitle", () => ({
-  PageTitle: (props: any) => <h1 data-testid="page-title">{props.title}</h1>
+  PageTitle: (props: any) => <h1 data-testid="page-title">{props.title}</h1>,
 }));
 
 // Import the component after mocks
@@ -72,7 +76,7 @@ describe("AboutPage", () => {
   beforeEach(() => {
     jest.clearAllMocks();
     (useRouter as jest.Mock).mockReturnValue({
-      push: jest.fn()
+      push: jest.fn(),
     });
   });
 
@@ -83,11 +87,13 @@ describe("AboutPage", () => {
 
   it("renders all the paragraphs with translation content", () => {
     render(<AboutPage />);
-    
+
     expect(screen.getByText(mockTranslations.intro)).toBeInTheDocument();
     expect(screen.getByText(mockTranslations.artist)).toBeInTheDocument();
     expect(screen.getByText(mockTranslations.background)).toBeInTheDocument();
-    expect(screen.getByText(mockTranslations.customization)).toBeInTheDocument();
+    expect(
+      screen.getByText(mockTranslations.customization),
+    ).toBeInTheDocument();
     expect(screen.getByText(mockTranslations.digital)).toBeInTheDocument();
     expect(screen.getByText(mockTranslations.conclusion)).toBeInTheDocument();
     expect(screen.getByText(mockTranslations.signature)).toBeInTheDocument();
@@ -96,16 +102,16 @@ describe("AboutPage", () => {
   it("renders the CTA section with correct text", () => {
     render(<AboutPage />);
     expect(screen.getByRole("heading", { level: 2 })).toHaveTextContent(
-      "Let us tailor something unique for you."
+      "Let us tailor something unique for you.",
     );
   });
 
   it("renders a contact button that links to the contact page", () => {
     render(<AboutPage />);
-    
+
     const contactButton = screen.getByTestId("button");
     const link = screen.getByTestId("link");
-    
+
     expect(contactButton).toBeInTheDocument();
     expect(link).toHaveAttribute("href", "/contact");
     expect(screen.getByText("Contact Us")).toBeInTheDocument();
@@ -115,6 +121,7 @@ describe("AboutPage", () => {
   it("uses the form variant for the button styling", () => {
     render(<AboutPage />);
     const button = screen.getByTestId("button");
+
     expect(button).toHaveAttribute("data-variant", "form");
     expect(button).toHaveAttribute("data-as-child", "true");
   });

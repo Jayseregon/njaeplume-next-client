@@ -72,7 +72,12 @@ export default function ContactPage() {
       <div className="text-foreground">
         <EmailIcon size={65} />
       </div>
-      <form data-testid="form" action={formAction} className="space-y-4" nonce={nonce}>
+      <form
+        action={formAction}
+        className="space-y-4"
+        data-testid="form"
+        nonce={nonce}
+      >
         <div
           className="grid grid-cols-1 sm:grid-cols-2 gap-5 w-full"
           nonce={nonce}

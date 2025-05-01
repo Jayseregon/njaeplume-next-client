@@ -282,9 +282,10 @@ const PaymentConfirmationEmail = ({
                 margin: "4px 0 16px",
               }}
             >
-              Click the button below to access your purchase in your account
-              dashboard. You can download your files from there at any time. We
-              recommend keeping a backup of your files once downloaded.
+              Click the button below to download your purchase. The link will
+              redirect you to your account where you can access all your
+              purchased items. Please note that each link will remain active for
+              30 days and can only be used once for security purposes.
             </Text>
 
             <Button
