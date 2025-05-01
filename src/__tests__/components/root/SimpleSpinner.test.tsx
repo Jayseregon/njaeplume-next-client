@@ -11,6 +11,11 @@ jest.mock("lucide-react", () => ({
   ),
 }));
 
+// Mock the cn utility
+jest.mock("@/lib/utils", () => ({
+  cn: (...classes: string[]) => classes.filter(Boolean).join(" "),
+}));
+
 describe("SimpleSpinner", () => {
   it("renders the component", () => {
     const { container } = render(<SimpleSpinner />);
@@ -26,10 +31,19 @@ describe("SimpleSpinner", () => {
   });
 
   it("applies the animate-spin class", () => {
-    const { container } = render(<SimpleSpinner />);
-    // Since the Loader2 is mocked, we need to check the first child element
-    const spinnerElement = container.firstChild;
+    render(<SimpleSpinner />);
+    const spinnerElement = screen.getByTestId("loader-icon");
 
     expect(spinnerElement).toHaveClass("animate-spin");
+  });
+
+  it("accepts and applies custom className", () => {
+    render(<SimpleSpinner className="w-12 h-12 text-blue-500" />);
+    const spinnerElement = screen.getByTestId("loader-icon");
+
+    expect(spinnerElement).toHaveClass("animate-spin");
+    expect(spinnerElement).toHaveClass("w-12");
+    expect(spinnerElement).toHaveClass("h-12");
+    expect(spinnerElement).toHaveClass("text-blue-500");
   });
 });
