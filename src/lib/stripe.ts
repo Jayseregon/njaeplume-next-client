@@ -13,10 +13,6 @@ if (!process.env.STRIPE_SECRET_KEY) {
 export const stripe = new Stripe(process.env.STRIPE_SECRET_KEY, {
   apiVersion: "2025-04-30.basil",
   typescript: true,
-  appInfo: {
-    name: "njaeplume-next-client",
-    version: "2.5.20",
-  },
 });
 
 function extractCustomerDetails(

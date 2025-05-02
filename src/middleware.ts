@@ -76,7 +76,7 @@ export const config = {
     "/((?!_next/static|_vercel|.*\\..*).*)",
     "/((?!api/webhooks/stripe|api|_next/static|_next/image|_next/data|static|favicon.ico|favicon.png|favicon.webp).*)",
     "/((?!_next|[^?]*\\.(?:html?|css|js(?!on)|jpe?g|webp|png|gif|svg|ttf|woff2?|ico|csv|docx?|xlsx?|zip|webmanifest)).*)",
-    "/(api(?!/webhooks/stripe))(.*)", // Apply to API routes but exclude webhook endpoints
+    "/(api(?!/webhooks/stripe))(.*)",
     "/(trpc)(.*)",
   ],
 };
