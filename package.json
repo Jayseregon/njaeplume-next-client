@@ -1,6 +1,6 @@
 {
   "name": "njaeplume-next-client",
-  "version": "2.6.4",
+  "version": "2.6.5",
   "private": true,
   "type": "module",
   "scripts": {
@@ -14,7 +14,7 @@
     "db:migrate": "tsx scripts/db/migrate.ts run"
   },
   "dependencies": {
-    "@clerk/nextjs": "^6.18.2",
+    "@clerk/nextjs": "^6.18.4",
     "@hookform/resolvers": "^5.0.1",
     "@prisma/client": "^6.7.0",
     "@radix-ui/react-accordion": "^1.2.8",
@@ -32,10 +32,10 @@
     "@radix-ui/react-tooltip": "^1.2.4",
     "@react-aria/ssr": "3.9.8",
     "@react-aria/visually-hidden": "3.8.22",
-    "@react-email/components": "^0.0.36",
-    "@react-email/render": "^1.0.6",
+    "@react-email/components": "^0.0.37",
+    "@react-email/render": "^1.1.0",
     "@stripe/stripe-js": "^7.2.0",
-    "@tanstack/react-query": "^5.74.11",
+    "@tanstack/react-query": "^5.75.0",
     "@tanstack/react-table": "^8.21.3",
     "@vercel/speed-insights": "^1.2.0",
     "axios": "^1.9.0",
@@ -47,18 +47,18 @@
     "dotenv": "^16.5.0",
     "intl-messageformat": "^10.7.16",
     "lucide-react": "^0.503.0",
-    "motion": "^12.9.2",
+    "motion": "^12.9.4",
     "next": "^15.3.1",
     "next-intl": "^4.1.0",
     "next-recaptcha-v3": "^1.5.2",
     "next-themes": "^0.4.6",
     "react": "19.1.0",
     "react-dom": "19.1.0",
-    "react-email": "^4.0.7",
+    "react-email": "^4.0.11",
     "react-google-recaptcha": "^3.1.0",
     "react-hook-form": "^7.56.1",
     "react-intersection-observer": "^9.16.0",
-    "resend": "^4.4.1",
+    "resend": "^4.5.0",
     "sharp": "^0.34.1",
     "slug": "^10.0.0",
     "sonner": "^2.0.3",
@@ -67,7 +67,7 @@
     "tailwind-merge": "^3.2.0",
     "tailwindcss-animate": "^1.0.7",
     "zod": "^3.24.3",
-    "zustand": "^5.0.3"
+    "zustand": "^5.0.4"
   },
   "devDependencies": {
     "@tailwindcss/postcss": "^4.1.5",
