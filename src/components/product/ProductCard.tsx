@@ -1,6 +1,7 @@
 import Image from "next/image";
 import Link from "next/link";
-import { CircleEllipsis, Hourglass } from "lucide-react";
+import { CircleEllipsis, ShoppingCart } from "lucide-react";
+import { toast } from "sonner";
 
 import {
   Card,
@@ -11,21 +12,22 @@ import {
 import { Button } from "@/components/ui/button";
 import ErrorBoundary from "@/src/components/root/ErrorBoundary";
 import { Product } from "@/interfaces/Products";
+import { useCartStore } from "@/providers/CartStoreProvider";
+import { formatPrice } from "@/lib/utils";
 
 export const ProductCard = ({ product }: { product: Product }) => {
   const pullZone = process.env.NEXT_PUBLIC_BUNNY_PUBLIC_ASSETS_PULL_ZONE_URL;
+  const addToCart = useCartStore((state) => state.addToCart);
 
-  // const handleAddToCart = (e: React.MouseEvent) => {
-  //   // Prevent the card link from being triggered
-  //   e.preventDefault();
-  //   e.stopPropagation();
+  const handleAddToCart = (e: React.MouseEvent) => {
+    // Prevent the card link from being triggered
+    e.preventDefault();
+    e.stopPropagation();
 
-  //   // Add to cart logic would go here
-  //   console.log(`Added ${product.name} to cart`);
-
-  //   // You could also call a function from props or use context
-  //   // addToCart(product);
-  // };
+    // Add to cart using our store
+    addToCart(product);
+    toast.info(`${product.name} has been added to your cart.`);
+  };
 
   return (
     <Link
@@ -57,10 +59,7 @@ export const ProductCard = ({ product }: { product: Product }) => {
                   className="w-5/6 mx-auto bg-stone-200 relative"
                 >
                   <Image
-                    alt={
-                      product.images[0].alt_text ||
-                      "default product image alt text"
-                    }
+                    alt={product.images[0].alt_text}
                     className="w-full h-auto object-contain"
                     height={600}
                     priority={false}
@@ -74,7 +73,7 @@ export const ProductCard = ({ product }: { product: Product }) => {
           </div>
         </CardContent>
         <CardFooter className="justify-center items-center pt-0 pb-3">
-          {/* <Button
+          <Button
             className="flex items-center space-x-2 w-full sm:w-auto"
             size="sm"
             title="Add to cart"
@@ -82,16 +81,7 @@ export const ProductCard = ({ product }: { product: Product }) => {
             onClick={handleAddToCart}
           >
             <ShoppingCart className="h-4 w-4" />
-            <span>${product.price.toFixed(2)}</span>
-          </Button> */}
-          <Button
-            className="flex items-center space-x-2 w-full sm:w-auto"
-            size="sm"
-            title="Add to cart"
-            variant="form"
-          >
-            <Hourglass className="h-4 w-4" />
-            <span>Coming Soon...</span>
+            <span>{formatPrice(product.price)}</span>
           </Button>
         </CardFooter>
       </Card>

@@ -20,7 +20,7 @@ const CategoryRowSkeleton = () => (
 
 // Component to load and display category data
 const CategoryRows = async ({ comingSoon }: { comingSoon: string }) => {
-  const populatedCategories = await getLatestProductsByCategory(3);
+  const populatedCategories = await getLatestProductsByCategory(4);
 
   if (!populatedCategories || populatedCategories.length === 0) {
     return (

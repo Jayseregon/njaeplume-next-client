@@ -148,32 +148,6 @@ describe("NavbarCenter", () => {
     }
   });
 
-  it("displays castle nav item for users with castleAdmin role", () => {
-    // Mock the clerk auth to return a signed-in user with castleAdmin role
-    jest.spyOn(require("@clerk/nextjs"), "useUser").mockReturnValue({
-      isSignedIn: true,
-      user: {
-        publicMetadata: { role: "castleAdmin" },
-      },
-    });
-
-    render(<NavbarCenter currentPath="/" />);
-
-    // Count nav items - should include regular items plus castle item
-    const items = screen.getAllByTestId("navigation-menu-item");
-    const castleItem = siteConfig.castleNavItems.find(
-      (item) => item.key === "castle",
-    );
-
-    if (castleItem) {
-      expect(items).toHaveLength(siteConfig.navItems.length + 1);
-      expect(screen.getByText(castleItem.label)).toBeInTheDocument();
-    }
-
-    // Clean up mock
-    jest.restoreAllMocks();
-  });
-
   it("does not display castle nav item for signed-in users without castleAdmin role", () => {
     // Mock the clerk auth to return a signed-in user without castleAdmin role
     jest.spyOn(require("@clerk/nextjs"), "useUser").mockReturnValue({

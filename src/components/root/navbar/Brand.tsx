@@ -5,7 +5,7 @@ import React, { useContext } from "react";
 
 import { cn } from "@/lib/utils"; // Make sure you have this utility
 import { Logo } from "@/components/icons";
-import { NonceContext } from "@/app/providers";
+import { NonceContext } from "@/providers/RootProviders";
 import { siteConfig } from "@/config/site";
 
 interface BrandProps {

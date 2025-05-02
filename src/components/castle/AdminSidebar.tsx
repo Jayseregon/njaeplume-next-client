@@ -94,24 +94,24 @@ export function AdminSidebar() {
             const Icon = iconMap[item.icon];
 
             return (
-              <Link key={item.key} legacyBehavior href={item.href}>
-                <a
-                  className={cn(
-                    "flex items-center px-3 py-2 text-sm rounded-md transition-colors",
-                    pathname === item.href
-                      ? "bg-primary/10 text-primary font-medium"
-                      : "hover:bg-muted",
-                  )}
-                >
-                  {isCollapsed ? (
+              <Link
+                key={item.key}
+                className={cn(
+                  "flex items-center px-3 py-2 text-sm rounded-md transition-colors",
+                  pathname === item.href
+                    ? "bg-primary/10 text-primary font-medium"
+                    : "hover:bg-muted",
+                )}
+                href={item.href}
+              >
+                {isCollapsed ? (
+                  <Icon className="h-5 w-5" />
+                ) : (
+                  <span className="flex gap-4">
                     <Icon className="h-5 w-5" />
-                  ) : (
-                    <span className="flex gap-4">
-                      <Icon className="h-5 w-5" />
-                      {item.label}
-                    </span>
-                  )}
-                </a>
+                    {item.label}
+                  </span>
+                )}
               </Link>
             );
           })}

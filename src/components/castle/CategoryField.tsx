@@ -1,6 +1,6 @@
 import React from "react";
-import { Category } from "@prisma/client";
 
+import { Category } from "@/generated/client";
 import {
   Select,
   SelectContent,
