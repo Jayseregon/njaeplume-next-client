@@ -19,6 +19,8 @@ export interface OrderItem {
   quantity: number;
   price: number;
   product: Product;
+  downloadCount: number;
+  downloadedAt?: string;
 }
 
 export interface Order {

@@ -71,26 +71,28 @@ model Order {
   amount                  Float
   status                  OrderStatus @default(PENDING)
   stripeCheckoutSessionId String      @unique
-  stripeChargeId          String?     @unique 
-  stripeCustomerId        String? 
+  stripeChargeId          String?     @unique
+  stripeCustomerId        String?
   createdAt               DateTime    @default(now())
   updatedAt               DateTime    @updatedAt
   items                   OrderItem[]
 
   // Add indexes for faster lookups
   @@index([userId])
-  @@index([stripeCheckoutSessionId]) 
+  @@index([stripeCheckoutSessionId])
   @@schema("orders")
 }
 
 model OrderItem {
-  id        String  @id @default(cuid())
-  orderId   String
-  order     Order   @relation(fields: [orderId], references: [id], onDelete: Cascade)
-  productId String
-  product   Product @relation(fields: [productId], references: [id]) // Don't cascade delete product if order item is deleted
-  quantity  Int     @default(1) // Quantity is always 1 for digital products
-  price     Float
+  id             String    @id @default(cuid())
+  orderId        String
+  order          Order     @relation(fields: [orderId], references: [id], onDelete: Cascade)
+  productId      String
+  product        Product   @relation(fields: [productId], references: [id]) // Don't cascade delete product if order item is deleted
+  quantity       Int       @default(1) // Quantity is always 1 for digital products
+  price          Float
+  downnloadCount Int       @default(0)
+  downloadedAt   DateTime?
 
   @@schema("orders")
 }
