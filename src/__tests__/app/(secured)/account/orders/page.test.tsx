@@ -97,6 +97,11 @@ jest.mock("@/components/ui/button", () => ({
 
 // REMOVED: Mock for Suspense since we don't use it anymore
 
+// Mock next-intl
+jest.mock("next-intl", () => ({
+  useTranslations: () => (key: string) => key, // Simple mock returning the key
+}));
+
 // Import after mocks
 import OrdersPage from "@/app/(secured)/account/orders/page";
 import { OrderWithItems } from "@/src/interfaces/Products";
@@ -211,10 +216,8 @@ describe("OrdersPage", () => {
   it("renders loading state when user data is loading", async () => {
     render(<OrdersPage />);
 
-    // REMOVED: Check for suspense fallback since we no longer use Suspense
-
     // Check for loading message
-    expect(screen.getByText("Loading your orders...")).toBeInTheDocument();
+    expect(screen.getByText("loading")).toBeInTheDocument();
   });
 
   it("shows sign-in message when user is not authenticated", async () => {
@@ -225,9 +228,8 @@ describe("OrdersPage", () => {
 
     render(<OrdersPage />);
 
-    expect(
-      screen.getByText("Please sign in to view your orders"),
-    ).toBeInTheDocument();
+    // Check for sign-in message using the rendered text (mock returns key part)
+    expect(screen.getByText("signInRequired")).toBeInTheDocument();
   });
 
   it("displays empty state when user has no orders", async () => {
@@ -241,11 +243,10 @@ describe("OrdersPage", () => {
     render(<OrdersPage />);
 
     await waitFor(() => {
-      expect(screen.getByText("No orders found")).toBeInTheDocument();
-      expect(
-        screen.getByText("You haven't placed any orders yet."),
-      ).toBeInTheDocument();
-      expect(screen.getByText("Go Shopping")).toBeInTheDocument();
+      // Check for empty state messages using translation keys (mock returns key part)
+      expect(screen.getByText("noOrdersTitle")).toBeInTheDocument();
+      expect(screen.getByText("noOrdersMessage")).toBeInTheDocument();
+      expect(screen.getByText("goShopping")).toBeInTheDocument();
     });
 
     // Check that the link to shop is present
@@ -266,6 +267,8 @@ describe("OrdersPage", () => {
       expect(screen.getByTestId("orders-table")).toBeInTheDocument();
       expect(screen.getByTestId("order-ORD-123456")).toBeInTheDocument();
       expect(screen.getByTestId("order-ORD-789012")).toBeInTheDocument();
+      // Check PageTitle receives the correct key (mock t returns the key)
+      expect(screen.getByTestId("page-title")).toHaveTextContent("title");
     });
   });
 
@@ -284,7 +287,8 @@ describe("OrdersPage", () => {
     });
 
     expect(screen.getByTestId("arrow-left-icon")).toBeInTheDocument();
-    expect(screen.getByText(/back to dashboard/i)).toBeInTheDocument();
+    // Check button text using translation key
+    expect(screen.getByText("backToDashboard")).toBeInTheDocument();
     expect(screen.getByTestId("link--account")).toHaveAttribute(
       "href",
       "/account",
@@ -318,9 +322,8 @@ describe("OrdersPage", () => {
     render(<OrdersPage />);
 
     await waitFor(() => {
-      expect(toast.error).toHaveBeenCalledWith(
-        "Failed to load your order history.",
-      );
+      // Check toast error message using translation key
+      expect(toast.error).toHaveBeenCalledWith("errorLoading");
       expect(console.error).toHaveBeenCalledWith(
         "Error fetching orders:",
         expect.any(Error),

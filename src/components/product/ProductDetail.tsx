@@ -10,6 +10,7 @@ import {
   ShoppingCart,
 } from "lucide-react";
 import { toast } from "sonner";
+import { useTranslations } from "next-intl";
 
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
@@ -22,6 +23,8 @@ import { useCartStore } from "@/providers/CartStoreProvider";
 import { formatPrice } from "@/lib/utils";
 
 export function ProductDetail({ product }: { product: Product }) {
+  const t = useTranslations("ProductDetail");
+  const tCard = useTranslations("ProductCard");
   const [currentImageIndex, setCurrentImageIndex] = useState(0);
   const pullZone = process.env.NEXT_PUBLIC_BUNNY_PUBLIC_ASSETS_PULL_ZONE_URL;
 
@@ -44,9 +47,7 @@ export function ProductDetail({ product }: { product: Product }) {
 
   const handleAddToCart = () => {
     addToCart(product);
-    toast.info(`${product.name} has been added to your cart.`);
-
-    // Optional: open the cart drawer after adding the item
+    toast.info(tCard("addToCartSuccess", { productName: product.name }));
     setTimeout(() => toggleCart(), 300);
   };
 
@@ -59,9 +60,9 @@ export function ProductDetail({ product }: { product: Product }) {
         size="sm"
         variant="ghost"
       >
-        <Link className="flex items-center" href="/shop/brushes">
+        <Link className="flex items-center" href={`/shop/${product.category}`}>
           <ArrowLeft className="mr-2 h-4 w-4" />
-          Back to {product.category}
+          {t("backButton", { category: product.category })}
         </Link>
       </Button>
 
@@ -76,7 +77,7 @@ export function ProductDetail({ product }: { product: Product }) {
             onClick={handleAddToCart}
           >
             <ShoppingCart className="h-4 w-4" />
-            Add to Cart
+            {t("addToCartButton")}
           </Button>
         </div>
       </div>
@@ -88,7 +89,7 @@ export function ProductDetail({ product }: { product: Product }) {
           <ErrorBoundary
             fallback={
               <div className="w-full aspect-square bg-muted flex items-center justify-center rounded-lg">
-                <p>Failed to load image</p>
+                <p>{t("imageLoadError")}</p>
               </div>
             }
           >
@@ -107,7 +108,7 @@ export function ProductDetail({ product }: { product: Product }) {
               {hasMultipleImages && (
                 <>
                   <Button
-                    aria-label="Previous image"
+                    aria-label={t("prevImageAria")}
                     className="absolute left-2 top-1/2 -translate-y-1/2 bg-background/80 hover:bg-background/90 rounded-full"
                     size="icon"
                     variant="secondary"
@@ -117,7 +118,7 @@ export function ProductDetail({ product }: { product: Product }) {
                   </Button>
 
                   <Button
-                    aria-label="Next image"
+                    aria-label={t("nextImageAria")}
                     className="absolute right-2 top-1/2 -translate-y-1/2 bg-background/80 hover:bg-background/90 rounded-full"
                     size="icon"
                     variant="secondary"
@@ -136,7 +137,7 @@ export function ProductDetail({ product }: { product: Product }) {
               {product.images.map((image, i) => (
                 <button
                   key={image.id}
-                  aria-label={`View thumbnail ${i + 1}`}
+                  aria-label={t("thumbnailAria", { index: i + 1 })}
                   className={`flex-shrink-0 relative h-20 w-20 rounded-md overflow-hidden transition-all transform hover:scale-105 focus:scale-95 ${
                     currentImageIndex === i
                       ? "ring-2 ring-primary ring-offset-2"
@@ -172,7 +173,7 @@ export function ProductDetail({ product }: { product: Product }) {
               onClick={handleAddToCart}
             >
               <ShoppingCart className="h-4 w-4" />
-              Add to Cart
+              {t("addToCartButton")}
             </Button>
           </div>
 

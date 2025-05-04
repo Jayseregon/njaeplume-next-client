@@ -7,8 +7,9 @@ import {
   getSortedRowModel,
   SortingState,
 } from "@tanstack/react-table";
-import { ArrowDown10, ArrowUp01 } from "lucide-react"; // Import sorting icons
+import { ArrowDown10, ArrowUp01 } from "lucide-react";
 import Image from "next/image";
+import { useTranslations } from "next-intl";
 
 import { OrderWithItems } from "@/interfaces/Products";
 import { formatPrice } from "@/lib/utils";
@@ -35,6 +36,7 @@ interface OrdersTableProps {
 }
 
 export function OrdersTable({ orders }: OrdersTableProps) {
+  const t = useTranslations("AccountOrdersTable");
   const pullZone = process.env.NEXT_PUBLIC_BUNNY_PUBLIC_ASSETS_PULL_ZONE_URL;
   // Add state for sorting with default sort by createdAt descending
   const [sorting, setSorting] = useState<SortingState>([
@@ -46,13 +48,13 @@ export function OrdersTable({ orders }: OrdersTableProps) {
     () => [
       {
         accessorKey: "displayId",
-        header: "Order ID",
+        header: t("orderId"),
         // Enable sorting for this column
         enableSorting: true,
       },
       {
         accessorKey: "createdAt",
-        header: "Date",
+        header: t("date"),
         // Enable sorting for this column
         enableSorting: true,
         cell: ({ row }) =>
@@ -60,21 +62,21 @@ export function OrdersTable({ orders }: OrdersTableProps) {
       },
       {
         accessorKey: "status",
-        header: "Status",
+        header: t("status"),
         cell: ({ row }) => (
           <Badge variant="bordered">{row.original.status}</Badge>
         ),
       },
       {
         accessorKey: "amount",
-        header: "Amount",
+        header: t("amount"),
         cell: ({ row }) => (
           <div className="text-right">{formatPrice(row.original.amount)}</div>
         ),
       },
       {
         id: "items", // Use a unique ID for the items column
-        header: "Items",
+        header: t("items"),
         // Disable sorting for this column
         enableSorting: false,
         cell: ({ row }) => {
@@ -84,12 +86,14 @@ export function OrdersTable({ orders }: OrdersTableProps) {
             <Dialog>
               <DialogTrigger asChild>
                 <Button size="xs" variant="form">
-                  View {order.items.length} item(s)
+                  {t("viewItems", { count: order.items.length })}
                 </Button>
               </DialogTrigger>
               <DialogContent className="sm:max-w-[525px]">
                 <DialogHeader>
-                  <DialogTitle>Items for Order {order.displayId}</DialogTitle>
+                  <DialogTitle>
+                    {t("itemsForOrder", { orderId: order.displayId })}
+                  </DialogTitle>
                 </DialogHeader>
                 <div className="flex flex-col gap-4 py-4 max-h-[60vh] overflow-y-auto">
                   {order.items.map((item) => (
@@ -123,7 +127,7 @@ export function OrdersTable({ orders }: OrdersTableProps) {
                           {item.product.category}
                         </span>
                         <span className="text-xs text-muted-foreground">
-                          Price: {formatPrice(item.price)}
+                          {t("price", { price: formatPrice(item.price) })}
                         </span>
                       </div>
                     </div>
@@ -135,8 +139,8 @@ export function OrdersTable({ orders }: OrdersTableProps) {
         },
       },
     ],
-    [pullZone],
-  ); // Include pullZone in dependency array if used inside useMemo
+    [pullZone, t],
+  );
 
   // Set up the table instance
   const table = useReactTable({
@@ -200,7 +204,7 @@ export function OrdersTable({ orders }: OrdersTableProps) {
           ) : (
             <TableRow>
               <TableCell className="h-24 text-center" colSpan={columns.length}>
-                No orders found.
+                {t("noOrdersFound")}
               </TableCell>
             </TableRow>
           )}

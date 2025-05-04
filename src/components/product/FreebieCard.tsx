@@ -3,6 +3,7 @@ import Image from "next/image";
 import { CloudDownload } from "lucide-react";
 import { toast } from "sonner";
 import { motion } from "framer-motion";
+import { useTranslations } from "next-intl";
 
 import {
   Card,
@@ -17,6 +18,7 @@ import { SimpleSpinner } from "@/components/root/SimpleSpinner";
 import { generateBunnySignedUrl } from "@/src/actions/bunny/action";
 
 export const FreebieCard = ({ product }: { product: Product }) => {
+  const t = useTranslations("FreebieCard");
   const [isLoading, setIsLoading] = useState(false);
   const [isHovered, setIsHovered] = useState(false);
   const pullZone = process.env.NEXT_PUBLIC_BUNNY_PUBLIC_ASSETS_PULL_ZONE_URL;
@@ -51,13 +53,13 @@ export const FreebieCard = ({ product }: { product: Product }) => {
       downloadLink.click();
       document.body.removeChild(downloadLink);
 
-      toast.success("Thank you for downloading!", {
-        description: `We hope you enjoy ${product.name}!`,
+      toast.success(t("downloadSuccessTitle"), {
+        description: t("downloadSuccessDesc", { productName: product.name }),
       });
     } catch (error) {
       console.error("Download error:", error);
-      toast.error("Unable to download file", {
-        description: "Please try again later or contact us for assistance.",
+      toast.error(t("downloadErrorTitle"), {
+        description: t("downloadErrorDesc"),
       });
     } finally {
       setIsLoading(false);
@@ -96,7 +98,9 @@ export const FreebieCard = ({ product }: { product: Product }) => {
     <Card className="rounded-2xl pt-3 text-foreground transition-all duration-200 hover:shadow-md relative overflow-hidden">
       <CardHeader>
         <h3 className="text-xl pb-1 font-bold">{product.name}</h3>
-        <p className="italic text-sm pb-2">{product.category}</p>
+        <p className="italic text-sm pb-2">
+          {t(`category.${product.category}`)}
+        </p>
       </CardHeader>
       <CardContent>
         <div className="pb-5">
@@ -104,7 +108,7 @@ export const FreebieCard = ({ product }: { product: Product }) => {
             <ErrorBoundary
               fallback={
                 <div className="w-5/6 mx-auto p-4 text-center bg-stone-100">
-                  <p>Failed to load image</p>
+                  <p>{t("imageLoadError")}</p>
                 </div>
               }
             >
@@ -144,7 +148,7 @@ export const FreebieCard = ({ product }: { product: Product }) => {
             className="flex items-center justify-center space-x-2 w-full"
             disabled={isLoading}
             size="sm"
-            title="Download Freebie"
+            title={t("downloadButtonTitle")}
             variant="form"
             onClick={handleDownload}
           >
@@ -156,7 +160,7 @@ export const FreebieCard = ({ product }: { product: Product }) => {
                   <CloudDownload className="h-4 w-4 mr-2" />
                 </motion.div>
                 <span className="group-hover:font-medium transition-all">
-                  Download Now
+                  {t("downloadButtonText")}
                 </span>
               </>
             )}

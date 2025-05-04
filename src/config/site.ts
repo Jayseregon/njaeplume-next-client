@@ -9,7 +9,7 @@ export const siteConfig = {
   homeItems: [
     {
       key: "shop",
-      label: "Visit Our Shop",
+      label: "Shop",
       href: "/shop",
     },
   ],

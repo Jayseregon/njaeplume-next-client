@@ -51,6 +51,11 @@ jest.mock("@/actions/prisma/action", () => ({
     mockGetProductsByCategory(category),
 }));
 
+// Mock next-intl
+jest.mock("next-intl", () => ({
+  useTranslations: () => (key: string) => key, // Simple mock returning the key
+}));
+
 // Sample product data for different categories
 const mockProductsByCategory = {
   brushes: [
@@ -101,11 +106,8 @@ describe("Dynamic CategoryPage", () => {
 
       render(<CategoryPage />);
 
-      // Verify the page title is capitalized
-      const expectedTitle =
-        category.charAt(0).toUpperCase() + category.slice(1);
-
-      expect(screen.getByTestId("page-title")).toHaveTextContent(expectedTitle);
+      // Verify the page title uses the category key (mock returns the key)
+      expect(screen.getByTestId("page-title")).toHaveTextContent(category);
 
       // Initially shows loading state with spinner
       expect(screen.getByTestId("spinner")).toBeInTheDocument();
@@ -141,7 +143,7 @@ describe("Dynamic CategoryPage", () => {
       );
     });
 
-    // Should still render the page despite the error
-    expect(screen.getByTestId("page-title")).toHaveTextContent("Brushes");
+    // Should still render the page title with the key despite the error
+    expect(screen.getByTestId("page-title")).toHaveTextContent("brushes");
   });
 });

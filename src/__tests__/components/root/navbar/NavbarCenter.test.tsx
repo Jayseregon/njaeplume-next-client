@@ -63,6 +63,11 @@ jest.mock("next/link", () => ({
   ),
 }));
 
+// Mock next-intl
+jest.mock("next-intl", () => ({
+  useTranslations: () => (key: string) => key, // Simple mock that returns the key
+}));
+
 describe("NavbarCenter", () => {
   it("renders navigation menu with correct styling", () => {
     render(<NavbarCenter currentPath="/" />);
@@ -78,15 +83,16 @@ describe("NavbarCenter", () => {
     );
   });
 
-  it("renders all navigation items from siteConfig", () => {
+  it("renders all navigation items from siteConfig using translated keys", () => {
     render(<NavbarCenter currentPath="/" />);
 
     const items = screen.getAllByTestId("navigation-menu-item");
 
     expect(items).toHaveLength(siteConfig.navItems.length);
 
+    // Check if the keys are rendered (mock returns the key)
     siteConfig.navItems.forEach((item) => {
-      expect(screen.getByText(item.label)).toBeInTheDocument();
+      expect(screen.getByText(item.key)).toBeInTheDocument();
     });
   });
 
@@ -144,7 +150,8 @@ describe("NavbarCenter", () => {
     );
 
     if (castleItem) {
-      expect(screen.queryByText(castleItem.label)).not.toBeInTheDocument();
+      // Check using the key, as the mock returns the key
+      expect(screen.queryByText(castleItem.key)).not.toBeInTheDocument();
     }
   });
 
@@ -169,7 +176,8 @@ describe("NavbarCenter", () => {
     );
 
     if (castleItem) {
-      expect(screen.queryByText(castleItem.label)).not.toBeInTheDocument();
+      // Check using the key
+      expect(screen.queryByText(castleItem.key)).not.toBeInTheDocument();
     }
 
     // Clean up mock

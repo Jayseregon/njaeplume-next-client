@@ -5,6 +5,7 @@ import { Trash2, ShoppingBag, ShoppingCart, Loader2 } from "lucide-react";
 import Image from "next/image";
 import { useUser, useClerk } from "@clerk/nextjs";
 import { toast } from "sonner";
+import { useTranslations } from "next-intl";
 
 import { formatPrice } from "@/lib/utils";
 import { Button } from "@/components/ui/button";
@@ -20,6 +21,7 @@ import {
 import { useCartStore } from "@/providers/CartStoreProvider";
 
 export function CartDrawer() {
+  const t = useTranslations("CartDrawer");
   const pullZone = process.env.NEXT_PUBLIC_BUNNY_PUBLIC_ASSETS_PULL_ZONE_URL;
   const { user } = useUser();
   const { redirectToSignIn } = useClerk();
@@ -47,7 +49,7 @@ export function CartDrawer() {
         headers: {
           "Content-Type": "application/json",
         },
-        body: JSON.stringify({ items }), // Send cart items
+        body: JSON.stringify({ items }),
       });
 
       if (!response.ok) {
@@ -68,9 +70,7 @@ export function CartDrawer() {
       }
     } catch (error) {
       console.error("Checkout error:", error);
-      toast.error(
-        `Checkout failed: ${error instanceof Error ? error.message : "Unknown error"}`,
-      );
+      toast.error(t("checkoutError"));
     } finally {
       setIsCheckingOut(false);
     }
@@ -82,10 +82,10 @@ export function CartDrawer() {
         <SheetHeader className="space-y-2.5 pr-6">
           <SheetTitle className="flex items-center gap-2">
             <ShoppingCart className="h-5 w-5" />
-            My Cart
+            {t("title")}
           </SheetTitle>
           <SheetDescription className="text-sm italic text-muted-foreground">
-            Make sure to review your cart before checkout
+            {t("description")}
           </SheetDescription>
         </SheetHeader>
 
@@ -94,7 +94,7 @@ export function CartDrawer() {
             <div className="flex h-full flex-col items-center justify-center space-y-3 px-4">
               <ShoppingBag className="h-12 w-12 text-muted-foreground" />
               <p className="text-lg font-medium text-center">
-                Your cart is empty
+                {t("emptyCart")}
               </p>
             </div>
           ) : (
@@ -138,7 +138,9 @@ export function CartDrawer() {
                         onClick={() => removeFromCart(product.id)}
                       >
                         <Trash2 className="h-4 w-4" />
-                        <span className="sr-only">Remove {product.name}</span>
+                        <span className="sr-only">
+                          {t("removeProduct", { productName: product.name })}
+                        </span>
                       </Button>
                     </div>
                   </div>
@@ -152,7 +154,7 @@ export function CartDrawer() {
           <SheetFooter className="border-t pt-6 px-4">
             <div className="flex w-full flex-col gap-4">
               <div className="flex items-center justify-between">
-                <span className="text-sm font-medium">Total</span>
+                <span className="text-sm font-medium">{t("total")}</span>
                 <span className="text-xl font-bold">
                   {formatPrice(getTotalPrice())}
                 </span>
@@ -167,7 +169,7 @@ export function CartDrawer() {
                   {isCheckingOut ? (
                     <Loader2 className="mr-2 h-4 w-4 animate-spin" />
                   ) : null}
-                  Proceed to Checkout
+                  {t("checkoutButton")}
                 </Button>
                 <Button
                   className="w-full text-foreground border border-foreground"
@@ -176,7 +178,7 @@ export function CartDrawer() {
                   variant="ghost"
                   onClick={() => clearCart()}
                 >
-                  Clear Cart
+                  {t("clearCartButton")}
                 </Button>
               </div>
             </div>

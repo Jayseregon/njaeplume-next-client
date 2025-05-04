@@ -2,6 +2,7 @@ import Image from "next/image";
 import Link from "next/link";
 import { CircleEllipsis, ShoppingCart } from "lucide-react";
 import { toast } from "sonner";
+import { useTranslations } from "next-intl";
 
 import {
   Card,
@@ -16,6 +17,7 @@ import { useCartStore } from "@/providers/CartStoreProvider";
 import { formatPrice } from "@/lib/utils";
 
 export const ProductCard = ({ product }: { product: Product }) => {
+  const t = useTranslations("ProductCard");
   const pullZone = process.env.NEXT_PUBLIC_BUNNY_PUBLIC_ASSETS_PULL_ZONE_URL;
   const addToCart = useCartStore((state) => state.addToCart);
 
@@ -26,7 +28,7 @@ export const ProductCard = ({ product }: { product: Product }) => {
 
     // Add to cart using our store
     addToCart(product);
-    toast.info(`${product.name} has been added to your cart.`);
+    toast.info(t("addToCartSuccess", { productName: product.name }));
   };
 
   return (
@@ -42,7 +44,9 @@ export const ProductCard = ({ product }: { product: Product }) => {
 
         <CardHeader>
           <h3 className="text-xl pb-1 font-bold">{product.name}</h3>
-          <p className="italic text-sm pb-2">{product.category}</p>
+          <p className="italic text-sm pb-2 capitalize">
+            {t(`category.${product.category}`)}
+          </p>
         </CardHeader>
         <CardContent>
           <div className="pb-5">
@@ -50,7 +54,7 @@ export const ProductCard = ({ product }: { product: Product }) => {
               <ErrorBoundary
                 fallback={
                   <div className="w-5/6 mx-auto p-4 text-center bg-stone-100">
-                    <p>Failed to load image</p>
+                    <p>{t("imageLoadError")}</p>
                   </div>
                 }
               >
@@ -76,7 +80,7 @@ export const ProductCard = ({ product }: { product: Product }) => {
           <Button
             className="flex items-center space-x-2 w-full sm:w-auto"
             size="sm"
-            title="Add to cart"
+            title={t("addToCartButtonTitle")}
             variant="form"
             onClick={handleAddToCart}
           >

@@ -2,7 +2,8 @@
   "HomePage": {
     "noticeTitle": "Des changements excitants arrivent !",
     "noticeMessage": "Nous réorganisons notre boutique pour vous offrir une expérience encore meilleure.",
-    "noticeCTA": "Restez à l'écoute et revenez bientôt pour des mises à jour !"
+    "noticeCTA": "Restez à l'écoute et revenez bientôt pour des mises à jour !",
+    "buttonCTA": "Magasiner maintenant"
   },
   "Utils": {
     "LoadingButton": "Veuillez patienter",
@@ -231,11 +232,117 @@
       "freebies": "Voir tous les Gratuits"
     },
     "categoryTitles": {
-      "brushes": "Nos dernières Brosses",
+      "brushes": "Nos derniers Pinceaux",
       "stickers": "Nos derniers Autocollants",
       "templates": "Nos derniers Modèles",
       "planners": "Nos derniers Planificateurs",
       "freebies": "Nos derniers Gratuits"
     }
+  },
+  "AccountDownloads": {
+    "loading": "Chargement de vos produits numériques...",
+    "signInRequired": "Veuillez vous connecter pour accéder à vos téléchargements",
+    "backToDashboard": "Retour au Tableau de Bord",
+    "title": "Mes Téléchargements",
+    "downloadButton": "Télécharger",
+    "downloadedOn": "Téléchargé le {date}",
+    "noDownloadsTitle": "Aucun produit téléchargeable trouvé",
+    "noDownloadsMessage": "Vous n'avez pas encore acheté de produits numériques, ou vos commandes sont toujours en cours de traitement.",
+    "goShopping": "Aller magasiner",
+    "errorLoading": "Échec du chargement de vos produits téléchargeables."
+  },
+  "AccountOrders": {
+    "loading": "Chargement de vos commandes...",
+    "signInRequired": "Veuillez vous connecter pour voir vos commandes",
+    "backToDashboard": "Retour au Tableau de Bord",
+    "title": "Historique des Commandes",
+    "noOrdersTitle": "Aucune commande trouvée",
+    "noOrdersMessage": "Vous n'avez pas encore passé de commande.",
+    "goShopping": "Aller magasiner",
+    "errorLoading": "Échec du chargement de votre historique de commandes."
+  },
+  "AccountDashboard": {
+    "loading": "Chargement des informations de votre compte...",
+    "signInRequired": "Veuillez vous connecter pour accéder à votre compte",
+    "title": "Mon Compte",
+    "welcome": "Bienvenue, {firstName}",
+    "description": "Gérez vos téléchargements numériques et votre historique de commandes depuis votre tableau de bord personnel.",
+    "yourAccount": "Votre Compte",
+    "orders": "Commandes",
+    "downloadable": "Téléchargeables",
+    "totalFiles": "Fichiers Totals",
+    "recentOrder": "Commande Récente",
+    "viewAllOrders": "Voir Toutes les Commandes",
+    "orderId": "ID Commande :",
+    "noOrdersYet": "Vous n'avez pas encore passé de commande.",
+    "recentDownloads": "Téléchargements Récents",
+    "viewAllDownloads": "Voir Tous les Téléchargements",
+    "downloadButton": "Télécharger",
+    "downloadedOn": "Téléchargé le {date}",
+    "downloadsAvailable": "Des téléchargements sont disponibles. Cliquez sur 'Voir Tous les Téléchargements' pour les voir.",
+    "noDownloadsYet": "Vous n'avez pas encore de téléchargements.",
+    "paymentSuccess": "Paiement réussi ! Votre commande est complète."
+  },
+  "AccountOrdersTable": {
+    "orderId": "ID Commande",
+    "date": "Date",
+    "status": "Statut",
+    "amount": "Montant",
+    "items": "Articles",
+    "viewItems": "Voir {count, plural, =1 {# article} other {# articles}}",
+    "itemsForOrder": "Articles pour la Commande {orderId}",
+    "price": "Prix : {price}",
+    "noOrdersFound": "Aucune commande trouvée."
+  },
+  "CartDrawer": {
+    "title": "Mon Panier",
+    "description": "Assurez-vous de vérifier votre panier avant de passer à la caisse",
+    "emptyCart": "Votre panier est vide",
+    "removeProduct": "Retirer {productName}",
+    "total": "Total",
+    "checkoutButton": "Passer à la caisse",
+    "clearCartButton": "Vider le panier",
+    "checkoutError": "Le paiement a échoué. Veuillez réessayer."
+  },
+  "ProductCard": {
+    "imageLoadError": "Échec du chargement de l'image",
+    "addToCartButtonTitle": "Ajouter au panier",
+    "addToCartSuccess": "{productName} a été ajouté à votre panier.",
+    "category": {
+      "brushes": "Pinceaux",
+      "stickers": "Autocollants",
+      "templates": "Modèles",
+      "planners": "Planificateurs"
+    }
+  },
+  "FreebieCard": {
+    "imageLoadError": "Échec du chargement de l'image",
+    "downloadButtonTitle": "Télécharger le gratuit",
+    "downloadSuccessTitle": "Merci pour votre téléchargement !",
+    "downloadSuccessDesc": "Nous espérons que vous apprécierez {productName} !",
+    "downloadErrorTitle": "Impossible de télécharger le fichier",
+    "downloadErrorDesc": "Veuillez réessayer plus tard ou nous contacter pour obtenir de l'aide.",
+    "downloadButtonText": "Télécharger",
+    "category": {
+      "freebies": "Gratuits"
+    }
+  },
+  "FreebiePage": {
+    "title": "Téléchargements Gratuits"
+  },
+  "ProductDetail": {
+    "backButton": "Retour à {category}",
+    "addToCartButton": "Ajouter au panier",
+    "imageLoadError": "Échec du chargement de l'image",
+    "prevImageAria": "Image précédente",
+    "nextImageAria": "Image suivante",
+    "thumbnailAria": "Voir la miniature {index}"
+  },
+  "Navbar": {
+    "brushes": "Pinceaux",
+    "stickers": "Autocollants",
+    "templates": "Modèles",
+    "planners": "Planificateurs",
+    "freebies": "Gratuits"
   }
 }

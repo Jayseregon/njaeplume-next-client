@@ -98,6 +98,24 @@ jest.mock("sonner", () => ({
   },
 }));
 
+// Mock next-intl
+jest.mock("next-intl", () => ({
+  useTranslations: () => (key: string, values?: any) => {
+    // Simple mock returning the key or key with interpolated values
+    if (values) {
+      let result = key;
+
+      for (const k in values) {
+        result = result.replace(`{${k}}`, values[k]);
+      }
+
+      return result;
+    }
+
+    return key;
+  },
+}));
+
 // Mock cart store
 const mockClearCart = jest.fn();
 const mockSetCartOpen = jest.fn();
@@ -221,9 +239,7 @@ describe("AccountDashboard", () => {
     // Check for Suspense wrapper
     expect(screen.getByTestId("suspense-wrapper")).toBeInTheDocument();
     // Use getAllByText instead of getByText since the text appears multiple times
-    expect(
-      screen.getAllByText("Loading your account information...").length,
-    ).toBeGreaterThan(0);
+    expect(screen.getAllByText("loading").length).toBeGreaterThan(0);
   });
 
   it("shows sign-in message when user is not authenticated", () => {
@@ -233,9 +249,7 @@ describe("AccountDashboard", () => {
     });
 
     render(<AccountDashboard />);
-    expect(
-      screen.getByText("Please sign in to access your account"),
-    ).toBeInTheDocument();
+    expect(screen.getByText("signInRequired")).toBeInTheDocument();
   });
 
   it("renders user dashboard with welcome message when user is logged in", async () => {
@@ -249,12 +263,10 @@ describe("AccountDashboard", () => {
 
     // Wait for data loading to complete
     await waitFor(() => {
-      expect(
-        screen.getByText(`Welcome, ${mockUser.firstName}`),
-      ).toBeInTheDocument();
+      expect(screen.getByText(`welcome`)).toBeInTheDocument();
     });
 
-    expect(screen.getByTestId("page-title")).toHaveTextContent("My Account");
+    expect(screen.getByTestId("page-title")).toHaveTextContent("title");
   });
 
   it("displays user stats correctly with zero orders", async () => {
@@ -274,9 +286,7 @@ describe("AccountDashboard", () => {
       expect(statsValues.length).toBeGreaterThanOrEqual(1);
     });
 
-    expect(
-      screen.getByText("You haven't placed any orders yet."),
-    ).toBeInTheDocument();
+    expect(screen.getByText("noOrdersYet")).toBeInTheDocument();
   });
 
   it("displays latest order information when user has orders", async () => {
@@ -292,13 +302,11 @@ describe("AccountDashboard", () => {
 
     await waitFor(() => {
       // Check if order ID label is displayed (more specific selector)
-      expect(
-        screen.getByText(/Order ID:/, { exact: false }),
-      ).toBeInTheDocument();
+      expect(screen.getByText("orderId")).toBeInTheDocument();
 
       // Use a more specific approach to find the order ID - look for it in the recent order section
       const recentOrderSection = screen
-        .getByText("Recent Order")
+        .getByText("recentOrder") // Use the translation key
         .closest("div")?.parentElement;
 
       expect(recentOrderSection).not.toBeNull();
@@ -334,7 +342,7 @@ describe("AccountDashboard", () => {
     render(<AccountDashboard />);
 
     await waitFor(() => {
-      const viewAllLink = screen.getByText("View All Orders");
+      const viewAllLink = screen.getByText("viewAllOrders");
 
       expect(viewAllLink).toBeInTheDocument();
       expect(viewAllLink.closest("a")).toHaveAttribute(
@@ -353,8 +361,8 @@ describe("AccountDashboard", () => {
     render(<AccountDashboard />);
 
     await waitFor(() => {
-      expect(screen.getByText("Recent Downloads")).toBeInTheDocument();
-      const viewAllLink = screen.getByText("View All Downloads");
+      expect(screen.getByText("recentDownloads")).toBeInTheDocument();
+      const viewAllLink = screen.getByText("viewAllDownloads");
 
       expect(viewAllLink).toBeInTheDocument();
       expect(viewAllLink.closest("a")).toHaveAttribute(
@@ -380,8 +388,8 @@ describe("AccountDashboard", () => {
 
     await waitFor(() => {
       // Should see labels for the download stats
-      expect(screen.getByText("Downloadable")).toBeInTheDocument();
-      expect(screen.getByText("Total Files")).toBeInTheDocument();
+      expect(screen.getByText("downloadable")).toBeInTheDocument();
+      expect(screen.getByText("totalFiles")).toBeInTheDocument();
     });
   });
 
@@ -397,7 +405,7 @@ describe("AccountDashboard", () => {
 
     await waitFor(() => {
       // Check if download button exists
-      expect(screen.getByText("Download")).toBeInTheDocument();
+      expect(screen.getByText("downloadButton")).toBeInTheDocument();
       expect(screen.getByTestId("download-icon")).toBeInTheDocument();
     });
   });
@@ -415,7 +423,7 @@ describe("AccountDashboard", () => {
     await waitFor(() => {
       // Check if download date is shown
       expect(screen.getByTestId("calendar-icon")).toBeInTheDocument();
-      expect(screen.getByText(/Downloaded on/)).toBeInTheDocument();
+      expect(screen.getByText(/downloadedOn/)).toBeInTheDocument();
     });
   });
 
@@ -446,9 +454,7 @@ describe("AccountDashboard", () => {
       // Check cart clearing and toast
       expect(mockClearCart).toHaveBeenCalled();
       expect(mockSetCartOpen).toHaveBeenCalledWith(false);
-      expect(toast.success).toHaveBeenCalledWith(
-        "Payment successful! Your order is complete.",
-      );
+      expect(toast.success).toHaveBeenCalledWith("paymentSuccess");
 
       // Check URL replacement
       expect(mockReplace).toHaveBeenCalledWith("/account", { scroll: false });
@@ -464,7 +470,7 @@ describe("AccountDashboard", () => {
     render(<AccountDashboard />);
 
     await waitFor(() => {
-      const viewAllLink = screen.getByText("View All Downloads");
+      const viewAllLink = screen.getByText("viewAllDownloads");
 
       expect(viewAllLink).toBeInTheDocument();
       expect(viewAllLink.closest("a")).toHaveAttribute(

@@ -5,6 +5,7 @@ import { useUser } from "@clerk/nextjs";
 import { ArrowLeft } from "lucide-react";
 import Link from "next/link";
 import { toast } from "sonner";
+import { useTranslations } from "next-intl";
 
 import { PageTitle } from "@/src/components/root/PageTitle";
 import ErrorBoundary from "@/src/components/root/ErrorBoundary";
@@ -14,13 +15,11 @@ import { Button } from "@/components/ui/button";
 import { getUserOrders } from "@/src/actions/prisma/action";
 import { OrderWithItems } from "@/interfaces/Products";
 
-// No need for Suspense anymore since we don't use useSearchParams
 export default function OrdersPage() {
+  const t = useTranslations("AccountOrders");
   const { user, isLoaded } = useUser();
   const [orders, setOrders] = useState<OrderWithItems[]>([]);
   const [isLoading, setIsLoading] = useState(true);
-
-  // Removed the checkout redirect logic as it's now handled in the main account page
 
   // Effect for fetching orders
   useEffect(() => {
@@ -33,7 +32,7 @@ export default function OrdersPage() {
           setOrders(userOrders);
         } catch (error) {
           console.error("Error fetching orders:", error);
-          toast.error("Failed to load your order history.");
+          toast.error(t("errorLoading"));
         } finally {
           setIsLoading(false);
         }
@@ -46,16 +45,14 @@ export default function OrdersPage() {
       // If user data is loaded but there's no user, stop loading
       setIsLoading(false);
     }
-  }, [user, isLoaded]);
+  }, [user, isLoaded, t]);
 
   if (!isLoaded || isLoading) {
-    return <div className="p-8 text-center">Loading your orders...</div>;
+    return <div className="p-8 text-center">{t("loading")}</div>;
   }
 
   if (!user) {
-    return (
-      <div className="p-8 text-center">Please sign in to view your orders</div>
-    );
+    return <div className="p-8 text-center">{t("signInRequired")}</div>;
   }
 
   return (
@@ -69,22 +66,22 @@ export default function OrdersPage() {
         >
           <Link className="flex items-center" href="/account">
             <ArrowLeft className="mr-2 h-4 w-4" />
-            Back to Dashboard
+            {t("backToDashboard")}
           </Link>
         </Button>
 
-        <PageTitle title="Order History" />
+        <PageTitle title={t("title")} />
 
         {orders.length > 0 ? (
           <OrdersTable orders={orders} />
         ) : (
           <div className="border rounded-md p-8 text-center">
-            <h3 className="text-xl font-medium mb-2">No orders found</h3>
+            <h3 className="text-xl font-medium mb-2">{t("noOrdersTitle")}</h3>
             <p className="text-gray-600 dark:text-gray-300 mb-4">
-              You haven&apos;t placed any orders yet.
+              {t("noOrdersMessage")}
             </p>
             <Button asChild variant="default">
-              <Link href="/shop">Go Shopping</Link>
+              <Link href="/shop">{t("goShopping")}</Link>
             </Button>
           </div>
         )}

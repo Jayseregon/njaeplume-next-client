@@ -6,6 +6,7 @@ import Link from "next/link";
 import { Download, CalendarDays } from "lucide-react";
 import { useSearchParams, useRouter } from "next/navigation";
 import { toast } from "sonner";
+import { useTranslations } from "next-intl";
 
 import { PageTitle } from "@/src/components/root/PageTitle";
 import ErrorBoundary from "@/src/components/root/ErrorBoundary";
@@ -20,6 +21,7 @@ import { useProductDownload } from "@/src/hooks/useProductDownload";
 import { useCartStore } from "@/providers/CartStoreProvider";
 
 function AccountDashboardContent() {
+  const t = useTranslations("AccountDashboard");
   const { user, isLoaded } = useUser();
   const [latestOrder, setLatestOrder] = useState<OrderWithItems | null>(null);
   const [completedOrders, setCompletedOrders] = useState<OrderWithItems[]>([]);
@@ -41,12 +43,12 @@ function AccountDashboardContent() {
     if (sessionId) {
       clearCart();
       setCartOpen(false);
-      toast.success("Payment successful! Your order is complete.");
+      toast.success(t("paymentSuccess"));
 
       // Remove the session_id from the URL without reloading
       router.replace("/account", { scroll: false });
     }
-  }, [searchParams, clearCart, setCartOpen, router]);
+  }, [searchParams, clearCart, setCartOpen, router, t]);
 
   // Download handling
   const { downloadingItems, handleDownload } = useProductDownload((item) => {
@@ -143,45 +145,38 @@ function AccountDashboardContent() {
   const recentDownloadableItems = getRecentDownloadableItems();
 
   if (!isLoaded || isLoadingData) {
-    return (
-      <div className="p-8 text-center">Loading your account information...</div>
-    );
+    return <div className="p-8 text-center">{t("loading")}</div>;
   }
 
   if (!user) {
-    return (
-      <div className="p-8 text-center">
-        Please sign in to access your account
-      </div>
-    );
+    return <div className="p-8 text-center">{t("signInRequired")}</div>;
   }
 
   return (
     <ErrorBoundary fallback={<ErrorDefaultDisplay />}>
       <div className="space-y-8">
-        <PageTitle title="My Account" />
+        <PageTitle title={t("title")} />
 
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
           {/* Welcome Card */}
           <div className="border rounded-md p-6">
             <h2 className="text-2xl font-bold mb-4">
-              Welcome, {user.firstName}
+              {t("welcome", { firstName: user.firstName as string })}
             </h2>
             <p className="text-gray-600 dark:text-gray-300">
-              Manage your digital downloads and order history from your personal
-              dashboard.
+              {t("description")}
             </p>
           </div>
 
           {/* Stats Card - Updated with more descriptive layout */}
           <div className="border rounded-md p-6">
-            <h2 className="text-2xl font-bold mb-4">Your Account</h2>
+            <h2 className="text-2xl font-bold mb-4">{t("yourAccount")}</h2>
             <div className="flex justify-between">
               {/* Left side - Orders count */}
               <div className="text-center">
                 <p className="text-3xl font-bold">{totalOrdersCount}</p>
                 <p className="text-sm text-gray-600 dark:text-gray-300">
-                  Orders
+                  {t("orders")}
                 </p>
               </div>
 
@@ -193,7 +188,7 @@ function AccountDashboardContent() {
                     {totalDownloadableItems - downloadedItemsCount}
                   </p>
                   <p className="text-sm text-gray-600 dark:text-gray-300">
-                    Downloadable
+                    {t("downloadable")}
                   </p>
                 </div>
 
@@ -201,7 +196,7 @@ function AccountDashboardContent() {
                 <div className="text-center">
                   <p className="text-3xl font-bold">{totalDownloadableItems}</p>
                   <p className="text-sm text-gray-600 dark:text-gray-300">
-                    Total Files
+                    {t("totalFiles")}
                   </p>
                 </div>
               </div>
@@ -212,9 +207,9 @@ function AccountDashboardContent() {
         {/* Recent Orders */}
         <div className="border rounded-md p-6">
           <div className="flex justify-between items-center mb-4">
-            <h2 className="text-2xl font-bold">Recent Order</h2>
+            <h2 className="text-2xl font-bold">{t("recentOrder")}</h2>
             <Button asChild className="max-w-fit" variant="form">
-              <Link href="/account/orders">View All Orders</Link>
+              <Link href="/account/orders">{t("viewAllOrders")}</Link>
             </Button>
           </div>
 
@@ -223,7 +218,7 @@ function AccountDashboardContent() {
               <div className="py-4 flex flex-col sm:flex-row justify-between items-start sm:items-center gap-2">
                 <div className="text-start">
                   <p className="font-medium">
-                    <span className="text-foreground pr-2">Order ID: </span>
+                    <span className="text-foreground pr-2">{t("orderId")}</span>
                     {latestOrder.displayId}
                   </p>
                   <p className="text-gray-500">
@@ -239,18 +234,16 @@ function AccountDashboardContent() {
               </div>
             </div>
           ) : (
-            <p className="py-4 text-gray-500">
-              You haven&apos;t placed any orders yet.
-            </p>
+            <p className="py-4 text-gray-500">{t("noOrdersYet")}</p>
           )}
         </div>
 
         {/* Available Downloads - Updated with real downloads */}
         <div className="border rounded-md p-6">
           <div className="flex justify-between items-center mb-4">
-            <h2 className="text-2xl font-bold">Recent Downloads</h2>
+            <h2 className="text-2xl font-bold">{t("recentDownloads")}</h2>
             <Button asChild className="max-w-fit" variant="form">
-              <Link href="/account/downloads">View All Downloads</Link>
+              <Link href="/account/downloads">{t("viewAllDownloads")}</Link>
             </Button>
           </div>
 
@@ -288,15 +281,16 @@ function AccountDashboardContent() {
                       ) : (
                         <>
                           <Download className="mr-2 h-4 w-4" />
-                          Download
+                          {t("downloadButton")}
                         </>
                       )}
                     </Button>
                   ) : (
                     <div className="flex items-center text-sm text-muted-foreground">
                       <CalendarDays className="mr-2 h-4 w-4" />
-                      Downloaded on{" "}
-                      {new Date(item.downloadedAt!).toLocaleDateString()}
+                      {t("downloadedOn", {
+                        date: new Date(item.downloadedAt!).toLocaleDateString(),
+                      })}
                     </div>
                   )}
                 </div>
@@ -305,8 +299,8 @@ function AccountDashboardContent() {
           ) : (
             <p className="py-4 text-gray-500">
               {totalDownloadableItems > 0
-                ? "You have downloads available. Click 'View All Downloads' to see them."
-                : "You don't have any downloads yet."}
+                ? t("downloadsAvailable")
+                : t("noDownloadsYet")}
             </p>
           )}
         </div>
@@ -317,14 +311,10 @@ function AccountDashboardContent() {
 
 // Wrap the component in Suspense for useSearchParams
 export default function AccountDashboard() {
+  const t = useTranslations("AccountDashboard"); // Initialize translations for fallback
+
   return (
-    <Suspense
-      fallback={
-        <div className="p-8 text-center">
-          Loading your account information...
-        </div>
-      }
-    >
+    <Suspense fallback={<div className="p-8 text-center">{t("loading")}</div>}>
       <AccountDashboardContent />
     </Suspense>
   );

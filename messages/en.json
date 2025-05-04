@@ -2,7 +2,8 @@
   "HomePage": {
     "noticeTitle": "Exciting Changes Are Coming!",
     "noticeMessage": "We're currently revamping our shop to bring you an even better experience.",
-    "noticeCTA": "Stay tuned and check back soon for updates!"
+    "noticeCTA": "Stay tuned and check back soon for updates!",
+    "buttonCTA": "Shop Now"
   },
   "Utils": {
     "LoadingButton": "Please wait",
@@ -237,5 +238,111 @@
       "planners": "Our latest Planners",
       "freebies": "Our latest Freebies"
     }
+  },
+  "AccountDownloads": {
+    "loading": "Loading your digital products...",
+    "signInRequired": "Please sign in to access your downloads",
+    "backToDashboard": "Back to Dashboard",
+    "title": "My Downloads",
+    "downloadButton": "Download",
+    "downloadedOn": "Downloaded on {date}",
+    "noDownloadsTitle": "No downloadable products found",
+    "noDownloadsMessage": "You haven't purchased any digital products yet, or your orders are still processing.",
+    "goShopping": "Go Shopping",
+    "errorLoading": "Failed to load your downloadable products."
+  },
+  "AccountOrders": {
+    "loading": "Loading your orders...",
+    "signInRequired": "Please sign in to view your orders",
+    "backToDashboard": "Back to Dashboard",
+    "title": "Order History",
+    "noOrdersTitle": "No orders found",
+    "noOrdersMessage": "You haven't placed any orders yet.",
+    "goShopping": "Go Shopping",
+    "errorLoading": "Failed to load your order history."
+  },
+  "AccountDashboard": {
+    "loading": "Loading your account information...",
+    "signInRequired": "Please sign in to access your account",
+    "title": "My Account",
+    "welcome": "Welcome, {firstName}",
+    "description": "Manage your digital downloads and order history from your personal dashboard.",
+    "yourAccount": "Your Account",
+    "orders": "Orders",
+    "downloadable": "Downloadable",
+    "totalFiles": "Total Files",
+    "recentOrder": "Recent Order",
+    "viewAllOrders": "View All Orders",
+    "orderId": "Order ID:",
+    "noOrdersYet": "You haven't placed any orders yet.",
+    "recentDownloads": "Recent Downloads",
+    "viewAllDownloads": "View All Downloads",
+    "downloadButton": "Download",
+    "downloadedOn": "Downloaded on {date}",
+    "downloadsAvailable": "You have downloads available. Click 'View All Downloads' to see them.",
+    "noDownloadsYet": "You don't have any downloads yet.",
+    "paymentSuccess": "Payment successful! Your order is complete."
+  },
+  "AccountOrdersTable": {
+    "orderId": "Order ID",
+    "date": "Date",
+    "status": "Status",
+    "amount": "Amount",
+    "items": "Items",
+    "viewItems": "View {count, plural, =1 {# item} other {# items}}",
+    "itemsForOrder": "Items for Order {orderId}",
+    "price": "Price: {price}",
+    "noOrdersFound": "No orders found."
+  },
+  "CartDrawer": {
+    "title": "My Cart",
+    "description": "Make sure to review your cart before checkout",
+    "emptyCart": "Your cart is empty",
+    "removeProduct": "Remove {productName}",
+    "total": "Total",
+    "checkoutButton": "Proceed to Checkout",
+    "clearCartButton": "Clear Cart",
+    "checkoutError": "Checkout failed. Please try again."
+  },
+  "ProductCard": {
+    "imageLoadError": "Failed to load image",
+    "addToCartButtonTitle": "Add to cart",
+    "addToCartSuccess": "{productName} has been added to your cart.",
+    "category": {
+      "brushes": "Brushes",
+      "stickers": "Stickers",
+      "templates": "Templates",
+      "planners": "Planners"
+    }
+  },
+  "FreebieCard": {
+    "imageLoadError": "Failed to load image",
+    "downloadButtonTitle": "Download Freebie",
+    "downloadSuccessTitle": "Thank you for downloading!",
+    "downloadSuccessDesc": "We hope you enjoy {productName}!",
+    "downloadErrorTitle": "Unable to download file",
+    "downloadErrorDesc": "Please try again later or contact us for assistance.",
+    "downloadButtonText": "Download",
+    "category": {
+      "freebies": "Freebies"
+    }
+  },
+  "FreebiePage": {
+    "title": "Free Downloads"
+  },
+  "ProductDetail": {
+    "backButton": "Back to {category}",
+    "addToCartButton": "Add to Cart",
+    "imageLoadError": "Failed to load image",
+    "prevImageAria": "Previous image",
+    "nextImageAria": "Next image",
+    "thumbnailAria": "View thumbnail {index}"
+  },
+  "Navbar": {
+    "brushes": "Brushes",
+    "stickers": "Stickers",
+    "templates": "Templates",
+    "planners": "Planners",
+    "freebies": "Freebies"
   }
 }
