@@ -170,10 +170,10 @@ export function CartDrawer() {
                   Proceed to Checkout
                 </Button>
                 <Button
-                  className="w-full"
+                  className="w-full text-foreground border border-foreground"
                   disabled={isCheckingOut}
                   size="sm"
-                  variant="outline"
+                  variant="ghost"
                   onClick={() => clearCart()}
                 >
                   Clear Cart

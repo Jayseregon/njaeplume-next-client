@@ -1,8 +1,7 @@
 "use client";
 
-import { useEffect, useState, Suspense } from "react";
+import { useEffect, useState } from "react";
 import { useUser } from "@clerk/nextjs";
-import { useSearchParams, useRouter } from "next/navigation";
 import { ArrowLeft } from "lucide-react";
 import Link from "next/link";
 import { toast } from "sonner";
@@ -14,34 +13,14 @@ import { OrdersTable } from "@/src/components/account/OrdersTable";
 import { Button } from "@/components/ui/button";
 import { getUserOrders } from "@/src/actions/prisma/action";
 import { OrderWithItems } from "@/interfaces/Products";
-import { useCartStore } from "@/providers/CartStoreProvider";
 
-function OrdersPageComponent() {
+// No need for Suspense anymore since we don't use useSearchParams
+export default function OrdersPage() {
   const { user, isLoaded } = useUser();
   const [orders, setOrders] = useState<OrderWithItems[]>([]);
   const [isLoading, setIsLoading] = useState(true);
-  const searchParams = useSearchParams();
-  const router = useRouter();
-  const clearCart = useCartStore((state) => state.clearCart);
-  const setCartOpen = useCartStore((state) => state.setCartOpen);
 
-  // Effect for handling successful checkout redirect
-  useEffect(() => {
-    const sessionId = searchParams.get("session_id");
-
-    if (sessionId) {
-      console.log("Checkout successful, clearing cart...");
-      clearCart();
-      setCartOpen(false);
-      toast.success("Payment successful! Your order is complete.");
-
-      // Optional: Remove the session_id from the URL without reloading
-      const currentPath = window.location.pathname;
-
-      router.replace(currentPath, { scroll: false });
-    }
-    // This effect should only run once when the component mounts and searchParams are available
-  }, [searchParams]);
+  // Removed the checkout redirect logic as it's now handled in the main account page
 
   // Effect for fetching orders
   useEffect(() => {
@@ -111,14 +90,5 @@ function OrdersPageComponent() {
         )}
       </div>
     </ErrorBoundary>
-  );
-}
-
-// Wrap the component in Suspense for useSearchParams
-export default function OrdersPage() {
-  return (
-    <Suspense fallback={<div className="p-8 text-center">Loading...</div>}>
-      <OrdersPageComponent />
-    </Suspense>
   );
 }

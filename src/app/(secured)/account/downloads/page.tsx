@@ -16,21 +16,46 @@ import {
   AccordionItem,
   AccordionTrigger,
 } from "@/components/ui/accordion";
-import {
-  getUserOrders,
-  updateOrderItemDownload,
-} from "@/src/actions/prisma/action";
+import { getUserOrders } from "@/src/actions/prisma/action";
 import { OrderWithItems } from "@/interfaces/Products";
-import { generateBunnySignedUrl } from "@/src/actions/bunny/action";
 import { SimpleSpinner } from "@/components/root/SimpleSpinner";
+import { useProductDownload } from "@/src/hooks/useProductDownload";
 
 export default function DownloadsPage() {
   const { user, isLoaded } = useUser();
   const [orders, setOrders] = useState<OrderWithItems[]>([]);
   const [isLoading, setIsLoading] = useState(true);
-  const [downloadingItems, setDownloadingItems] = useState<
-    Record<string, boolean>
-  >({});
+
+  // Use the shared download hook
+  const { downloadingItems, handleDownload: handleDownloadBase } =
+    useProductDownload();
+
+  // Wrapper function to update the local state after download
+  const handleDownload = async (item: any, orderId: string) => {
+    await handleDownloadBase(item, orderId);
+
+    // Update the local orders state to reflect the download
+    setOrders((prevOrders) =>
+      prevOrders.map((order) => {
+        if (order.id === orderId) {
+          return {
+            ...order,
+            items: order.items.map((orderItem) => {
+              if (orderItem.id === item.id) {
+                return {
+                  ...orderItem,
+                  downnloadCount: 1,
+                  downloadedAt: new Date(),
+                };
+              }
+              return orderItem;
+            }),
+          };
+        }
+        return order;
+      })
+    );
+  };
 
   useEffect(() => {
     async function fetchOrders() {
@@ -59,86 +84,6 @@ export default function DownloadsPage() {
       setIsLoading(false);
     }
   }, [user, isLoaded]);
-
-  const handleDownload = async (item: any, orderId: string) => {
-    // Skip if already downloaded or currently downloading
-    if (
-      item.downnloadCount > 0 ||
-      item.downloadedAt ||
-      downloadingItems[item.id]
-    ) {
-      return;
-    }
-
-    try {
-      // Mark this item as currently downloading
-      setDownloadingItems((prev) => ({ ...prev, [item.id]: true }));
-
-      // Generate a signed URL that expires in 5 minutes (default)
-      const response = await generateBunnySignedUrl(item.product.zip_file_name);
-
-      if (!response.success || !response.url) {
-        throw new Error("Download generation failed");
-      }
-
-      // Update the OrderItem with download information first
-      // This ensures we track the download even if the browser download fails
-      const updateResult = await updateOrderItemDownload(item.id);
-      
-      if (!updateResult) {
-        throw new Error("Failed to update download status");
-      }
-
-      // Extract filename from zip_file_name
-      const fileName =
-        item.product.zip_file_name.split("/").pop() ||
-        `${item.product.slug}.zip`;
-
-      // Create a temporary anchor element for download
-      const downloadLink = document.createElement("a");
-      downloadLink.href = response.url;
-      downloadLink.download = fileName;
-      
-      // Trigger click to start download
-      document.body.appendChild(downloadLink);
-      downloadLink.click();
-      document.body.removeChild(downloadLink);
-
-      // Update the local state to reflect the download
-      setOrders((prevOrders) =>
-        prevOrders.map((order) => {
-          if (order.id === orderId) {
-            return {
-              ...order,
-              items: order.items.map((orderItem) => {
-                if (orderItem.id === item.id) {
-                  return {
-                    ...orderItem,
-                    downnloadCount: 1,
-                    downloadedAt: new Date(),
-                  };
-                }
-                return orderItem;
-              }),
-            };
-          }
-          return order;
-        })
-      );
-
-      toast.success("Thank you for downloading!", {
-        description: `We hope you enjoy ${item.product.name}!`,
-      });
-    } catch (error) {
-      console.error("Download error:", error);
-      toast.error("Unable to download file", {
-        description: "Please try again later or contact us for assistance.",
-      });
-    } finally {
-      // Clear the downloading status
-      setDownloadingItems((prev) => ({ ...prev, [item.id]: false }));
-    }
-  };
 
   if (!isLoaded || isLoading) {
     return (
@@ -183,7 +128,8 @@ export default function DownloadsPage() {
                 value={order.id}
                 className="border-b last:border-b-0">
                 <AccordionTrigger className="px-4 hover:no-underline text-left bg-foreground/20">
-                  <span>Order #{order.displayId}</span>
+                  <span>{order.displayId}</span>
+                  <div className="px-20" />
                   <span className="ml-auto mr-4 text-sm text-foreground">
                     {new Date(order.createdAt).toLocaleDateString()}
                   </span>
