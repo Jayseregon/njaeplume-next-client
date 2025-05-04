@@ -14,13 +14,14 @@ import { FailedPaymentProps } from "@/interfaces/StripeWebhook";
 
 const PaymentFailureEmail = ({
   customerName = "John Doe",
+  messages,
 }: FailedPaymentProps) => {
   const currentYear = new Date().getFullYear();
 
   return (
     <Html>
       <Head>
-        <title>Payment Failed - NJAE Plume</title>
+        <title>{messages.headTitle}</title>
       </Head>
       <Body
         style={{
@@ -52,7 +53,7 @@ const PaymentFailureEmail = ({
                 marginBottom: "8px",
               }}
             >
-              Payment Was Not Successful
+              {messages.heading}
             </Heading>
             <Text
               style={{
@@ -62,7 +63,7 @@ const PaymentFailureEmail = ({
                 marginBottom: "24px",
               }}
             >
-              We were unable to process your payment for NJAE Plume
+              {messages.subHeading}
             </Text>
           </Section>
 
@@ -83,7 +84,7 @@ const PaymentFailureEmail = ({
                 margin: "0",
               }}
             >
-              Hi {customerName},
+              {messages.greeting} {customerName},
             </Text>
             <Text
               style={{
@@ -92,9 +93,7 @@ const PaymentFailureEmail = ({
                 margin: "4px 0 16px",
               }}
             >
-              Your recent payment attempt failed. This could be due to
-              insufficient funds, expired card details, or security measures
-              from your bank.
+              {messages.failureText}
             </Text>
 
             <Text
@@ -105,7 +104,7 @@ const PaymentFailureEmail = ({
                 margin: "0",
               }}
             >
-              What to do next:
+              {messages.nextStepsTitle}
             </Text>
             <Text
               style={{
@@ -114,10 +113,7 @@ const PaymentFailureEmail = ({
                 margin: "4px 0 16px",
               }}
             >
-              No charges have been processed, and no order has been created. You
-              can try again with a different payment method or check with your
-              bank to ensure there are no issues with your current payment
-              method.
+              {messages.nextStepsText}
             </Text>
           </Section>
 
@@ -129,8 +125,7 @@ const PaymentFailureEmail = ({
                 margin: "8px 0",
               }}
             >
-              If you have any questions or need assistance, please don&apos;t
-              hesitate to contact our support team at support@njaeplume.com
+              {messages.supportText}
             </Text>
             <Text
               style={{
@@ -139,7 +134,7 @@ const PaymentFailureEmail = ({
                 margin: "8px 0",
               }}
             >
-              Thank you for your interest in NJAE Plume.
+              {messages.closingText}
             </Text>
           </Section>
 

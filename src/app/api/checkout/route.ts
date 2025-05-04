@@ -2,6 +2,7 @@ import { NextRequest, NextResponse } from "next/server";
 import { auth, currentUser } from "@clerk/nextjs/server";
 import { z } from "zod";
 import Stripe from "stripe";
+import { cookies } from "next/headers";
 
 import { Category } from "@/generated/client";
 import { stripe } from "@/lib/stripe";
@@ -38,6 +39,7 @@ export async function POST(req: NextRequest) {
     const { userId } = await auth();
     const user = await currentUser();
     const pullZone = process.env.NEXT_PUBLIC_BUNNY_PUBLIC_ASSETS_PULL_ZONE_URL;
+    const cookieStore = await cookies();
 
     if (!userId || !user) {
       // Return structured JSON error for unauthorized
@@ -103,6 +105,9 @@ export async function POST(req: NextRequest) {
       );
     }
 
+    // Get locale from cookies
+    const localeCookie = cookieStore.get("NEXT_LOCALE")?.value;
+
     const session = await stripe.checkout.sessions.create({
       payment_method_types: ["card"],
       line_items,
@@ -113,6 +118,8 @@ export async function POST(req: NextRequest) {
         userId: userId,
         // Store product IDs and prices at time of checkout for webhook processing
         cartItems: metadataString,
+        // Store the locale for later use
+        locale: localeCookie as string,
       },
       customer_email: customerEmail,
     });

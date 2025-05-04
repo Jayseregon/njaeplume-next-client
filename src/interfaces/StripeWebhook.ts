@@ -1,4 +1,5 @@
 import { OrderStatus } from "@/generated/client";
+import enMessages from "@/messages/en.json"; // Import for type definition
 
 export interface Product {
   id: string;
@@ -52,6 +53,13 @@ export interface EmailOrderItem {
   };
 }
 
+// Define the type for PaymentConfirmation messages based on the JSON structure
+type PaymentConfirmationMessages = typeof enMessages.PaymentConfirmation;
+// Define the type for Category messages
+type CategoryMessages = typeof enMessages.ProductCard.category;
+// Define the type for PaymentFailure messages
+type PaymentFailureMessages = typeof enMessages.PaymentFailure;
+
 export interface PaymentConfirmationProps {
   displayId: string;
   amount: number;
@@ -59,8 +67,11 @@ export interface PaymentConfirmationProps {
   items: EmailOrderItem[];
   customerName: string;
   downloadLink?: string;
+  messages: PaymentConfirmationMessages;
+  categoryMessages: CategoryMessages;
 }
 
 export interface FailedPaymentProps {
   customerName: string;
+  messages: PaymentFailureMessages;
 }

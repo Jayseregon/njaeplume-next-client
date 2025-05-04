@@ -3,6 +3,8 @@ import { render } from "@testing-library/react";
 
 import PaymentConfirmationEmail from "@/emails/PaymentConfirmationTemplate";
 import { PaymentConfirmationProps } from "@/interfaces/StripeWebhook";
+// Import the actual messages to get the structure and default values
+import enMessages from "@/messages/en.json";
 
 // Mock the react-email components to make them testable with React Testing Library
 jest.mock("@react-email/components", () => ({
@@ -103,23 +105,28 @@ jest.mock("@react-email/components", () => ({
 }));
 
 describe("PaymentConfirmationEmail", () => {
+  // Extract the relevant message sections
+  const mockMessages = enMessages.PaymentConfirmation;
+  const mockCategoryMessages = enMessages.ProductCard.category;
+
   const mockOrderItems = [
     {
       product: {
         name: "Digital Sticker Pack",
-        category: "Stickers",
+        category: "stickers", // Use lowercase key as in JSON
         price: 5.99,
       },
     },
     {
       product: {
         name: "Procreate Brush Set",
-        category: "Brushes",
+        category: "brushes", // Use lowercase key as in JSON
         price: 12.99,
       },
     },
   ];
 
+  // Update defaultProps to include the structured messages
   const defaultProps: PaymentConfirmationProps = {
     displayId: "ORDER-123-456",
     amount: 18.98,
@@ -127,6 +134,8 @@ describe("PaymentConfirmationEmail", () => {
     items: mockOrderItems,
     customerName: "Jane Doe",
     downloadLink: "https://example.com/download",
+    messages: mockMessages, // Pass the PaymentConfirmation messages
+    categoryMessages: mockCategoryMessages, // Pass the category messages
   };
 
   test("renders without crashing", () => {
@@ -137,19 +146,21 @@ describe("PaymentConfirmationEmail", () => {
     expect(container).toBeTruthy();
   });
 
-  test("displays correct order information", () => {
+  test("displays correct order information using messages prop", () => {
     const { getByText } = render(
       <PaymentConfirmationEmail {...defaultProps} />,
     );
 
-    expect(getByText("Payment Successful! 🎉")).toBeInTheDocument();
-    expect(getByText("Hi Jane Doe,")).toBeInTheDocument();
+    // Use keys from mockMessages
+    expect(getByText(`${mockMessages.heading} 🎉`)).toBeInTheDocument();
+    expect(getByText(`${mockMessages.greeting} Jane Doe,`)).toBeInTheDocument();
     expect(
       getByText((content) => content.includes("ORDER-123-456")),
     ).toBeInTheDocument();
     expect(
       getByText((content) => content.includes("$18.98")),
     ).toBeInTheDocument();
+    expect(getByText(mockMessages.subHeading)).toBeInTheDocument();
   });
 
   test("formats the date correctly", () => {
@@ -163,22 +174,24 @@ describe("PaymentConfirmationEmail", () => {
     ).toBeInTheDocument();
   });
 
-  test("displays all purchased items", () => {
+  test("displays all purchased items with translated categories", () => {
     const { getByText } = render(
       <PaymentConfirmationEmail {...defaultProps} />,
     );
 
     // Check both products are displayed
     expect(getByText("Digital Sticker Pack")).toBeInTheDocument();
-    expect(getByText("Stickers")).toBeInTheDocument();
+    // Check for translated category using mockCategoryMessages
+    expect(getByText(mockCategoryMessages.stickers)).toBeInTheDocument();
     expect(getByText("$5.99")).toBeInTheDocument();
 
     expect(getByText("Procreate Brush Set")).toBeInTheDocument();
-    expect(getByText("Brushes")).toBeInTheDocument();
+    // Check for translated category using mockCategoryMessages
+    expect(getByText(mockCategoryMessages.brushes)).toBeInTheDocument();
     expect(getByText("$12.99")).toBeInTheDocument();
   });
 
-  test("includes download button with correct link", () => {
+  test("includes download button with correct link and text from messages", () => {
     const { getByTestId } = render(
       <PaymentConfirmationEmail {...defaultProps} />,
     );
@@ -189,7 +202,8 @@ describe("PaymentConfirmationEmail", () => {
       "href",
       "https://example.com/download",
     );
-    expect(downloadButton).toHaveTextContent("View My Purchases");
+    // Use key from mockMessages
+    expect(downloadButton).toHaveTextContent(mockMessages.downloadButtonText);
   });
 
   test("shows the current year in the copyright notice", () => {
@@ -203,28 +217,35 @@ describe("PaymentConfirmationEmail", () => {
     ).toBeInTheDocument();
   });
 
-  test("works with default values when props are missing", () => {
+  test("works with default values when props are missing (including messages)", () => {
     // Render with empty props to trigger default values
+    // Note: The component itself defines defaults, but we need to pass the message props
+    // for the component to render without errors. We use the imported defaults.
     const { getByText } = render(
       <PaymentConfirmationEmail
         amount={undefined as any}
+        categoryMessages={mockCategoryMessages} // Pass default category messages
         createdAt={undefined as any}
         customerName={undefined as any}
         displayId={undefined as any}
         downloadLink={undefined as any}
         items={undefined as any}
+        messages={mockMessages} // Pass default messages
       />,
     );
 
-    // Check default values are used
+    // Check default values are used for non-message props
     expect(
       getByText((content) => content.includes("NJAE2025-OID0101-010100CO87")),
     ).toBeInTheDocument();
     expect(
       getByText((content) => content.includes("$11.45")),
     ).toBeInTheDocument();
+    // Check default items defined in the component
     expect(getByText("Digital Product 1")).toBeInTheDocument();
     expect(getByText("Digital Product 2")).toBeInTheDocument();
+    // Check that messages are rendered using the passed defaults
+    expect(getByText(`${mockMessages.heading} 🎉`)).toBeInTheDocument();
   });
 
   test("applies proper styling to key elements", () => {

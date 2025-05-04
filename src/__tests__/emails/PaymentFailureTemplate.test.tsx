@@ -3,6 +3,8 @@ import { render } from "@testing-library/react";
 
 import PaymentFailureEmail from "@/emails/PaymentFailureTemplate";
 import { FailedPaymentProps } from "@/interfaces/StripeWebhook";
+// Import the actual messages to get the structure and default values
+import enMessages from "@/messages/en.json";
 
 // Mock the react-email components to make them testable with React Testing Library
 jest.mock("@react-email/components", () => ({
@@ -76,8 +78,13 @@ jest.mock("@react-email/components", () => ({
 }));
 
 describe("PaymentFailureEmail", () => {
+  // Extract the relevant message section
+  const mockMessages = enMessages.PaymentFailure;
+
+  // Update defaultProps to include the structured messages
   const defaultProps: FailedPaymentProps = {
     customerName: "Jane Smith",
+    messages: mockMessages, // Pass the PaymentFailure messages
   };
 
   test("renders without crashing", () => {
@@ -86,58 +93,53 @@ describe("PaymentFailureEmail", () => {
     expect(container).toBeTruthy();
   });
 
-  test("displays the correct title and header", () => {
+  test("displays the correct title and header using messages prop", () => {
     const { getByText, getByTestId } = render(
       <PaymentFailureEmail {...defaultProps} />,
     );
 
-    expect(getByText("Payment Was Not Successful")).toBeInTheDocument();
-    expect(
-      getByText("We were unable to process your payment for NJAE Plume"),
-    ).toBeInTheDocument();
+    // Use keys from mockMessages
+    expect(getByText(mockMessages.heading)).toBeInTheDocument();
+    expect(getByText(mockMessages.subHeading)).toBeInTheDocument();
+
+    // Check title in head - Query the document directly for the title element
+    const titleElement = document.querySelector("title");
+
+    expect(titleElement).not.toBeNull(); // Ensure the title element exists
+    expect(titleElement).toHaveTextContent(mockMessages.headTitle);
 
     const heading = getByTestId("heading");
 
     expect(heading).toHaveStyle("color: rgb(196, 146, 136)");
   });
 
-  test("displays customer name correctly", () => {
-    const { getByText } = render(
-      <PaymentFailureEmail customerName="Jane Smith" />,
-    );
-
-    expect(getByText("Hi Jane Smith,")).toBeInTheDocument();
-  });
-
-  test("displays failure explanation and next steps", () => {
+  test("displays customer name correctly using messages prop", () => {
     const { getByText } = render(<PaymentFailureEmail {...defaultProps} />);
 
-    // Verify explanation text is shown
+    // Use greeting key from mockMessages
     expect(
-      getByText((content) =>
-        content.includes("Your recent payment attempt failed"),
-      ),
-    ).toBeInTheDocument();
-
-    // Verify next steps section
-    expect(getByText("What to do next:")).toBeInTheDocument();
-    expect(
-      getByText((content) =>
-        content.includes("No charges have been processed"),
-      ),
+      getByText(`${mockMessages.greeting} Jane Smith,`),
     ).toBeInTheDocument();
   });
 
-  test("displays support information", () => {
+  test("displays failure explanation and next steps using messages prop", () => {
     const { getByText } = render(<PaymentFailureEmail {...defaultProps} />);
 
-    expect(
-      getByText((content) => content.includes("support@njaeplume.com")),
-    ).toBeInTheDocument();
+    // Verify explanation text using key
+    expect(getByText(mockMessages.failureText)).toBeInTheDocument();
 
-    expect(
-      getByText("Thank you for your interest in NJAE Plume."),
-    ).toBeInTheDocument();
+    // Verify next steps section using keys
+    expect(getByText(mockMessages.nextStepsTitle)).toBeInTheDocument();
+    expect(getByText(mockMessages.nextStepsText)).toBeInTheDocument();
+  });
+
+  test("displays support information using messages prop", () => {
+    const { getByText } = render(<PaymentFailureEmail {...defaultProps} />);
+
+    // Verify support text using key
+    expect(getByText(mockMessages.supportText)).toBeInTheDocument();
+    // Verify closing text using key
+    expect(getByText(mockMessages.closingText)).toBeInTheDocument();
   });
 
   test("shows the current year in the copyright notice", () => {
@@ -149,14 +151,19 @@ describe("PaymentFailureEmail", () => {
     ).toBeInTheDocument();
   });
 
-  test("works with default customer name when not provided", () => {
-    // Render without providing customerName
+  test("works with default customer name when not provided (requires messages)", () => {
+    // Render without providing customerName, but messages are required
     const { getByText } = render(
-      <PaymentFailureEmail customerName={undefined as any} />,
+      <PaymentFailureEmail
+        customerName={undefined as any}
+        messages={mockMessages} // Pass default messages
+      />,
     );
 
-    // Check default customer name is used
-    expect(getByText("Hi John Doe,")).toBeInTheDocument();
+    // Check default customer name is used along with the greeting message
+    expect(getByText(`${mockMessages.greeting} John Doe,`)).toBeInTheDocument();
+    // Check other messages are rendered
+    expect(getByText(mockMessages.heading)).toBeInTheDocument();
   });
 
   test("applies proper styling to key elements", () => {

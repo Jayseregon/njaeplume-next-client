@@ -57,6 +57,8 @@ const PaymentConfirmationEmail = ({
   ],
   customerName = "John Doe",
   downloadLink = "https://njaeplume.com/account/orders",
+  messages,
+  categoryMessages,
 }: PaymentConfirmationProps) => {
   const currentYear = new Date().getFullYear();
   const orderDate = formatDate(new Date(createdAt));
@@ -65,7 +67,7 @@ const PaymentConfirmationEmail = ({
   return (
     <Html>
       <Head>
-        <title>Payment Confirmation - NJAE Plume</title>
+        <title>{messages.headTitle}</title>
       </Head>
       <Body
         style={{
@@ -97,7 +99,7 @@ const PaymentConfirmationEmail = ({
                 marginBottom: "8px",
               }}
             >
-              Payment Successful! 🎉
+              {messages.heading} 🎉
             </Heading>
             <Text
               style={{
@@ -107,7 +109,7 @@ const PaymentConfirmationEmail = ({
                 marginBottom: "24px",
               }}
             >
-              Thank you for your purchase from NJAE Plume
+              {messages.subHeading}
             </Text>
           </Section>
 
@@ -128,7 +130,7 @@ const PaymentConfirmationEmail = ({
                 margin: "0",
               }}
             >
-              Hi {customerName},
+              {messages.greeting} {customerName},
             </Text>
             <Text
               style={{
@@ -137,9 +139,7 @@ const PaymentConfirmationEmail = ({
                 margin: "4px 0 16px",
               }}
             >
-              We are delighted to confirm that your payment has been
-              successfully processed. Your digital products are now ready for
-              download.
+              {messages.confirmationText}
             </Text>
 
             <Text
@@ -150,7 +150,7 @@ const PaymentConfirmationEmail = ({
                 margin: "0",
               }}
             >
-              Order Details:
+              {messages.orderDetailsTitle}:
             </Text>
             <Text
               style={{
@@ -159,9 +159,9 @@ const PaymentConfirmationEmail = ({
                 margin: "4px 0 16px",
               }}
             >
-              <strong>Order Number:</strong> #{displayId}
+              <strong>{messages.orderNumberLabel}:</strong> #{displayId}
               <br />
-              <strong>Order Date:</strong> {orderDate}
+              <strong>{messages.orderDateLabel}:</strong> {orderDate}
             </Text>
 
             <Text
@@ -172,7 +172,7 @@ const PaymentConfirmationEmail = ({
                 margin: "0",
               }}
             >
-              My Purchase:
+              {messages.purchaseSummaryTitle}:
             </Text>
             <Section
               style={{
@@ -207,9 +207,15 @@ const PaymentConfirmationEmail = ({
                           fontSize: "12px",
                           fontStyle: "italic",
                           margin: "2px 0 0 0",
+                          textTransform: "capitalize", // Ensure category is capitalized if needed
                         }}
                       >
-                        {item.product.category}
+                        {
+                          categoryMessages[
+                            item.product
+                              .category as keyof typeof categoryMessages
+                          ]
+                        }
                       </Text>
                     </Column>
                     <Column style={{ width: "80px" }}>
@@ -245,7 +251,7 @@ const PaymentConfirmationEmail = ({
                         margin: "0",
                       }}
                     >
-                      Total
+                      {messages.totalLabel}
                     </Text>
                   </Column>
                   <Column style={{ width: "80px" }}>
@@ -273,7 +279,7 @@ const PaymentConfirmationEmail = ({
                 margin: "0",
               }}
             >
-              Next Steps:
+              {messages.nextStepsTitle}:
             </Text>
             <Text
               style={{
@@ -282,10 +288,7 @@ const PaymentConfirmationEmail = ({
                 margin: "4px 0 16px",
               }}
             >
-              Click the button below to download your purchase. The link will
-              redirect you to your account where you can access all your
-              purchased items. Please note that each link will remain active for
-              30 days and can only be used once for security purposes.
+              {messages.nextStepsText}
             </Text>
 
             <Button
@@ -304,7 +307,7 @@ const PaymentConfirmationEmail = ({
                 boxSizing: "border-box" as const,
               }}
             >
-              View My Purchases
+              {messages.downloadButtonText}
             </Button>
           </Section>
 
@@ -316,8 +319,7 @@ const PaymentConfirmationEmail = ({
                 margin: "8px 0",
               }}
             >
-              If you have any questions or need assistance, please don&apos;t
-              hesitate to contact our support team at support@njaeplume.com
+              {messages.supportText}
             </Text>
             <Text
               style={{
@@ -326,7 +328,7 @@ const PaymentConfirmationEmail = ({
                 margin: "8px 0",
               }}
             >
-              Thank you for shopping with NJAE Plume!
+              {messages.closingText}
             </Text>
           </Section>
 

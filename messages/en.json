@@ -344,5 +344,35 @@
     "templates": "Templates",
     "planners": "Planners",
     "freebies": "Freebies"
+  },
+  "PaymentConfirmation": {
+    "headTitle": "Payment Confirmation - NJAE Plume",
+    "heading": "Payment Successful!",
+    "subHeading": "Thank you for your purchase from NJAE Plume",
+    "greeting": "Hi",
+    "confirmationText": "We are delighted to confirm that your payment has been successfully processed. Your digital products are now ready for download.",
+    "orderDetailsTitle": "Order Details",
+    "orderNumberLabel": "Order Number",
+    "orderDateLabel": "Order Date",
+    "purchaseSummaryTitle": "My Purchase",
+    "totalLabel": "Total",
+    "nextStepsTitle": "Next Steps",
+    "nextStepsText": "Click the button below to download your purchase. The link will redirect you to your account where you can access all your purchased items. Please note that each link will remain active for 30 days and can only be used once for security purposes.",
+    "downloadButtonText": "View My Purchases",
+    "supportText": "If you have any questions or need assistance, please don't hesitate to contact our support team at support@njaeplume.com",
+    "closingText": "Thank you for shopping with NJAE Plume!",
+    "subject": "Order Confirmation"
+  },
+  "PaymentFailure": {
+    "headTitle": "Payment Failed - NJAE Plume",
+    "heading": "Payment Was Not Successful",
+    "subHeading": "We were unable to process your payment for NJAE Plume",
+    "greeting": "Hi",
+    "failureText": "Your recent payment attempt failed. This could be due to insufficient funds, expired card details, or security measures from your bank.",
+    "nextStepsTitle": "What to do next:",
+    "nextStepsText": "No charges have been processed, and no order has been created. You can try again with a different payment method or check with your bank to ensure there are no issues with your current payment method.",
+    "supportText": "If you have any questions or need assistance, please don't hesitate to contact our support team at support@njaeplume.com",
+    "closingText": "Thank you for your interest in NJAE Plume.",
+    "subject": "Payment Failure Notification"
   }
 }

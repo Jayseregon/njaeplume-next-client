@@ -344,5 +344,35 @@
     "templates": "Modèles",
     "planners": "Planificateurs",
     "freebies": "Gratuits"
+  },
+  "PaymentConfirmation": {
+    "headTitle": "Confirmation de Paiement - NJAE Plume",
+    "heading": "Paiement Réussi !",
+    "subHeading": "Merci pour votre achat chez NJAE Plume",
+    "greeting": "Bonjour",
+    "confirmationText": "Nous sommes ravis de confirmer que votre paiement a été traité avec succès. Vos produits numériques sont maintenant prêts à être téléchargés.",
+    "orderDetailsTitle": "Détails de la Commande",
+    "orderNumberLabel": "Numéro de Commande",
+    "orderDateLabel": "Date de Commande",
+    "purchaseSummaryTitle": "Mon Achat",
+    "totalLabel": "Total",
+    "nextStepsTitle": "Prochaines Étapes",
+    "nextStepsText": "Cliquez sur le bouton ci-dessous pour télécharger votre achat. Le lien vous redirigera vers votre compte où vous pourrez accéder à tous vos articles achetés. Veuillez noter que chaque lien restera actif pendant 30 jours et ne peut être utilisé qu'une seule fois pour des raisons de sécurité.",
+    "downloadButtonText": "Voir Mes Achats",
+    "supportText": "Si vous avez des questions ou besoin d'aide, n'hésitez pas à contacter notre équipe de support à support@njaeplume.com",
+    "closingText": "Merci d'avoir magasiné chez NJAE Plume !",
+    "subject": "Confirmation de Commande"
+  },
+  "PaymentFailure": {
+    "headTitle": "Échec du Paiement - NJAE Plume",
+    "heading": "Le Paiement n'a pas Réussi",
+    "subHeading": "Nous n'avons pas pu traiter votre paiement pour NJAE Plume",
+    "greeting": "Bonjour",
+    "failureText": "Votre récente tentative de paiement a échoué. Cela pourrait être dû à des fonds insuffisants, à des détails de carte expirés ou à des mesures de sécurité de votre banque.",
+    "nextStepsTitle": "Que faire ensuite :",
+    "nextStepsText": "Aucun frais n'a été traité et aucune commande n'a été créée. Vous pouvez réessayer avec un autre mode de paiement ou vérifier auprès de votre banque qu'il n'y a pas de problème avec votre mode de paiement actuel.",
+    "supportText": "Si vous avez des questions ou besoin d'aide, n'hésitez pas à contacter notre équipe de support à support@njaeplume.com",
+    "closingText": "Merci de votre intérêt pour NJAE Plume.",
+    "subject": "Notification d'Échec de Paiement"
   }
 }
