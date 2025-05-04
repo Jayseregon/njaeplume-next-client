@@ -354,3 +354,50 @@ export async function getUserOrders(options?: {
     throw new Error("Failed to fetch orders.");
   }
 }
+
+// Add or update this server action to handle download tracking
+export async function updateOrderItemDownload(orderItemId: string): Promise<boolean> {
+  try {
+    // Get the current auth session
+    const { userId } = await auth();
+    
+    if (!userId) {
+      console.error("No authenticated user found when trying to update download");
+      return false;
+    }
+
+    // First, verify this order item belongs to the authenticated user
+    const orderItem = await prisma.orderItem.findUnique({
+      where: { id: orderItemId },
+      include: {
+        order: true,
+      },
+    });
+
+    if (!orderItem) {
+      console.error(`Order item ${orderItemId} not found`);
+      return false;
+    }
+
+    // Verify this order belongs to the current user
+    if (orderItem.order.userId !== userId) {
+      console.error(`User ${userId} does not own order item ${orderItemId}`);
+      return false;
+    }
+
+    // Update the download count and timestamp
+    await prisma.orderItem.update({
+      where: { id: orderItemId },
+      data: {
+        downnloadCount: 1, // Increment to 1 (first download)
+        downloadedAt: new Date(),
+      },
+    });
+
+    console.log(`Successfully updated download status for order item ${orderItemId}`);
+    return true;
+  } catch (error) {
+    console.error("Error updating order item download:", error);
+    return false;
+  }
+}
