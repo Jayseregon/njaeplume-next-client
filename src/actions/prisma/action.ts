@@ -356,13 +356,18 @@ export async function getUserOrders(options?: {
 }
 
 // Add or update this server action to handle download tracking
-export async function updateOrderItemDownload(orderItemId: string): Promise<boolean> {
+export async function updateOrderItemDownload(
+  orderItemId: string,
+): Promise<boolean> {
   try {
     // Get the current auth session
     const { userId } = await auth();
-    
+
     if (!userId) {
-      console.error("No authenticated user found when trying to update download");
+      console.error(
+        "No authenticated user found when trying to update download",
+      );
+
       return false;
     }
 
@@ -376,12 +381,14 @@ export async function updateOrderItemDownload(orderItemId: string): Promise<bool
 
     if (!orderItem) {
       console.error(`Order item ${orderItemId} not found`);
+
       return false;
     }
 
     // Verify this order belongs to the current user
     if (orderItem.order.userId !== userId) {
       console.error(`User ${userId} does not own order item ${orderItemId}`);
+
       return false;
     }
 
@@ -394,10 +401,14 @@ export async function updateOrderItemDownload(orderItemId: string): Promise<bool
       },
     });
 
-    console.log(`Successfully updated download status for order item ${orderItemId}`);
+    console.log(
+      `Successfully updated download status for order item ${orderItemId}`,
+    );
+
     return true;
   } catch (error) {
     console.error("Error updating order item download:", error);
+
     return false;
   }
 }

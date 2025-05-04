@@ -103,7 +103,8 @@ const config: Config = {
     "^@/interfaces/(.*)$": "<rootDir>/src/interfaces/$1",
     "^@/lib/(.*)$": "<rootDir>/src/lib/$1",
     "^@/(.*)$": "<rootDir>/src/$1",
-    "^@/src/(.*)$": "<rootDir>/src/$1",
+    "^@/src/hooks/(.*)$": "<rootDir>/src/hooks/$1", // Fix mapping for hooks directory
+    "^@/src/(.*)$": "<rootDir>/src/$1", // Keep the general mapping
     "^framer-motion$": "<rootDir>/src/__tests__/__mocks__/framer-motion.tsx",
   },
 

@@ -2,6 +2,7 @@
 
 import { useState } from "react";
 import { toast } from "sonner";
+
 import { generateBunnySignedUrl } from "@/src/actions/bunny/action";
 import { updateOrderItemDownload } from "@/src/actions/prisma/action";
 
@@ -11,9 +12,11 @@ interface UseProductDownloadResult {
 }
 
 export function useProductDownload(
-  onDownloadSuccess?: (item: any, orderId: string) => void
+  onDownloadSuccess?: (item: any, orderId: string) => void,
 ): UseProductDownloadResult {
-  const [downloadingItems, setDownloadingItems] = useState<Record<string, boolean>>({});
+  const [downloadingItems, setDownloadingItems] = useState<
+    Record<string, boolean>
+  >({});
 
   const handleDownload = async (item: any, orderId: string) => {
     // Skip if already downloaded or currently downloading
@@ -39,7 +42,7 @@ export function useProductDownload(
       // Update the OrderItem with download information first
       // This ensures we track the download even if the browser download fails
       const updateResult = await updateOrderItemDownload(item.id);
-      
+
       if (!updateResult) {
         throw new Error("Failed to update download status");
       }
@@ -51,9 +54,10 @@ export function useProductDownload(
 
       // Create a temporary anchor element for download
       const downloadLink = document.createElement("a");
+
       downloadLink.href = response.url;
       downloadLink.download = fileName;
-      
+
       // Trigger click to start download
       document.body.appendChild(downloadLink);
       downloadLink.click();

@@ -1,6 +1,8 @@
 import React from "react";
-import { render, screen, waitFor } from "@testing-library/react";
+import { render, screen, waitFor, within } from "@testing-library/react";
 import { useUser } from "@clerk/nextjs";
+import { useSearchParams, useRouter } from "next/navigation";
+import { toast } from "sonner";
 
 import { formatPrice, formatDate } from "@/lib/utils";
 import { getUserOrders } from "@/actions/prisma/action";
@@ -39,6 +41,10 @@ jest.mock("@/components/root/ErrorBoundary", () => (props: any) => (
   <>{props.children}</>
 ));
 
+jest.mock("@/components/root/SimpleSpinner", () => ({
+  SimpleSpinner: () => <div data-testid="spinner">Loading...</div>,
+}));
+
 jest.mock("@/components/root/ErrorDefaultDisplay", () => ({
   ErrorDefaultDisplay: () => <div data-testid="error-display">Error</div>,
 }));
@@ -50,11 +56,13 @@ jest.mock("@/components/ui/button", () => ({
     disabled,
     className,
     variant,
+    size,
     ...props
   }: any) => (
     <button
       className={className}
       data-as-child={asChild ? "true" : "false"}
+      data-size={size}
       data-testid="button"
       data-variant={variant}
       disabled={disabled}
@@ -73,6 +81,73 @@ jest.mock("@/components/ui/badge", () => ({
   ),
 }));
 
+// Add new mocks for the updated component
+jest.mock("next/navigation", () => ({
+  useSearchParams: jest.fn(() => ({
+    get: jest.fn().mockReturnValue(null),
+  })),
+  useRouter: jest.fn(() => ({
+    replace: jest.fn(),
+  })),
+}));
+
+jest.mock("sonner", () => ({
+  toast: {
+    success: jest.fn(),
+    error: jest.fn(),
+  },
+}));
+
+// Mock cart store
+const mockClearCart = jest.fn();
+const mockSetCartOpen = jest.fn();
+
+jest.mock("@/providers/CartStoreProvider", () => ({
+  useCartStore: jest.fn((selector) => {
+    if (selector.toString().includes("clearCart")) return mockClearCart;
+    if (selector.toString().includes("setCartOpen")) return mockSetCartOpen;
+
+    return undefined;
+  }),
+}));
+
+// Mock Suspense
+jest.mock("react", () => {
+  const actualReact = jest.requireActual("react");
+
+  return {
+    ...actualReact,
+    Suspense: ({
+      children,
+      fallback,
+    }: {
+      children: React.ReactNode;
+      fallback: React.ReactNode;
+    }) => (
+      <div data-testid="suspense-wrapper">
+        {fallback}
+        {children}
+      </div>
+    ),
+  };
+});
+
+// Mock CalendarDays and Download icons
+jest.mock("lucide-react", () => ({
+  Download: () => <span data-testid="download-icon">Download Icon</span>,
+  CalendarDays: () => <span data-testid="calendar-icon">Calendar Icon</span>,
+}));
+
+// Mock product download hook
+jest.mock("@/hooks/useProductDownload", () => ({
+  useProductDownload: jest.fn((callback) => ({
+    downloadingItems: {},
+    handleDownload: jest.fn((item) => {
+      if (callback) callback(item);
+    }),
+  })),
+}));
+
 // Mock data
 const mockUser = {
   id: "user_123",
@@ -84,7 +159,7 @@ const mockOrder = {
   id: "ord_123",
   displayId: "ORD-123456",
   amount: 2999,
-  status: "completed",
+  status: "COMPLETED", // Updated to match enum
   createdAt: new Date("2023-10-15T10:30:00Z"),
   userId: "user_123",
   items: [
@@ -94,19 +169,36 @@ const mockOrder = {
       productId: "prod_1",
       quantity: 1,
       price: 2999,
+      downnloadCount: 0, // Added download count
+      downloadedAt: null, // Added download date
       product: {
         id: "prod_1",
         name: "Digital Brush Set",
         price: 2999,
         description: "A set of digital brushes",
         slug: "digital-brush-set",
-        category: { id: "cat_1", name: "Brushes" },
+        category: "brushes", // Updated from object to string
         createdAt: new Date("2023-09-01"),
         updatedAt: new Date("2023-09-01"),
         zip_file_name: "brushes.zip",
         tags: [],
         images: [],
       },
+    },
+  ],
+};
+
+// Add a mock order with downloaded items
+const mockOrderWithDownload = {
+  ...mockOrder,
+  id: "ord_456",
+  displayId: "ORD-789012",
+  items: [
+    {
+      ...mockOrder.items[0],
+      id: "item_2",
+      downnloadCount: 1,
+      downloadedAt: new Date("2023-10-16T10:30:00Z"),
     },
   ],
 };
@@ -126,9 +218,12 @@ describe("AccountDashboard", () => {
 
   it("renders loading state when user data is loading", () => {
     render(<AccountDashboard />);
+    // Check for Suspense wrapper
+    expect(screen.getByTestId("suspense-wrapper")).toBeInTheDocument();
+    // Use getAllByText instead of getByText since the text appears multiple times
     expect(
-      screen.getByText("Loading your account information..."),
-    ).toBeInTheDocument();
+      screen.getAllByText("Loading your account information...").length,
+    ).toBeGreaterThan(0);
   });
 
   it("shows sign-in message when user is not authenticated", () => {
@@ -190,29 +285,37 @@ describe("AccountDashboard", () => {
       user: mockUser,
     });
 
-    // Mock orders - first call returns latest order, second call for count returns full list
-    (getUserOrders as jest.Mock).mockImplementation(({ limit } = {}) => {
-      if (limit === 1) {
-        return Promise.resolve([mockOrder]);
-      } else {
-        return Promise.resolve([mockOrder]); // Just 1 order for count
-      }
-    });
+    // Mock orders
+    (getUserOrders as jest.Mock).mockResolvedValue([mockOrder]);
 
     render(<AccountDashboard />);
 
     await waitFor(() => {
-      // Check if order ID is displayed
+      // Check if order ID label is displayed (more specific selector)
       expect(
-        screen.getByText(`Order ID: ${mockOrder.displayId}`),
+        screen.getByText(/Order ID:/, { exact: false }),
       ).toBeInTheDocument();
 
-      // Check if date is displayed correctly using our formatDate function
+      // Use a more specific approach to find the order ID - look for it in the recent order section
+      const recentOrderSection = screen
+        .getByText("Recent Order")
+        .closest("div")?.parentElement;
+
+      expect(recentOrderSection).not.toBeNull();
+
+      // Now check within that section for the order ID
+      const orderIdElement = within(
+        recentOrderSection as HTMLElement,
+      ).getByText(mockOrder.displayId);
+
+      expect(orderIdElement).toBeInTheDocument();
+
+      // Check if date is displayed correctly
       expect(
-        screen.getByText(`Date: ${formatDate(mockOrder.createdAt)}`),
+        screen.getByText(formatDate(mockOrder.createdAt)),
       ).toBeInTheDocument();
 
-      // Check if price is formatted correctly using our formatPrice function
+      // Check if price is formatted correctly
       expect(
         screen.getByText(formatPrice(mockOrder.amount)),
       ).toBeInTheDocument();
@@ -241,7 +344,7 @@ describe("AccountDashboard", () => {
     });
   });
 
-  it("displays the downloads section with coming soon button", async () => {
+  it("displays the downloads section with view all downloads link", async () => {
     (useUser as jest.Mock).mockReturnValue({
       isLoaded: true,
       user: mockUser,
@@ -250,19 +353,109 @@ describe("AccountDashboard", () => {
     render(<AccountDashboard />);
 
     await waitFor(() => {
-      expect(screen.getByText("Your Downloads")).toBeInTheDocument();
-      const comingSoonButton = screen.getByText("Coming Soon");
+      expect(screen.getByText("Recent Downloads")).toBeInTheDocument();
+      const viewAllLink = screen.getByText("View All Downloads");
 
-      expect(comingSoonButton).toBeInTheDocument();
-      expect(comingSoonButton.closest("button")).toBeDisabled();
+      expect(viewAllLink).toBeInTheDocument();
+      expect(viewAllLink.closest("a")).toHaveAttribute(
+        "href",
+        "/account/downloads",
+      );
     });
-
-    expect(
-      screen.getByText("You don't have any downloads yet."),
-    ).toBeInTheDocument();
   });
 
-  it("calls getUserOrders with correct parameters", async () => {
+  it("displays download stats correctly", async () => {
+    (useUser as jest.Mock).mockReturnValue({
+      isLoaded: true,
+      user: mockUser,
+    });
+
+    // Mock orders with downloaded and downloadable items
+    (getUserOrders as jest.Mock).mockResolvedValue([
+      mockOrder,
+      mockOrderWithDownload,
+    ]);
+
+    render(<AccountDashboard />);
+
+    await waitFor(() => {
+      // Should see labels for the download stats
+      expect(screen.getByText("Downloadable")).toBeInTheDocument();
+      expect(screen.getByText("Total Files")).toBeInTheDocument();
+    });
+  });
+
+  it("displays download buttons for non-downloaded items", async () => {
+    (useUser as jest.Mock).mockReturnValue({
+      isLoaded: true,
+      user: mockUser,
+    });
+
+    (getUserOrders as jest.Mock).mockResolvedValue([mockOrder]);
+
+    render(<AccountDashboard />);
+
+    await waitFor(() => {
+      // Check if download button exists
+      expect(screen.getByText("Download")).toBeInTheDocument();
+      expect(screen.getByTestId("download-icon")).toBeInTheDocument();
+    });
+  });
+
+  it("displays download date for downloaded items", async () => {
+    (useUser as jest.Mock).mockReturnValue({
+      isLoaded: true,
+      user: mockUser,
+    });
+
+    (getUserOrders as jest.Mock).mockResolvedValue([mockOrderWithDownload]);
+
+    render(<AccountDashboard />);
+
+    await waitFor(() => {
+      // Check if download date is shown
+      expect(screen.getByTestId("calendar-icon")).toBeInTheDocument();
+      expect(screen.getByText(/Downloaded on/)).toBeInTheDocument();
+    });
+  });
+
+  it("processes checkout redirect and clears cart when session_id is present", async () => {
+    (useUser as jest.Mock).mockReturnValue({
+      isLoaded: true,
+      user: mockUser,
+    });
+
+    // Mock session_id in URL
+    const mockGet = jest.fn((param) =>
+      param === "session_id" ? "test_session" : null,
+    );
+
+    (useSearchParams as jest.Mock).mockReturnValue({
+      get: mockGet,
+    });
+
+    const mockReplace = jest.fn();
+
+    (useRouter as jest.Mock).mockReturnValue({
+      replace: mockReplace,
+    });
+
+    render(<AccountDashboard />);
+
+    await waitFor(() => {
+      // Check cart clearing and toast
+      expect(mockClearCart).toHaveBeenCalled();
+      expect(mockSetCartOpen).toHaveBeenCalledWith(false);
+      expect(toast.success).toHaveBeenCalledWith(
+        "Payment successful! Your order is complete.",
+      );
+
+      // Check URL replacement
+      expect(mockReplace).toHaveBeenCalledWith("/account", { scroll: false });
+    });
+  });
+
+  it("renders the view all downloads link", async () => {
     (useUser as jest.Mock).mockReturnValue({
       isLoaded: true,
       user: mockUser,
@@ -271,10 +464,13 @@ describe("AccountDashboard", () => {
     render(<AccountDashboard />);
 
     await waitFor(() => {
-      // First call should get the latest order
-      expect(getUserOrders).toHaveBeenCalledWith({ limit: 1 });
-      // Second call should get all orders for counting
-      expect(getUserOrders).toHaveBeenCalledWith();
+      const viewAllLink = screen.getByText("View All Downloads");
+
+      expect(viewAllLink).toBeInTheDocument();
+      expect(viewAllLink.closest("a")).toHaveAttribute(
+        "href",
+        "/account/downloads",
+      );
     });
   });
 });

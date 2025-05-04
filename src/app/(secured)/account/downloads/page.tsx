@@ -48,12 +48,14 @@ export default function DownloadsPage() {
                   downloadedAt: new Date(),
                 };
               }
+
               return orderItem;
             }),
           };
         }
+
         return order;
-      })
+      }),
     );
   };
 
@@ -66,8 +68,9 @@ export default function DownloadsPage() {
           const userOrders = await getUserOrders();
           // Filter for completed orders only, as only those should have downloads
           const completedOrders = userOrders.filter(
-            (order) => order.status === "COMPLETED"
+            (order) => order.status === "COMPLETED",
           );
+
           setOrders(completedOrders);
         } catch (error) {
           console.error("Error fetching orders for downloads:", error);
@@ -106,10 +109,9 @@ export default function DownloadsPage() {
           asChild
           className="mb-4 text-foreground"
           size="sm"
-          variant="ghost">
-          <Link
-            className="flex items-center"
-            href="/account">
+          variant="ghost"
+        >
+          <Link className="flex items-center" href="/account">
             <ArrowLeft className="mr-2 h-4 w-4" />
             Back to Dashboard
           </Link>
@@ -119,14 +121,16 @@ export default function DownloadsPage() {
 
         {orders.length > 0 ? (
           <Accordion
-            type="multiple"
             className="w-full rounded-md border"
-            defaultValue={orders.length > 0 ? [orders[0].id] : []}>
+            defaultValue={orders.length > 0 ? [orders[0].id] : []}
+            type="multiple"
+          >
             {orders.map((order) => (
               <AccordionItem
                 key={order.id}
+                className="border-b last:border-b-0"
                 value={order.id}
-                className="border-b last:border-b-0">
+              >
                 <AccordionTrigger className="px-4 hover:no-underline text-left bg-foreground/20">
                   <span>{order.displayId}</span>
                   <div className="px-20" />
@@ -139,7 +143,8 @@ export default function DownloadsPage() {
                     {order.items.map((item) => (
                       <li
                         key={item.id}
-                        className="flex items-center justify-between border-b py-3 last:border-b-0">
+                        className="flex items-center justify-between border-b py-3 last:border-b-0"
+                      >
                         <div>
                           <span className="font-medium">
                             {item.product.name}
@@ -152,11 +157,12 @@ export default function DownloadsPage() {
                         {/* Conditional rendering based on download status */}
                         {item.downnloadCount === 0 && !item.downloadedAt ? (
                           <Button
-                            size="xs"
-                            variant="form"
                             className="w-fit"
                             disabled={downloadingItems[item.id]}
-                            onClick={() => handleDownload(item, order.id)}>
+                            size="xs"
+                            variant="form"
+                            onClick={() => handleDownload(item, order.id)}
+                          >
                             {downloadingItems[item.id] ? (
                               <SimpleSpinner />
                             ) : (
@@ -189,9 +195,7 @@ export default function DownloadsPage() {
               You haven&apos;t purchased any digital products yet, or your
               orders are still processing.
             </p>
-            <Button
-              asChild
-              variant="default">
+            <Button asChild variant="default">
               <Link href="/shop">Go Shopping</Link>
             </Button>
           </div>

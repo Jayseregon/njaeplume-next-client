@@ -39,7 +39,6 @@ function AccountDashboardContent() {
     const sessionId = searchParams.get("session_id");
 
     if (sessionId) {
-      console.log("Checkout successful, clearing cart...");
       clearCart();
       setCartOpen(false);
       toast.success("Payment successful! Your order is complete.");
@@ -63,9 +62,10 @@ function AccountDashboardContent() {
               downloadedAt: new Date(),
             };
           }
+
           return orderItem;
         }),
-      }))
+      })),
     );
 
     // Update download stats
@@ -90,8 +90,9 @@ function AccountDashboardContent() {
 
           // Filter completed orders for downloads
           const completed = orders.filter(
-            (order) => order.status === "COMPLETED"
+            (order) => order.status === "COMPLETED",
           );
+
           setCompletedOrders(completed);
 
           // Calculate download stats
@@ -183,17 +184,19 @@ function AccountDashboardContent() {
                   Orders
                 </p>
               </div>
-              
+
               {/* Right side - Downloads stats */}
               <div className="flex-1 flex justify-end gap-8">
                 {/* Available Downloads */}
                 <div className="text-center">
-                  <p className="text-3xl font-bold">{totalDownloadableItems - downloadedItemsCount}</p>
+                  <p className="text-3xl font-bold">
+                    {totalDownloadableItems - downloadedItemsCount}
+                  </p>
                   <p className="text-sm text-gray-600 dark:text-gray-300">
                     Downloadable
                   </p>
                 </div>
-                
+
                 {/* Total Downloads */}
                 <div className="text-center">
                   <p className="text-3xl font-bold">{totalDownloadableItems}</p>
@@ -210,10 +213,7 @@ function AccountDashboardContent() {
         <div className="border rounded-md p-6">
           <div className="flex justify-between items-center mb-4">
             <h2 className="text-2xl font-bold">Recent Order</h2>
-            <Button
-              asChild
-              className="max-w-fit"
-              variant="form">
+            <Button asChild className="max-w-fit" variant="form">
               <Link href="/account/orders">View All Orders</Link>
             </Button>
           </div>
@@ -249,10 +249,7 @@ function AccountDashboardContent() {
         <div className="border rounded-md p-6">
           <div className="flex justify-between items-center mb-4">
             <h2 className="text-2xl font-bold">Recent Downloads</h2>
-            <Button
-              asChild
-              className="max-w-fit"
-              variant="form">
+            <Button asChild className="max-w-fit" variant="form">
               <Link href="/account/downloads">View All Downloads</Link>
             </Button>
           </div>
@@ -262,7 +259,8 @@ function AccountDashboardContent() {
               {recentDownloadableItems.map((item) => (
                 <div
                   key={item.id}
-                  className="flex justify-between text-start border-b pb-4 last:border-b-0">
+                  className="flex justify-between text-start border-b pb-4 last:border-b-0"
+                >
                   <div>
                     <p className="font-medium">
                       {item.product.name}
@@ -279,11 +277,12 @@ function AccountDashboardContent() {
                   {/* Conditional rendering based on download status */}
                   {item.downnloadCount === 0 && !item.downloadedAt ? (
                     <Button
-                      size="xs"
-                      variant="form"
                       className="w-fit"
                       disabled={downloadingItems[item.id]}
-                      onClick={() => handleDownload(item, item.orderId)}>
+                      size="xs"
+                      variant="form"
+                      onClick={() => handleDownload(item, item.orderId)}
+                    >
                       {downloadingItems[item.id] ? (
                         <SimpleSpinner />
                       ) : (
@@ -319,7 +318,13 @@ function AccountDashboardContent() {
 // Wrap the component in Suspense for useSearchParams
 export default function AccountDashboard() {
   return (
-    <Suspense fallback={<div className="p-8 text-center">Loading your account information...</div>}>
+    <Suspense
+      fallback={
+        <div className="p-8 text-center">
+          Loading your account information...
+        </div>
+      }
+    >
       <AccountDashboardContent />
     </Suspense>
   );
