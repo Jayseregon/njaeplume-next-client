@@ -18,7 +18,7 @@ import { Separator } from "@/components/ui/separator";
 import { Product } from "@/src/interfaces/Products";
 import ErrorBoundary from "@/src/components/root/ErrorBoundary";
 import { PageTitle } from "@/src/components/root/PageTitle";
-import { getProductSpecificationsByCategory } from "@/src/lib/specsSelector";
+import { ProductSpecifications } from "@/src/components/product/specsSelector";
 import { useCartStore } from "@/providers/CartStoreProvider";
 import { formatPrice } from "@/lib/utils";
 
@@ -62,7 +62,7 @@ export function ProductDetail({ product }: { product: Product }) {
       >
         <Link className="flex items-center" href={`/shop/${product.category}`}>
           <ArrowLeft className="mr-2 h-4 w-4" />
-          {t("backButton", { category: product.category })}
+          {t(`backButton.${product.category}`)}
         </Link>
       </Button>
 
@@ -201,7 +201,7 @@ export function ProductDetail({ product }: { product: Product }) {
 
           {/* Product Specifications */}
           <div className="w-full text-justify">
-            {getProductSpecificationsByCategory(product.category)}
+            <ProductSpecifications category={product.category} />
           </div>
         </div>
       </div>

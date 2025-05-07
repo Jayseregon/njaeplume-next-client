@@ -331,12 +331,90 @@
     "title": "Free Downloads"
   },
   "ProductDetail": {
-    "backButton": "Back to {category}",
+    "backButton": {
+      "brushes": "Back to Brushes",
+      "stickers": "Back to Stickers",
+      "templates": "Back to Templates",
+      "planners": "Back to Planners"
+    },
     "addToCartButton": "Add to Cart",
     "imageLoadError": "Failed to load image",
     "prevImageAria": "Previous image",
     "nextImageAria": "Next image",
     "thumbnailAria": "View thumbnail {index}"
+  },
+  "ProductSpecs": {
+    "bulletSymbol": "•●◍●•",
+    "customDemandText": "For any custom art demand, please reach out to us through our <contactLink>contact form</contactLink>, before purchase.",
+    "faqSectionText": "Check our <faqLink>FAQ page</faqLink> for more information on how to use our products, or feel free to <contactLink>contact us</contactLink>.",
+    "copyright": {
+      "line1": "Original design. You may not resell or reproduce.",
+      "line2": "For full terms, please refere to our <eulaLink>End-User License Agreement (EULA)</eulaLink>.",
+      "line3": "© 2021 - {currentYear} Nathalie Tran, aka Niniefy. All Rights Reserved."
+    },
+    "categoryNotAvailable": "Description not available for this category.",
+    "accordionTriggers": {
+      "specifications": "Specifications",
+      "howToUse": "How to Use",
+      "customDemands": "Custom Demands",
+      "faq": "FAQ",
+      "copyrights": "Copyrights"
+    },
+    "categories": {
+      "stickers": {
+        "description": "Digital stickers set to use with your compatible applications. Great for creating cards or artworks, gifts or journaling.",
+        "specItems": [
+          ".png format",
+          "Transparent background",
+          "Compatible with any image supporting application: Noteful, GoodNotes®, Notability, Pages, Procreate®, Adobe Suite, etc.",
+          "Printable on Letter, A4 or smaller paper size.",
+          "HD quality",
+          "Entirely handmade: No AI",
+          "Unique",
+          "Direct download upon purchase"
+        ],
+        "howtoUse": "Upon downloading, you will receive a .zip file, in the <italic>Downloads</italic> folder in <bold>Files</bold> app (iOS, iPadOS).<br></br>Opening it will reveal a folder containing all the stickers of this set.<br></br>Select one of more, and share them to a compatible application. You can also import the whole folder as a new stickers pack into journaling apps such as: Noteful, GoodNotes®, Notability, etc."
+      },
+      "brushes": {
+        "description": "Digital brushes pack. Easily adjustable according to your needs.",
+        "specItems": [
+          ".brushset format",
+          "Procreate® and Adobe® Photoshop compatible",
+          "Entirely handmade: No AI",
+          "Unique",
+          "Direct download upon purchase"
+        ],
+        "howtoUse": "Upon downloading, you will receive a .zip file, in the <italic>Downloads</italic> folder in <bold>Files</bold> app (iOS, iPadOS).<br></br>Opening it will reveal a .brushset file.<br></br>Click on this file, and it will automatically be imported in Procreate® ; or, long-press &rarr; Share &rarr; select the Procreate® app.<br></br>Finally, open Procreate® select a canvas, and find the imported brushset in the Brush Library."
+      },
+      "templates": {
+        "description": "Digital template(s) to use with your compatible applications. Great for creating cards or artworks, gifts or planning and journaling.",
+        "specItems": [
+          ".png format",
+          "Compatible with any image supporting application: Noteful, GoodNotes®, Notability, Pages, Procreate®, Adobe Suite, etc.",
+          "Printable on Letter, A4 or smaller paper size.",
+          "Great quality",
+          "Entirely handmade: No AI",
+          "Unique",
+          "Direct download upon purchase"
+        ],
+        "howtoUse": "Upon downloading, you will receive a .zip file, in the <italic>Downloads</italic> folder in <bold>Files</bold> app (iOS, iPadOS).<br></br>Opening it will reveal a folder containing every templates.<br></br>Select one of more, then Share to open with your preferred application ; or, import these templates directly from Noteful, GoodNotes®, Notability, and so on."
+      },
+      "planners": {
+        "description1": "Digital planner to use all year long with any PDF file reader. Made for journaling, you can write on every page to log in your thoughts, schedules, habits, notes, etc.",
+        "description2": "Please note that this is a PDF file, which means it cannot link automatically to your other planners or apps like Calendar or Reminders, and there are no input fields to fill in.",
+        "specItems": [
+          ".pdf format",
+          "Compatible with any PDF reader application: Noteful, GoodNotes®, Notability, Pages, Notes, Procreate®, Adobe Suite, etc.",
+          "Printable on Letter, A4 or smaller paper size.",
+          "Great quality",
+          "Entirely handmade: No AI",
+          "Unique",
+          "Direct download upon purchase"
+        ],
+        "howtoUse_part1": "Upon downloading, you will receive a .zip file, in the <italic>Downloads</italic> folder in <bold>Files</bold> app (iOS, iPadOS).<br></br>Opening it will reveal a PDF file.<br></br>You can write on it directly in <bold>Files</bold> app ; or, import it into a compatible application: long-press on it &rarr; Share &rarr; select your favourite application.",
+        "howtoUse_part2": "If the planner has calendar links, the .zip file will reveal a folder with the planner and another PDF file with instructions on the use of these links."
+      }
+    }
   },
   "Navbar": {
     "brushes": "Brushes",

@@ -40,7 +40,7 @@ export async function generateMetadata({
   const categoryName = category.charAt(0).toUpperCase() + category.slice(1);
 
   return {
-    title: `${product.name} | NJAE Plume ${categoryName}`,
+    title: `${product.name} | ${categoryName}`,
     description: product.description.substring(0, 160),
   };
 }

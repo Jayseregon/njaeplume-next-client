@@ -331,12 +331,90 @@
     "title": "Téléchargements Gratuits"
   },
   "ProductDetail": {
-    "backButton": "Retour à {category}",
+    "backButton": {
+      "brushes": "Retour à Pinceaux",
+      "stickers": "Retour à Autocollants",
+      "templates": "Retour à Modèles",
+      "planners": "Retour à Planificateurs"
+    },
     "addToCartButton": "Ajouter au panier",
     "imageLoadError": "Échec du chargement de l'image",
     "prevImageAria": "Image précédente",
     "nextImageAria": "Image suivante",
     "thumbnailAria": "Voir la miniature {index}"
+  },
+  "ProductSpecs": {
+    "bulletSymbol": "•●◍●•",
+    "customDemandText": "Pour toute demande d'art personnalisé, veuillez nous contacter via notre <contactLink>formulaire de contact</contactLink>, avant l'achat.",
+    "faqSectionText": "Consultez notre <faqLink>page FAQ</faqLink> pour plus d'informations sur l'utilisation de nos produits, ou n'hésitez pas à <contactLink>nous contacter</contactLink>.",
+    "copyright": {
+      "line1": "Conception originale. Vous ne pouvez pas revendre ou reproduire.",
+      "line2": "Pour les conditions complètes, veuillez vous référer à notre <eulaLink>Contrat de Licence Utilisateur Final (CLUF)</eulaLink>.",
+      "line3": "© 2021 - {currentYear} Nathalie Tran, alias Niniefy. Tous Droits Réservés."
+    },
+    "categoryNotAvailable": "Description non disponible pour cette catégorie.",
+    "accordionTriggers": {
+      "specifications": "Spécifications",
+      "howToUse": "Comment Utiliser",
+      "customDemands": "Demandes Personnalisées",
+      "faq": "FAQ",
+      "copyrights": "Droits d'Auteur"
+    },
+    "categories": {
+      "stickers": {
+        "description": "Ensemble d'autocollants numériques à utiliser avec vos applications compatibles. Idéal pour créer des cartes, des œuvres d'art, des cadeaux ou pour le journaling.",
+        "specItems": [
+          "Format .png",
+          "Fond transparent",
+          "Compatible avec toute application supportant les images : Noteful, GoodNotes®, Notability, Pages, Procreate®, Suite Adobe, etc.",
+          "Imprimable sur papier format Lettre, A4 ou plus petit.",
+          "Qualité HD",
+          "Entièrement fait à la main : Pas d'IA",
+          "Unique",
+          "Téléchargement direct après achat"
+        ],
+        "howtoUse": "Après le téléchargement, vous recevrez un fichier .zip dans le dossier <italic>Téléchargements</italic> de l'application <bold>Fichiers</bold> (iOS, iPadOS).<br></br>L'ouvrir révélera un dossier contenant tous les autocollants de cet ensemble.<br></br>Sélectionnez-en un ou plusieurs, et partagez-les vers une application compatible. Vous pouvez également importer le dossier entier comme nouveau pack d'autocollants dans des applications de journaling telles que : Noteful, GoodNotes®, Notability, etc."
+      },
+      "brushes": {
+        "description": "Pack de pinceaux numériques. Facilement ajustables selon vos besoins.",
+        "specItems": [
+          "Format .brushset",
+          "Compatible Procreate® et Adobe® Photoshop",
+          "Entièrement fait à la main : Pas d'IA",
+          "Unique",
+          "Téléchargement direct après achat"
+        ],
+        "howtoUse": "Après le téléchargement, vous recevrez un fichier .zip dans le dossier <italic>Téléchargements</italic> de l'application <bold>Fichiers</bold> (iOS, iPadOS).<br></br>L'ouvrir révélera un fichier .brushset.<br></br>Cliquez sur ce fichier, et il sera automatiquement importé dans Procreate® ; ou, appuyez longuement &rarr; Partager &rarr; sélectionnez l'application Procreate®.<br></br>Enfin, ouvrez Procreate®, sélectionnez une toile, et trouvez l'ensemble de pinceaux importé dans la Bibliothèque de Pinceaux."
+      },
+      "templates": {
+        "description": "Modèle(s) numérique(s) à utiliser avec vos applications compatibles. Idéal pour créer des cartes, des œuvres d'art, des cadeaux ou pour la planification et le journaling.",
+        "specItems": [
+          "Format .png",
+          "Compatible avec toute application supportant les images : Noteful, GoodNotes®, Notability, Pages, Procreate®, Suite Adobe, etc.",
+          "Imprimable sur papier format Lettre, A4 ou plus petit.",
+          "Grande qualité",
+          "Entièrement fait à la main : Pas d'IA",
+          "Unique",
+          "Téléchargement direct après achat"
+        ],
+        "howtoUse": "Après le téléchargement, vous recevrez un fichier .zip dans le dossier <italic>Téléchargements</italic> de l'application <bold>Fichiers</bold> (iOS, iPadOS).<br></br>L'ouvrir révélera un dossier contenant tous les modèles.<br></br>Sélectionnez-en un ou plusieurs, puis Partagez pour ouvrir avec votre application préférée ; ou, importez ces modèles directement depuis Noteful, GoodNotes®, Notability, etc."
+      },
+      "planners": {
+        "description1": "Planificateur numérique à utiliser toute l'année avec n'importe quel lecteur de fichiers PDF. Conçu pour le journaling, vous pouvez écrire sur chaque page pour consigner vos pensées, emplois du temps, habitudes, notes, etc.",
+        "description2": "Veuillez noter qu'il s'agit d'un fichier PDF, ce qui signifie qu'il ne peut pas se lier automatiquement à vos autres planificateurs ou applications comme Calendrier ou Rappels, et il n'y a pas de champs de saisie à remplir.",
+        "specItems": [
+          "Format .pdf",
+          "Compatible avec toute application de lecture PDF : Noteful, GoodNotes®, Notability, Pages, Notes, Procreate®, Suite Adobe, etc.",
+          "Imprimable sur papier format Lettre, A4 ou plus petit.",
+          "Grande qualité",
+          "Entièrement fait à la main : Pas d'IA",
+          "Unique",
+          "Téléchargement direct après achat"
+        ],
+        "howtoUse_part1": "Après le téléchargement, vous recevrez un fichier .zip dans le dossier <italic>Téléchargements</italic> de l'application <bold>Fichiers</bold> (iOS, iPadOS).<br></br>L'ouvrir révélera un fichier PDF.<br></br>Vous pouvez écrire dessus directement dans l'application <bold>Fichiers</bold> ; ou, l'importer dans une application compatible : appuyez longuement dessus &rarr; Partager &rarr; sélectionnez votre application favorite.",
+        "howtoUse_part2": "Si le planificateur contient des liens de calendrier, le fichier .zip révélera un dossier avec le planificateur et un autre fichier PDF avec des instructions sur l'utilisation de ces liens."
+      }
+    }
   },
   "Navbar": {
     "brushes": "Pinceaux",
