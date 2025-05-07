@@ -5,6 +5,7 @@ export interface Product {
   name: string;
   price: number;
   description: string;
+  description_fr: string;
   category: Category;
   createdAt: Date;
   updatedAt: Date;

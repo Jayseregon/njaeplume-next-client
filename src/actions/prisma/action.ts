@@ -161,6 +161,7 @@ export async function createProduct(data: {
   name: string;
   price: number;
   description: string;
+  description_fr: string;
   category: Category;
   zip_file_name: string;
   tagIds: string[];
@@ -174,6 +175,7 @@ export async function createProduct(data: {
         name: data.name,
         price: data.price,
         description: data.description,
+        description_fr: data.description_fr,
         category: data.category,
         zip_file_name: data.zip_file_name,
         slug: slug,

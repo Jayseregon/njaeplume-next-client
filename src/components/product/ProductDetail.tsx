@@ -1,6 +1,7 @@
 "use client";
 
 import { useState } from "react";
+import { useLocale } from "next-intl";
 import Image from "next/image";
 import Link from "next/link";
 import {
@@ -23,6 +24,7 @@ import { useCartStore } from "@/providers/CartStoreProvider";
 import { formatPrice } from "@/lib/utils";
 
 export function ProductDetail({ product }: { product: Product }) {
+  const locale = useLocale();
   const t = useTranslations("ProductDetail");
   const tCard = useTranslations("ProductCard");
   const [currentImageIndex, setCurrentImageIndex] = useState(0);
@@ -51,6 +53,9 @@ export function ProductDetail({ product }: { product: Product }) {
     setTimeout(() => toggleCart(), 300);
   };
 
+  const productDescription =
+    locale === "fr" ? product.description_fr : product.description;
+
   return (
     <div className="container max-w-6xl mx-auto px-4">
       {/* Back button visible on all screen sizes */}
@@ -71,6 +76,7 @@ export function ProductDetail({ product }: { product: Product }) {
         <PageTitle title={product.name} />
         <div className="flex items-center justify-between mt-4">
           <p className="text-3xl font-bold">{formatPrice(product.price)}</p>
+          <div className="mx-10" />
           <Button
             className="whitespace-nowrap w-32 flex items-center gap-2"
             size="sm"
@@ -168,6 +174,7 @@ export function ProductDetail({ product }: { product: Product }) {
           {/* Price and add to cart for desktop */}
           <div className="hidden md:flex items-center justify-between">
             <p className="text-3xl font-bold">{formatPrice(product.price)}</p>
+            <div className="mx-10" />
             <Button
               className="w-40 flex items-center gap-2"
               onClick={handleAddToCart}
@@ -182,7 +189,7 @@ export function ProductDetail({ product }: { product: Product }) {
           {/* Description */}
           <div>
             <p className="whitespace-pre-wrap text-justify text-lg">
-              {product.description}
+              {productDescription}
             </p>
           </div>
 

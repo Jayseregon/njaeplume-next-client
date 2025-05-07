@@ -30,18 +30,19 @@ model Tag {
 }
 
 model Product {
-  id            String         @id @default(cuid())
-  name          String
-  price         Float
-  description   String
-  category      Category
-  createdAt     DateTime       @default(now())
-  updatedAt     DateTime       @updatedAt
-  zip_file_name String
-  slug          String         @unique
-  tags          Tag[]          @relation("ProductToTag")
-  images        ProductImage[]
-  OrderItem     OrderItem[]
+  id             String         @id @default(cuid())
+  name           String
+  price          Float
+  description    String
+  description_fr String         @default("")
+  category       Category
+  createdAt      DateTime       @default(now())
+  updatedAt      DateTime       @updatedAt
+  zip_file_name  String
+  slug           String         @unique
+  tags           Tag[]          @relation("ProductToTag")
+  images         ProductImage[]
+  OrderItem      OrderItem[]
 
   @@schema("products")
 }
