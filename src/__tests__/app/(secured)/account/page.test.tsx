@@ -5,7 +5,7 @@ import { useSearchParams, useRouter } from "next/navigation";
 import { toast } from "sonner";
 
 import { formatPrice, formatDate } from "@/lib/utils";
-import { getUserOrders } from "@/actions/prisma/action";
+import { getUserOrders, getUserWishlist } from "@/actions/prisma/action";
 import AccountDashboard from "@/app/(secured)/account/page";
 
 // Mock Next.js Link component
@@ -25,9 +25,10 @@ jest.mock("@clerk/nextjs", () => ({
   useUser: jest.fn(),
 }));
 
-// Mock getUserOrders action
+// Mock actions
 jest.mock("@/actions/prisma/action", () => ({
   getUserOrders: jest.fn(),
+  getUserWishlist: jest.fn(),
 }));
 
 // Mock components
@@ -100,20 +101,18 @@ jest.mock("sonner", () => ({
 
 // Mock next-intl
 jest.mock("next-intl", () => ({
-  useTranslations: () => (key: string, values?: any) => {
-    // Simple mock returning the key or key with interpolated values
+  useTranslations: jest.fn((namespace) => (key: string, values?: any) => {
+    let baseKey = `${namespace}.${key}`;
     if (values) {
-      let result = key;
-
+      let result = baseKey;
+      // Replace placeholders like {name} with their values
       for (const k in values) {
-        result = result.replace(`{${k}}`, values[k]);
+        result = result.replace(new RegExp(`{${k}}`, 'g'), values[k]);
       }
-
       return result;
     }
-
-    return key;
-  },
+    return baseKey;
+  }),
 }));
 
 // Mock cart store
@@ -172,6 +171,11 @@ const mockUser = {
   firstName: "John",
   lastName: "Doe",
 };
+
+const mockWishlistItems = [
+  { id: "prod_wish_1", name: "Wishlist Item 1" },
+  { id: "prod_wish_2", name: "Wishlist Item 2" },
+];
 
 const mockOrder = {
   id: "ord_123",
@@ -232,6 +236,7 @@ describe("AccountDashboard", () => {
     });
 
     (getUserOrders as jest.Mock).mockResolvedValue([]);
+    (getUserWishlist as jest.Mock).mockResolvedValue([]);
   });
 
   it("renders loading state when user data is loading", () => {
@@ -239,7 +244,7 @@ describe("AccountDashboard", () => {
     // Check for Suspense wrapper
     expect(screen.getByTestId("suspense-wrapper")).toBeInTheDocument();
     // Use getAllByText instead of getByText since the text appears multiple times
-    expect(screen.getAllByText("loading").length).toBeGreaterThan(0);
+    expect(screen.getAllByText("AccountDashboard.loading").length).toBeGreaterThan(0);
   });
 
   it("shows sign-in message when user is not authenticated", () => {
@@ -249,7 +254,7 @@ describe("AccountDashboard", () => {
     });
 
     render(<AccountDashboard />);
-    expect(screen.getByText("signInRequired")).toBeInTheDocument();
+    expect(screen.getByText("AccountDashboard.signInRequired")).toBeInTheDocument();
   });
 
   it("renders user dashboard with welcome message when user is logged in", async () => {
@@ -263,30 +268,32 @@ describe("AccountDashboard", () => {
 
     // Wait for data loading to complete
     await waitFor(() => {
-      expect(screen.getByText(`welcome`)).toBeInTheDocument();
+      expect(screen.getByText(`AccountDashboard.welcome`)).toBeInTheDocument();
     });
 
-    expect(screen.getByTestId("page-title")).toHaveTextContent("title");
+    expect(screen.getByTestId("page-title")).toHaveTextContent("AccountDashboard.title");
   });
 
-  it("displays user stats correctly with zero orders", async () => {
+  it("displays user stats correctly with zero orders and zero wishlist items", async () => {
     (useUser as jest.Mock).mockReturnValue({
       isLoaded: true,
       user: mockUser,
     });
 
-    // Mock no orders
+    // Mock no orders and no wishlist items
     (getUserOrders as jest.Mock).mockResolvedValue([]);
+    (getUserWishlist as jest.Mock).mockResolvedValue([]);
 
     render(<AccountDashboard />);
 
     await waitFor(() => {
-      const statsValues = screen.getAllByText("0");
-
-      expect(statsValues.length).toBeGreaterThanOrEqual(1);
+      // Orders count, downloadable count, total files count should be 0
+      const orderStats = within(screen.getByText("AccountDashboard.yourAccount").closest('div.border') as HTMLElement);
+      expect(orderStats.getAllByText("0").length).toBe(3);
     });
 
-    expect(screen.getByText("noOrdersYet")).toBeInTheDocument();
+    expect(screen.getByText("AccountDashboard.noOrdersYet")).toBeInTheDocument();
+    expect(screen.getByText("AccountDashboard.noWishlistItems")).toBeInTheDocument(); // Check for empty wishlist message
   });
 
   it("displays latest order information when user has orders", async () => {
@@ -302,11 +309,11 @@ describe("AccountDashboard", () => {
 
     await waitFor(() => {
       // Check if order ID label is displayed (more specific selector)
-      expect(screen.getByText("orderId")).toBeInTheDocument();
+      expect(screen.getByText("AccountDashboard.orderId")).toBeInTheDocument();
 
       // Use a more specific approach to find the order ID - look for it in the recent order section
       const recentOrderSection = screen
-        .getByText("recentOrder") // Use the translation key
+        .getByText("AccountDashboard.recentOrder") // Use the translation key
         .closest("div")?.parentElement;
 
       expect(recentOrderSection).not.toBeNull();
@@ -342,7 +349,7 @@ describe("AccountDashboard", () => {
     render(<AccountDashboard />);
 
     await waitFor(() => {
-      const viewAllLink = screen.getByText("viewAllOrders");
+      const viewAllLink = screen.getByText("AccountDashboard.viewAllOrders");
 
       expect(viewAllLink).toBeInTheDocument();
       expect(viewAllLink.closest("a")).toHaveAttribute(
@@ -361,8 +368,8 @@ describe("AccountDashboard", () => {
     render(<AccountDashboard />);
 
     await waitFor(() => {
-      expect(screen.getByText("recentDownloads")).toBeInTheDocument();
-      const viewAllLink = screen.getByText("viewAllDownloads");
+      expect(screen.getByText("AccountDashboard.recentDownloads")).toBeInTheDocument();
+      const viewAllLink = screen.getByText("AccountDashboard.viewAllDownloads");
 
       expect(viewAllLink).toBeInTheDocument();
       expect(viewAllLink.closest("a")).toHaveAttribute(
@@ -380,16 +387,17 @@ describe("AccountDashboard", () => {
 
     // Mock orders with downloaded and downloadable items
     (getUserOrders as jest.Mock).mockResolvedValue([
-      mockOrder,
-      mockOrderWithDownload,
+      mockOrder, // 1 item, 0 downloaded
+      mockOrderWithDownload, // 1 item, 1 downloaded
     ]);
+    // Total 2 items, 1 downloaded, 1 downloadable
 
     render(<AccountDashboard />);
 
     await waitFor(() => {
-      // Should see labels for the download stats
-      expect(screen.getByText("downloadable")).toBeInTheDocument();
-      expect(screen.getByText("totalFiles")).toBeInTheDocument();
+      const statsCard = screen.getByText("AccountDashboard.yourAccount").closest('div.border') as HTMLElement;
+      expect(within(statsCard).getByText("AccountDashboard.downloadable").previousElementSibling).toHaveTextContent("1"); // downloadableItems - downloadedItemsCount
+      expect(within(statsCard).getByText("AccountDashboard.totalFiles").previousElementSibling).toHaveTextContent("2"); // totalDownloadableItems
     });
   });
 
@@ -405,7 +413,7 @@ describe("AccountDashboard", () => {
 
     await waitFor(() => {
       // Check if download button exists
-      expect(screen.getByText("downloadButton")).toBeInTheDocument();
+      expect(screen.getByText("AccountDashboard.downloadButton")).toBeInTheDocument();
       expect(screen.getByTestId("download-icon")).toBeInTheDocument();
     });
   });
@@ -423,7 +431,8 @@ describe("AccountDashboard", () => {
     await waitFor(() => {
       // Check if download date is shown
       expect(screen.getByTestId("calendar-icon")).toBeInTheDocument();
-      expect(screen.getByText(/downloadedOn/)).toBeInTheDocument();
+      // The date part is dynamic, so we match the key part
+      expect(screen.getByText((content, element) => content.startsWith("AccountDashboard.downloadedOn"))).toBeInTheDocument();
     });
   });
 
@@ -454,7 +463,7 @@ describe("AccountDashboard", () => {
       // Check cart clearing and toast
       expect(mockClearCart).toHaveBeenCalled();
       expect(mockSetCartOpen).toHaveBeenCalledWith(false);
-      expect(toast.success).toHaveBeenCalledWith("paymentSuccess");
+      expect(toast.success).toHaveBeenCalledWith("AccountDashboard.paymentSuccess");
 
       // Check URL replacement
       expect(mockReplace).toHaveBeenCalledWith("/account", { scroll: false });
@@ -470,13 +479,64 @@ describe("AccountDashboard", () => {
     render(<AccountDashboard />);
 
     await waitFor(() => {
-      const viewAllLink = screen.getByText("viewAllDownloads");
+      const viewAllLink = screen.getByText("AccountDashboard.viewAllDownloads");
 
       expect(viewAllLink).toBeInTheDocument();
       expect(viewAllLink.closest("a")).toHaveAttribute(
         "href",
         "/account/downloads",
       );
+    });
+  });
+
+  // New tests for Wishlist Section
+  it("displays the wishlist section title and view wishlist link", async () => {
+    (useUser as jest.Mock).mockReturnValue({
+      isLoaded: true,
+      user: mockUser,
+    });
+    (getUserWishlist as jest.Mock).mockResolvedValue([]); // No items for this test
+
+    render(<AccountDashboard />);
+
+    await waitFor(() => {
+      expect(screen.getByText("AccountWishlist.title")).toBeInTheDocument();
+      const viewWishlistLink = screen.getByText("AccountDashboard.viewWishlist");
+      expect(viewWishlistLink).toBeInTheDocument();
+      expect(viewWishlistLink.closest("a")).toHaveAttribute(
+        "href",
+        "/account/wishlist", // Note: original path was /whishlist, but component uses /wishlist
+      );
+    });
+  });
+
+  it("displays wishlist summary when there are items in the wishlist", async () => {
+    (useUser as jest.Mock).mockReturnValue({
+      isLoaded: true,
+      user: mockUser,
+    });
+    (getUserWishlist as jest.Mock).mockResolvedValue(mockWishlistItems); // 2 items
+
+    render(<AccountDashboard />);
+
+    await waitFor(() => {
+      expect(
+        screen.getByText(`AccountDashboard.wishlistSummary`),
+      ).toBeInTheDocument();
+    });
+  });
+
+  it("displays 'no wishlist items' message when wishlist is empty", async () => {
+    (useUser as jest.Mock).mockReturnValue({
+      isLoaded: true,
+      user: mockUser,
+    });
+    (getUserWishlist as jest.Mock).mockResolvedValue([]);
+
+    render(<AccountDashboard />);
+
+    await waitFor(() => {
+      expect(screen.getByText("AccountDashboard.noWishlistItems")).toBeInTheDocument();
     });
   });
 });

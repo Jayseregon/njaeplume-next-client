@@ -12,7 +12,7 @@ import { PageTitle } from "@/src/components/root/PageTitle";
 import ErrorBoundary from "@/src/components/root/ErrorBoundary";
 import { ErrorDefaultDisplay } from "@/src/components/root/ErrorDefaultDisplay";
 import { Button } from "@/components/ui/button";
-import { getUserOrders } from "@/src/actions/prisma/action";
+import { getUserOrders, getUserWishlist } from "@/src/actions/prisma/action";
 import { OrderWithItems } from "@/interfaces/Products";
 import { formatPrice, formatDate } from "@/lib/utils";
 import { Badge } from "@/components/ui/badge";
@@ -22,10 +22,12 @@ import { useCartStore } from "@/providers/CartStoreProvider";
 
 function AccountDashboardContent() {
   const t = useTranslations("AccountDashboard");
+  const tWishlist = useTranslations("AccountWishlist");
   const { user, isLoaded } = useUser();
   const [latestOrder, setLatestOrder] = useState<OrderWithItems | null>(null);
   const [completedOrders, setCompletedOrders] = useState<OrderWithItems[]>([]);
   const [totalOrdersCount, setTotalOrdersCount] = useState<number>(0);
+  const [wishlistCount, setWishlistCount] = useState<number>(0);
   const [isLoadingData, setIsLoadingData] = useState(true);
   const searchParams = useSearchParams();
   const router = useRouter();
@@ -81,9 +83,13 @@ function AccountDashboardContent() {
         try {
           // Fetch all orders to get data
           const orders = await getUserOrders();
+          // Fetch wishlist items
+          const wishlist = await getUserWishlist();
 
           // Set total orders count
           setTotalOrdersCount(orders.length);
+          // Set wishlist count
+          setWishlistCount(wishlist.length);
 
           // Set latest order if available
           if (orders.length > 0) {
@@ -154,7 +160,7 @@ function AccountDashboardContent() {
 
   return (
     <ErrorBoundary fallback={<ErrorDefaultDisplay />}>
-      <div className="space-y-8">
+      <div className="space-y-8 max-w-3xl">
         <PageTitle title={t("title")} />
 
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
@@ -169,9 +175,9 @@ function AccountDashboardContent() {
           </div>
 
           {/* Stats Card - Updated with more descriptive layout */}
-          <div className="border rounded-md p-6">
+          <div className="border rounded-md p-6 flex flex-col">
             <h2 className="text-2xl font-bold mb-4">{t("yourAccount")}</h2>
-            <div className="flex justify-between">
+            <div className="flex justify-between mt-auto">
               {/* Left side - Orders count */}
               <div className="text-center">
                 <p className="text-3xl font-bold">{totalOrdersCount}</p>
@@ -202,6 +208,21 @@ function AccountDashboardContent() {
               </div>
             </div>
           </div>
+        </div>
+
+        {/* Wishlist Section */}
+        <div className="border rounded-md p-6">
+          <div className="flex justify-between items-center mb-4">
+            <h2 className="text-2xl font-bold">{tWishlist("title")}</h2>
+            <Button asChild className="max-w-fit" variant="form">
+              <Link href="/account/wishlist">{t("viewWishlist")}</Link>
+            </Button>
+          </div>
+          {wishlistCount > 0 ? (
+            <p>{t("wishlistSummary", { count: wishlistCount })}</p>
+          ) : (
+            <p className="py-4 text-gray-500">{t("noWishlistItems")}</p>
+          )}
         </div>
 
         {/* Recent Orders */}
