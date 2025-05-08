@@ -28,15 +28,8 @@ export default function DownloadsPage() {
   const [orders, setOrders] = useState<OrderWithItems[]>([]);
   const [isLoading, setIsLoading] = useState(true);
 
-  // Use the shared download hook
-  const { downloadingItems, handleDownload: handleDownloadBase } =
-    useProductDownload();
-
-  // Wrapper function to update the local state after download
-  const handleDownload = async (item: any, orderId: string) => {
-    await handleDownloadBase(item, orderId);
-
-    // Update the local orders state to reflect the download
+  // This function will be called by the hook on successful download
+  const handleSuccessfulDownload = (item: any, orderId: string) => {
     setOrders((prevOrders) =>
       prevOrders.map((order) => {
         if (order.id === orderId) {
@@ -46,20 +39,22 @@ export default function DownloadsPage() {
               if (orderItem.id === item.id) {
                 return {
                   ...orderItem,
-                  downnloadCount: 1,
+                  downnloadCount: (orderItem.downnloadCount || 0) + 1, // Ensure count is incremented
                   downloadedAt: new Date(),
                 };
               }
-
               return orderItem;
             }),
           };
         }
-
         return order;
       }),
     );
   };
+
+  // Use the shared download hook, passing the success callback
+  const { downloadingItems, handleDownload: triggerProductDownload } =
+    useProductDownload(handleSuccessfulDownload);
 
   useEffect(() => {
     async function fetchOrders() {
@@ -157,7 +152,7 @@ export default function DownloadsPage() {
                             disabled={downloadingItems[item.id]}
                             size="xs"
                             variant="form"
-                            onClick={() => handleDownload(item, order.id)}
+                            onClick={() => triggerProductDownload(item, order.id)} // Use the hook's download function
                           >
                             {downloadingItems[item.id] ? (
                               <SimpleSpinner />
