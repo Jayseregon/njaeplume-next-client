@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useLocale } from "next-intl";
 import Image from "next/image";
 import Link from "next/link";
@@ -9,9 +9,11 @@ import {
   ChevronRight,
   ArrowLeft,
   ShoppingCart,
+  Heart,
 } from "lucide-react";
 import { toast } from "sonner";
 import { useTranslations } from "next-intl";
+import { useUser } from "@clerk/nextjs";
 
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
@@ -22,17 +24,48 @@ import { PageTitle } from "@/src/components/root/PageTitle";
 import { ProductSpecifications } from "@/src/components/product/specsSelector";
 import { useCartStore } from "@/providers/CartStoreProvider";
 import { formatPrice } from "@/lib/utils";
+import {
+  addToWishlist,
+  removeFromWishlist,
+  isProductInWishlist,
+} from "@/src/actions/prisma/action";
 
 export function ProductDetail({ product }: { product: Product }) {
   const locale = useLocale();
   const t = useTranslations("ProductDetail");
   const tCard = useTranslations("ProductCard");
+  const tWishlist = useTranslations("Wishlist");
   const [currentImageIndex, setCurrentImageIndex] = useState(0);
   const pullZone = process.env.NEXT_PUBLIC_BUNNY_PUBLIC_ASSETS_PULL_ZONE_URL;
+  const { isSignedIn } = useUser();
+
+  const [isLiked, setIsLiked] = useState(false);
+  const [isLikeActionLoading, setIsLikeActionLoading] = useState(false);
 
   // Extract only the specific functions we need from the store
   const addToCart = useCartStore((state) => state.addToCart);
   const toggleCart = useCartStore((state) => state.toggleCart);
+
+  useEffect(() => {
+    if (isSignedIn && product.id) {
+      const checkWishlistStatus = async () => {
+        setIsLikeActionLoading(true);
+        try {
+          const status = await isProductInWishlist(product.id);
+
+          setIsLiked(status);
+        } catch (error) {
+          console.error("Failed to check wishlist status", error);
+        } finally {
+          setIsLikeActionLoading(false);
+        }
+      };
+
+      checkWishlistStatus();
+    } else {
+      setIsLiked(false);
+    }
+  }, [isSignedIn, product.id]);
 
   const hasMultipleImages = product.images.length > 1;
 
@@ -51,6 +84,36 @@ export function ProductDetail({ product }: { product: Product }) {
     addToCart(product);
     toast.info(tCard("addToCartSuccess", { productName: product.name }));
     setTimeout(() => toggleCart(), 300);
+  };
+
+  const handleToggleWishlist = async () => {
+    if (!isSignedIn) {
+      toast.error(tWishlist("signInRequired"));
+
+      return;
+    }
+    if (isLikeActionLoading) return;
+
+    setIsLikeActionLoading(true);
+    const originalIsLiked = isLiked;
+
+    setIsLiked(!originalIsLiked); // Optimistic update
+
+    try {
+      if (!originalIsLiked) {
+        await addToWishlist(product.id);
+        toast.success(tWishlist("added", { productName: product.name }));
+      } else {
+        await removeFromWishlist(product.id);
+        toast.success(tWishlist("removed", { productName: product.name }));
+      }
+    } catch (error) {
+      console.error("Failed to update wishlist", error);
+      toast.error(tWishlist("error"));
+      setIsLiked(originalIsLiked); // Revert on error
+    } finally {
+      setIsLikeActionLoading(false);
+    }
   };
 
   const productDescription =
@@ -76,6 +139,24 @@ export function ProductDetail({ product }: { product: Product }) {
         <PageTitle title={product.name} />
         <div className="flex items-center justify-between mt-4">
           <p className="text-3xl font-bold">{formatPrice(product.price)}</p>
+          {isSignedIn && (
+            <Button
+              className="p-1 h-8 w-8 rounded-full hover:bg-rose-100 dark:hover:bg-rose-800 mx-2"
+              disabled={isLikeActionLoading}
+              size="icon"
+              title={
+                isLiked
+                  ? tWishlist("removeFromWishlist")
+                  : tWishlist("addToWishlist")
+              }
+              variant="ghost"
+              onClick={handleToggleWishlist}
+            >
+              <Heart
+                className={`h-5 w-5 ${isLiked ? "fill-rose-500 text-rose-500" : "text-muted-foreground group-hover:text-rose-500"}`}
+              />
+            </Button>
+          )}
           <div className="mx-10" />
           <Button
             className="whitespace-nowrap w-32 flex items-center gap-2"
@@ -174,6 +255,24 @@ export function ProductDetail({ product }: { product: Product }) {
           {/* Price and add to cart for desktop */}
           <div className="hidden md:flex items-center justify-between">
             <p className="text-3xl font-bold">{formatPrice(product.price)}</p>
+            {isSignedIn && (
+              <Button
+                className="p-1 h-8 w-8 rounded-full hover:bg-rose-100 dark:hover:bg-rose-800 mx-2"
+                disabled={isLikeActionLoading}
+                size="icon"
+                title={
+                  isLiked
+                    ? tWishlist("removeFromWishlist")
+                    : tWishlist("addToWishlist")
+                }
+                variant="ghost"
+                onClick={handleToggleWishlist}
+              >
+                <Heart
+                  className={`h-5 w-5 ${isLiked ? "fill-rose-500 text-rose-500" : "text-muted-foreground group-hover:text-rose-500"}`}
+                />
+              </Button>
+            )}
             <div className="mx-10" />
             <Button
               className="w-40 flex items-center gap-2"
