@@ -57,5 +57,5 @@ export interface WishlistItem {
   userId: string;
   productId: string;
   createdAt: Date;
-  product?: Product; 
+  product?: Product;
 }

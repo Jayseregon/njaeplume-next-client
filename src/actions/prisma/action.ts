@@ -4,7 +4,11 @@ import { auth } from "@clerk/nextjs/server";
 
 import { Category } from "@/generated/client";
 import { prisma } from "@/src/lib/prismaClient";
-import { Product, OrderWithItems } from "@/src/interfaces/Products";
+import {
+  Product,
+  OrderWithItems,
+  WishlistItem,
+} from "@/src/interfaces/Products"; // Added WishlistItem
 import { slugifyProductName, normalizeTagName } from "@/src/lib/actionHelpers";
 
 // New cache implementations
@@ -412,5 +416,140 @@ export async function updateOrderItemDownload(
     console.error("Error updating order item download:", error);
 
     return false;
+  }
+}
+
+export async function isProductInWishlist(productId: string): Promise<boolean> {
+  const { userId } = await auth();
+
+  if (!userId) {
+    console.error(
+      "No authenticated user found when trying to check wishlist status",
+    );
+
+    return false;
+  }
+
+  try {
+    const wishlistItem = await prisma.wishlistItem.findUnique({
+      where: {
+        userId_productId: {
+          userId,
+          productId,
+        },
+      },
+    });
+
+    return !!wishlistItem;
+  } catch (error) {
+    console.error("Error checking wishlist status:", error);
+
+    // Return false or throw error, depending on desired error handling
+    return false;
+  }
+}
+
+export async function addToWishlist(
+  productId: string,
+): Promise<WishlistItem | null> {
+  const { userId } = await auth();
+
+  if (!userId) {
+    throw new Error("User not authenticated. Cannot add to wishlist.");
+  }
+
+  try {
+    // Check if product exists
+    const product = await prisma.product.findUnique({
+      where: { id: productId },
+    });
+
+    if (!product) {
+      throw new Error("Product not found.");
+    }
+
+    const wishlistItem = await prisma.wishlistItem.create({
+      data: {
+        userId,
+        productId,
+      },
+    });
+
+    return wishlistItem as WishlistItem;
+  } catch (error) {
+    console.error("Error adding to wishlist:", error);
+    // Prisma throws P2002 if item already exists due to @@id([userId, productId])
+    // You might want to handle this specific error gracefully or let it propagate
+    if ((error as any).code === "P2002") {
+      // Item already in wishlist, return existing or null based on desired behavior
+      const existingItem = await prisma.wishlistItem.findUnique({
+        where: { userId_productId: { userId, productId } },
+      });
+
+      return existingItem as WishlistItem | null;
+    }
+    throw new Error("Failed to add product to wishlist.");
+  }
+}
+
+export async function removeFromWishlist(productId: string): Promise<boolean> {
+  const { userId } = await auth();
+
+  if (!userId) {
+    throw new Error("User not authenticated. Cannot remove from wishlist.");
+
+    return false;
+  }
+
+  try {
+    await prisma.wishlistItem.delete({
+      where: {
+        userId_productId: {
+          userId,
+          productId,
+        },
+      },
+    });
+
+    return true;
+  } catch (error) {
+    console.error("Error removing from wishlist:", error);
+    // Prisma throws P2025 if item to delete is not found.
+    if ((error as any).code === "P2025") {
+      // Item not found, which means it's already removed or was never there.
+      // Consider this a success or handle as an error based on requirements.
+      return true;
+    }
+    throw new Error("Failed to remove product from wishlist.");
+  }
+}
+
+export async function getUserWishlist(): Promise<Product[]> {
+  const { userId } = await auth();
+
+  if (!userId) {
+    throw new Error("User not authenticated. Cannot fetch wishlist.");
+  }
+
+  try {
+    const wishlistItems = await prisma.wishlistItem.findMany({
+      where: { userId },
+      include: {
+        product: {
+          include: {
+            images: true,
+            tags: true,
+          },
+        },
+      },
+      orderBy: {
+        createdAt: "desc",
+      },
+    });
+
+    return wishlistItems.map((item) => item.product as Product);
+  } catch (error) {
+    console.error("Error fetching user wishlist:", error);
+    throw new Error("Failed to fetch wishlist.");
   }
 }

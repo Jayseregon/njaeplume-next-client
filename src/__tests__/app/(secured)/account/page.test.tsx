@@ -102,15 +102,19 @@ jest.mock("sonner", () => ({
 // Mock next-intl
 jest.mock("next-intl", () => ({
   useTranslations: jest.fn((namespace) => (key: string, values?: any) => {
-    let baseKey = `${namespace}.${key}`;
+    const baseKey = `${namespace}.${key}`;
+
     if (values) {
       let result = baseKey;
+
       // Replace placeholders like {name} with their values
       for (const k in values) {
-        result = result.replace(new RegExp(`{${k}}`, 'g'), values[k]);
+        result = result.replace(new RegExp(`{${k}}`, "g"), values[k]);
       }
+
       return result;
     }
+
     return baseKey;
   }),
 }));
@@ -244,7 +248,9 @@ describe("AccountDashboard", () => {
     // Check for Suspense wrapper
     expect(screen.getByTestId("suspense-wrapper")).toBeInTheDocument();
     // Use getAllByText instead of getByText since the text appears multiple times
-    expect(screen.getAllByText("AccountDashboard.loading").length).toBeGreaterThan(0);
+    expect(
+      screen.getAllByText("AccountDashboard.loading").length,
+    ).toBeGreaterThan(0);
   });
 
   it("shows sign-in message when user is not authenticated", () => {
@@ -254,7 +260,9 @@ describe("AccountDashboard", () => {
     });
 
     render(<AccountDashboard />);
-    expect(screen.getByText("AccountDashboard.signInRequired")).toBeInTheDocument();
+    expect(
+      screen.getByText("AccountDashboard.signInRequired"),
+    ).toBeInTheDocument();
   });
 
   it("renders user dashboard with welcome message when user is logged in", async () => {
@@ -271,7 +279,9 @@ describe("AccountDashboard", () => {
       expect(screen.getByText(`AccountDashboard.welcome`)).toBeInTheDocument();
     });
 
-    expect(screen.getByTestId("page-title")).toHaveTextContent("AccountDashboard.title");
+    expect(screen.getByTestId("page-title")).toHaveTextContent(
+      "AccountDashboard.title",
+    );
   });
 
   it("displays user stats correctly with zero orders and zero wishlist items", async () => {
@@ -288,12 +298,21 @@ describe("AccountDashboard", () => {
 
     await waitFor(() => {
       // Orders count, downloadable count, total files count should be 0
-      const orderStats = within(screen.getByText("AccountDashboard.yourAccount").closest('div.border') as HTMLElement);
+      const orderStats = within(
+        screen
+          .getByText("AccountDashboard.yourAccount")
+          .closest("div.border") as HTMLElement,
+      );
+
       expect(orderStats.getAllByText("0").length).toBe(3);
     });
 
-    expect(screen.getByText("AccountDashboard.noOrdersYet")).toBeInTheDocument();
-    expect(screen.getByText("AccountDashboard.noWishlistItems")).toBeInTheDocument(); // Check for empty wishlist message
+    expect(
+      screen.getByText("AccountDashboard.noOrdersYet"),
+    ).toBeInTheDocument();
+    expect(
+      screen.getByText("AccountDashboard.noWishlistItems"),
+    ).toBeInTheDocument(); // Check for empty wishlist message
   });
 
   it("displays latest order information when user has orders", async () => {
@@ -368,7 +387,9 @@ describe("AccountDashboard", () => {
     render(<AccountDashboard />);
 
     await waitFor(() => {
-      expect(screen.getByText("AccountDashboard.recentDownloads")).toBeInTheDocument();
+      expect(
+        screen.getByText("AccountDashboard.recentDownloads"),
+      ).toBeInTheDocument();
       const viewAllLink = screen.getByText("AccountDashboard.viewAllDownloads");
 
       expect(viewAllLink).toBeInTheDocument();
@@ -395,9 +416,18 @@ describe("AccountDashboard", () => {
     render(<AccountDashboard />);
 
     await waitFor(() => {
-      const statsCard = screen.getByText("AccountDashboard.yourAccount").closest('div.border') as HTMLElement;
-      expect(within(statsCard).getByText("AccountDashboard.downloadable").previousElementSibling).toHaveTextContent("1"); // downloadableItems - downloadedItemsCount
-      expect(within(statsCard).getByText("AccountDashboard.totalFiles").previousElementSibling).toHaveTextContent("2"); // totalDownloadableItems
+      const statsCard = screen
+        .getByText("AccountDashboard.yourAccount")
+        .closest("div.border") as HTMLElement;
+
+      expect(
+        within(statsCard).getByText("AccountDashboard.downloadable")
+          .previousElementSibling,
+      ).toHaveTextContent("1"); // downloadableItems - downloadedItemsCount
+      expect(
+        within(statsCard).getByText("AccountDashboard.totalFiles")
+          .previousElementSibling,
+      ).toHaveTextContent("2"); // totalDownloadableItems
     });
   });
 
@@ -413,7 +443,9 @@ describe("AccountDashboard", () => {
 
     await waitFor(() => {
       // Check if download button exists
-      expect(screen.getByText("AccountDashboard.downloadButton")).toBeInTheDocument();
+      expect(
+        screen.getByText("AccountDashboard.downloadButton"),
+      ).toBeInTheDocument();
       expect(screen.getByTestId("download-icon")).toBeInTheDocument();
     });
   });
@@ -432,7 +464,11 @@ describe("AccountDashboard", () => {
       // Check if download date is shown
       expect(screen.getByTestId("calendar-icon")).toBeInTheDocument();
       // The date part is dynamic, so we match the key part
-      expect(screen.getByText((content, element) => content.startsWith("AccountDashboard.downloadedOn"))).toBeInTheDocument();
+      expect(
+        screen.getByText((content) =>
+          content.startsWith("AccountDashboard.downloadedOn"),
+        ),
+      ).toBeInTheDocument();
     });
   });
 
@@ -463,7 +499,9 @@ describe("AccountDashboard", () => {
       // Check cart clearing and toast
       expect(mockClearCart).toHaveBeenCalled();
       expect(mockSetCartOpen).toHaveBeenCalledWith(false);
-      expect(toast.success).toHaveBeenCalledWith("AccountDashboard.paymentSuccess");
+      expect(toast.success).toHaveBeenCalledWith(
+        "AccountDashboard.paymentSuccess",
+      );
 
       // Check URL replacement
       expect(mockReplace).toHaveBeenCalledWith("/account", { scroll: false });
@@ -501,7 +539,10 @@ describe("AccountDashboard", () => {
 
     await waitFor(() => {
       expect(screen.getByText("AccountWishlist.title")).toBeInTheDocument();
-      const viewWishlistLink = screen.getByText("AccountDashboard.viewWishlist");
+      const viewWishlistLink = screen.getByText(
+        "AccountDashboard.viewWishlist",
+      );
+
       expect(viewWishlistLink).toBeInTheDocument();
       expect(viewWishlistLink.closest("a")).toHaveAttribute(
         "href",
@@ -536,7 +577,9 @@ describe("AccountDashboard", () => {
     render(<AccountDashboard />);
 
     await waitFor(() => {
-      expect(screen.getByText("AccountDashboard.noWishlistItems")).toBeInTheDocument();
+      expect(
+        screen.getByText("AccountDashboard.noWishlistItems"),
+      ).toBeInTheDocument();
     });
   });
 });
