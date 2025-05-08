@@ -43,6 +43,7 @@ model Product {
   tags           Tag[]          @relation("ProductToTag")
   images         ProductImage[]
   OrderItem      OrderItem[]
+  wishlistedBy   WishlistItem[] // Added relation to WishlistItem
 
   @@schema("products")
 }
@@ -96,4 +97,16 @@ model OrderItem {
   downloadedAt   DateTime?
 
   @@schema("orders")
+}
+
+model WishlistItem {
+  userId    String
+  productId String
+  product   Product  @relation(fields: [productId], references: [id], onDelete: Cascade)
+  createdAt DateTime @default(now())
+
+  @@id([userId, productId]) // Composite primary key
+  @@index([userId])
+  @@index([productId])
+  @@schema("products")
 }

@@ -12,6 +12,11 @@
       "message": "Please try again later."
     }
   },
+  "policies": {
+    "privacy_policy": "Privacy Policy",
+    "cookies_policy": "Cookie Policy",
+    "terms_of_service": "Terms of Service"
+  },
   "Footer": {
     "copyright1": "NJAE Plume",
     "copyright2": "All rights reserved",
@@ -266,7 +271,7 @@
     "signInRequired": "Please sign in to access your account",
     "title": "My Account",
     "welcome": "Welcome, {firstName}",
-    "description": "Manage your digital downloads and order history from your personal dashboard.",
+    "description": "Manage your Wishlist, digital downloads and order history from your personal dashboard.",
     "yourAccount": "Your Account",
     "orders": "Orders",
     "downloadable": "Downloadable",
@@ -281,7 +286,10 @@
     "downloadedOn": "Downloaded on {date}",
     "downloadsAvailable": "You have downloads available. Click 'View All Downloads' to see them.",
     "noDownloadsYet": "You don't have any downloads yet.",
-    "paymentSuccess": "Payment successful! Your order is complete."
+    "paymentSuccess": "Payment successful! Your order is complete.",
+    "viewWishlist": "View Wishlist",
+    "wishlistSummary": "You have {count, plural, =0 {no items} one {# item} other {# items}} in your wishlist.",
+    "noWishlistItems": "Your wishlist is empty. Start adding some favorites!"
   },
   "AccountOrdersTable": {
     "orderId": "Order ID",
@@ -452,5 +460,23 @@
     "supportText": "If you have any questions or need assistance, please don't hesitate to contact our support team at support@njaeplume.com",
     "closingText": "Thank you for your interest in NJAE Plume.",
     "subject": "Payment Failure Notification"
+  },
+  "Wishlist": {
+    "addToWishlist": "Add to Wishlist",
+    "removeFromWishlist": "Remove from Wishlist",
+    "added": "\"{productName}\" added to your wishlist!",
+    "removed": "\"{productName}\" removed from your wishlist.",
+    "error": "Failed to update wishlist. Please try again.",
+    "signInRequired": "Please sign in to manage your wishlist."
+  },
+  "AccountWishlist": {
+    "title": "My Wishlist",
+    "loading": "Loading your wishlist...",
+    "errorLoading": "Could not load your wishlist. Please try again later.",
+    "signInRequired": "Please sign in to view your wishlist.",
+    "backToDashboard": "Back to Dashboard",
+    "noItemsTitle": "Your Wishlist is Empty",
+    "noItemsMessage": "You haven't added any products to your wishlist yet. Start exploring and find something you love!",
+    "goShopping": "Go Shopping"
   }
 }

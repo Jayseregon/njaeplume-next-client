@@ -52,3 +52,10 @@ export interface OrderWithItems extends Order {
 export interface OrderItemWithProduct extends OrderItem {
   product: Product;
 }
+
+export interface WishlistItem {
+  userId: string;
+  productId: string;
+  createdAt: Date;
+  product?: Product; 
+}
