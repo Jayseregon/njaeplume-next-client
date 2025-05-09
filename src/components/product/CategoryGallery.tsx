@@ -18,7 +18,10 @@ export const CategoryGallery = ({
   if (!products?.length) {
     return (
       <div className="flex justify-center">
-        <div className="animate-spin border-4 rounded-full w-12 h-12 border-foreground border-t-transparent" />
+        <div
+          className="animate-spin border-4 rounded-full w-12 h-12 border-foreground border-t-transparent"
+          role="status"
+        />
       </div>
     );
   }

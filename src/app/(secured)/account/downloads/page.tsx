@@ -43,10 +43,12 @@ export default function DownloadsPage() {
                   downloadedAt: new Date(),
                 };
               }
+
               return orderItem;
             }),
           };
         }
+
         return order;
       }),
     );
@@ -152,7 +154,9 @@ export default function DownloadsPage() {
                             disabled={downloadingItems[item.id]}
                             size="xs"
                             variant="form"
-                            onClick={() => triggerProductDownload(item, order.id)} // Use the hook's download function
+                            onClick={() =>
+                              triggerProductDownload(item, order.id)
+                            } // Use the hook's download function
                           >
                             {downloadingItems[item.id] ? (
                               <SimpleSpinner />

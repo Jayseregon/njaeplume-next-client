@@ -146,6 +146,7 @@ export const FreebieCard = ({ product }: { product: Product }) => {
         >
           <Button
             className="flex items-center justify-center space-x-2 w-full"
+            data-testid="download-button"
             disabled={isLoading}
             size="sm"
             title={t("downloadButtonTitle")}
@@ -153,7 +154,10 @@ export const FreebieCard = ({ product }: { product: Product }) => {
             onClick={handleDownload}
           >
             {isLoading ? (
-              <SimpleSpinner />
+              // wrap spinner so data-testid is present in DOM
+              <div data-testid="simple-spinner">
+                <SimpleSpinner />
+              </div>
             ) : (
               <>
                 <motion.div variants={iconVariants}>

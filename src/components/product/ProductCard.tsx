@@ -113,26 +113,28 @@ export const ProductCard = ({
       href={`/shop/${product.category}/${product.slug}`}
     >
       <Card className="rounded-2xl pt-3 text-foreground transition-all duration-200 hover:shadow-md hover:scale-[1.02] relative overflow-hidden">
-        {/* Details indicator in top right corner */}
-        <div className="absolute top-2 right-2 z-10 flex items-center space-x-2">
-          {isSignedIn && ( // Show like button only if signed in
-            <Button
-              className="p-1 h-7 w-7 rounded-full hover:bg-rose-100 dark:hover:bg-rose-800"
-              disabled={isLikeActionLoading}
-              size="icon"
-              title={
-                isLiked
-                  ? tWishlist("removeFromWishlist")
-                  : tWishlist("addToWishlist")
-              }
-              variant="ghost"
-              onClick={handleToggleWishlist}
-            >
-              <Heart
-                className={`h-5 w-5 ${isLiked ? "fill-rose-500 text-rose-500" : "text-muted-foreground group-hover:text-rose-500"}`}
-              />
-            </Button>
-          )}
+        {/* Wishlist (Heart) button in top left corner */}
+        {isSignedIn && ( // Show like button only if signed in
+          <Button
+            className="absolute top-2 left-2 z-10 p-1 h-7 w-7 rounded-full hover:bg-rose-100 dark:hover:bg-rose-800"
+            disabled={isLikeActionLoading}
+            size="icon"
+            title={
+              isLiked
+                ? tWishlist("removeFromWishlist")
+                : tWishlist("addToWishlist")
+            }
+            variant="ghost"
+            onClick={handleToggleWishlist}
+          >
+            <Heart
+              className={`h-5 w-5 ${isLiked ? "fill-rose-500 text-rose-500" : "text-muted-foreground group-hover:text-rose-500"}`}
+            />
+          </Button>
+        )}
+
+        {/* Details indicator (CircleEllipsis) in top right corner */}
+        <div className="absolute top-2 right-2 z-10">
           <CircleEllipsis className="h-5 w-5 text-muted-foreground group-hover:text-primary transition-colors duration-200" />
         </div>
 

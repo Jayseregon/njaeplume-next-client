@@ -1,9 +1,15 @@
 import React from "react";
-import { render, screen, waitFor, within as rtlWithin } from "@testing-library/react";
+import {
+  render,
+  screen,
+  waitFor,
+  within as rtlWithin,
+} from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
-import DownloadsPage from "@/src/app/(secured)/account/downloads/page";
 import { useUser } from "@clerk/nextjs";
 import { toast } from "sonner";
+
+import DownloadsPage from "@/src/app/(secured)/account/downloads/page";
 import { getUserOrders } from "@/src/actions/prisma/action";
 import { useProductDownload } from "@/src/hooks/useProductDownload";
 import { OrderWithItems } from "@/src/interfaces/Products";
@@ -30,11 +36,14 @@ jest.mock("@/src/actions/prisma/action", () => ({
 // Mock the useProductDownload hook
 const mockHandleDownloadBase = jest.fn();
 let mockDownloadingItemsState: Record<string, boolean> = {};
-let capturedOnDownloadSuccessCallback: ((item: any, orderId: string) => void) | undefined;
+let capturedOnDownloadSuccessCallback:
+  | ((item: any, orderId: string) => void)
+  | undefined;
 
 jest.mock("@/src/hooks/useProductDownload", () => ({
   useProductDownload: jest.fn((onSuccessCallbackFromComponent) => {
     capturedOnDownloadSuccessCallback = onSuccessCallbackFromComponent;
+
     return {
       downloadingItems: mockDownloadingItemsState,
       handleDownload: mockHandleDownloadBase, // This is the function the component will call
@@ -45,7 +54,7 @@ jest.mock("@/src/hooks/useProductDownload", () => ({
 // Mock next/link
 jest.mock("next/link", () => {
   return ({ children, href }: { children: React.ReactNode; href: string }) => (
-    <a href={href} data-testid={`link-${href.replace(/\//g, "-")}`}>
+    <a data-testid={`link-${href.replace(/\//g, "-")}`} href={href}>
       {children}
     </a>
   );
@@ -83,15 +92,22 @@ jest.mock("@/components/ui/button", () => ({
     asChild,
     className,
   }: any) => {
-    if (asChild) return React.cloneElement(children, { "data-testid": "button-link", className, variant, size });
+    if (asChild)
+      return React.cloneElement(children, {
+        "data-testid": "button-link",
+        className,
+        variant,
+        size,
+      });
+
     return (
       <button
-        onClick={onClick}
-        disabled={disabled}
+        className={className}
+        data-size={size}
         data-testid="button"
         data-variant={variant}
-        data-size={size}
-        className={className}
+        disabled={disabled}
+        onClick={onClick}
       >
         {children}
       </button>
@@ -240,31 +256,44 @@ describe("DownloadsPage", () => {
       isSignedIn: true,
       user: mockUser,
     });
-    (getUserOrders as jest.Mock).mockResolvedValue(JSON.parse(JSON.stringify(mockOrders))); // Use deep copy for orders
-    
+    (getUserOrders as jest.Mock).mockResolvedValue(
+      JSON.parse(JSON.stringify(mockOrders)),
+    ); // Use deep copy for orders
+
     mockDownloadingItemsState = {};
     // Default mock for handleDownloadBase (the hook's download function)
     // Specific tests will override this implementation.
-    mockHandleDownloadBase.mockResolvedValue(undefined); 
+    mockHandleDownloadBase.mockResolvedValue(undefined);
 
     // Re-initialize the useProductDownload mock for each test to correctly capture the callback
-    (useProductDownload as jest.Mock).mockImplementation((onSuccessCallbackFromComponent) => {
-      capturedOnDownloadSuccessCallback = onSuccessCallbackFromComponent;
-      return {
-        downloadingItems: mockDownloadingItemsState,
-        handleDownload: mockHandleDownloadBase,
-      };
-    });
+    (useProductDownload as jest.Mock).mockImplementation(
+      (onSuccessCallbackFromComponent) => {
+        capturedOnDownloadSuccessCallback = onSuccessCallbackFromComponent;
+
+        return {
+          downloadingItems: mockDownloadingItemsState,
+          handleDownload: mockHandleDownloadBase,
+        };
+      },
+    );
   });
 
   test("should show loading state when auth is loading", () => {
-    (useUser as jest.Mock).mockReturnValue({ isLoaded: false, isSignedIn: undefined, user: null });
+    (useUser as jest.Mock).mockReturnValue({
+      isLoaded: false,
+      isSignedIn: undefined,
+      user: null,
+    });
     render(<DownloadsPage />);
     expect(screen.getByText("loading")).toBeInTheDocument();
   });
 
   test("should show sign-in required message when not signed in", () => {
-    (useUser as jest.Mock).mockReturnValue({ isLoaded: true, isSignedIn: false, user: null });
+    (useUser as jest.Mock).mockReturnValue({
+      isLoaded: true,
+      isSignedIn: false,
+      user: null,
+    });
     render(<DownloadsPage />);
     expect(screen.getByText("signInRequired")).toBeInTheDocument();
   });
@@ -280,8 +309,13 @@ describe("DownloadsPage", () => {
   });
 
   test("should handle error when fetching orders", async () => {
-    const consoleErrorSpy = jest.spyOn(console, 'error').mockImplementation(() => {});
-    (getUserOrders as jest.Mock).mockRejectedValue(new Error("Failed to fetch"));
+    const consoleErrorSpy = jest
+      .spyOn(console, "error")
+      .mockImplementation(() => {});
+
+    (getUserOrders as jest.Mock).mockRejectedValue(
+      new Error("Failed to fetch"),
+    );
     render(<DownloadsPage />);
     await waitFor(() => {
       expect(toast.error).toHaveBeenCalledWith("errorLoading");
@@ -300,24 +334,34 @@ describe("DownloadsPage", () => {
 
     expect(screen.getByTestId("accordion-item-order1")).toBeInTheDocument();
     expect(screen.getByText("ORD-001")).toBeInTheDocument();
-    
+
     const productAlphaItem = screen.getByText("Product Alpha").closest("li");
+
     expect(productAlphaItem).toBeInTheDocument();
     // Item1_1 is downloadable
-    const downloadButtonAlpha = rtlWithin(productAlphaItem!).getByRole("button", { name: "Download downloadButton" });
+    const downloadButtonAlpha = rtlWithin(productAlphaItem!).getByRole(
+      "button",
+      { name: "Download downloadButton" },
+    );
+
     expect(downloadButtonAlpha).toBeInTheDocument();
-    
+
     expect(screen.getByText("Product Beta (Downloaded)")).toBeInTheDocument();
     // Item1_2 is already downloaded
-    expect(screen.getByText(/downloadedOn/)).toBeInTheDocument(); 
+    expect(screen.getByText(/downloadedOn/)).toBeInTheDocument();
     expect(screen.getAllByTestId("icon-calendar").length).toBeGreaterThan(0);
 
     expect(screen.getByTestId("accordion-item-order2")).toBeInTheDocument();
     expect(screen.getByText("ORD-002")).toBeInTheDocument();
     expect(screen.getByText("Product Gamma")).toBeInTheDocument();
     const productGammaItem = screen.getByText("Product Gamma").closest("li");
+
     expect(productGammaItem).toBeInTheDocument();
-    const downloadButtonGamma = rtlWithin(productGammaItem!).getByRole("button", { name: "Download downloadButton" });
+    const downloadButtonGamma = rtlWithin(productGammaItem!).getByRole(
+      "button",
+      { name: "Download downloadButton" },
+    );
+
     expect(downloadButtonGamma).toBeInTheDocument();
   });
 
@@ -328,6 +372,7 @@ describe("DownloadsPage", () => {
       if (capturedOnDownloadSuccessCallback) {
         capturedOnDownloadSuccessCallback(item, orderId); // Call the component's success handler
       }
+
       return Promise.resolve();
     });
 
@@ -336,27 +381,39 @@ describe("DownloadsPage", () => {
       expect(screen.getByText("Product Alpha")).toBeInTheDocument();
     });
 
-    const productAlphaItemPreClick = screen.getByText("Product Alpha").closest("li");
-    const downloadButton = rtlWithin(productAlphaItemPreClick!).getByRole("button", { name: "Download downloadButton" });
+    const productAlphaItemPreClick = screen
+      .getByText("Product Alpha")
+      .closest("li");
+    const downloadButton = rtlWithin(productAlphaItemPreClick!).getByRole(
+      "button",
+      { name: "Download downloadButton" },
+    );
+
     await user.click(downloadButton);
 
     expect(mockHandleDownloadBase).toHaveBeenCalledWith(
       expect.objectContaining({ id: "item1_1" }),
-      "order1"
+      "order1",
     );
 
     await waitFor(() => {
-      const productAlphaItemPostClick = screen.getByText("Product Alpha").closest("li");
+      const productAlphaItemPostClick = screen
+        .getByText("Product Alpha")
+        .closest("li");
+
       expect(productAlphaItemPostClick).toHaveTextContent(/downloadedOn/); // UI updated by callback
-      expect(toast.success).toHaveBeenCalledWith("Thank you for downloading!", expect.any(Object));
+      expect(toast.success).toHaveBeenCalledWith(
+        "Thank you for downloading!",
+        expect.any(Object),
+      );
     });
   });
 
   test("should show spinner when item is downloading", async () => {
     mockDownloadingItemsState = { item1_1: true };
-     (useProductDownload as jest.Mock).mockImplementation(() => ({ 
-        downloadingItems: mockDownloadingItemsState,
-        handleDownload: mockHandleDownloadBase,
+    (useProductDownload as jest.Mock).mockImplementation(() => ({
+      downloadingItems: mockDownloadingItemsState,
+      handleDownload: mockHandleDownloadBase,
     }));
 
     render(<DownloadsPage />);
@@ -364,22 +421,33 @@ describe("DownloadsPage", () => {
     await waitFor(() => {
       expect(screen.getByText("Product Alpha")).toBeInTheDocument();
     });
-    
+
     const productAlphaItem = screen.getByText("Product Alpha").closest("li");
-    const downloadButton = rtlWithin(productAlphaItem!).getByRole("button", { name: "Loading..." }); 
+    const downloadButton = rtlWithin(productAlphaItem!).getByRole("button", {
+      name: "Loading...",
+    });
+
     expect(downloadButton).toBeDisabled();
-    expect(rtlWithin(downloadButton).getByTestId("spinner")).toBeInTheDocument();
+    expect(
+      rtlWithin(downloadButton).getByTestId("spinner"),
+    ).toBeInTheDocument();
   });
 
   test("should handle download failure", async () => {
-    const consoleErrorSpy = jest.spyOn(console, 'error').mockImplementation(() => {});
+    const consoleErrorSpy = jest
+      .spyOn(console, "error")
+      .mockImplementation(() => {});
 
-    mockHandleDownloadBase.mockImplementation(async (item, orderId) => {
+    mockHandleDownloadBase.mockImplementation(async () => {
       // Simulate hook's failure path
-      console.error("Download error:", new Error("Simulated internal download error from mock"));
+      console.error(
+        "Download error:",
+        new Error("Simulated internal download error from mock"),
+      );
       toast.error("Unable to download file", expect.any(Object));
+
       // DO NOT call capturedOnDownloadSuccessCallback here
-      return Promise.resolve(); 
+      return Promise.resolve();
     });
 
     render(<DownloadsPage />);
@@ -388,24 +456,44 @@ describe("DownloadsPage", () => {
     });
 
     const productAlphaItem = screen.getByText("Product Alpha").closest("li");
-    const downloadButton = rtlWithin(productAlphaItem!).getByRole("button", { name: "Download downloadButton" });
-    await user.click(downloadButton); 
+    const downloadButton = rtlWithin(productAlphaItem!).getByRole("button", {
+      name: "Download downloadButton",
+    });
+
+    await user.click(downloadButton);
 
     expect(mockHandleDownloadBase).toHaveBeenCalledWith(
       expect.objectContaining({ id: "item1_1" }),
-      "order1"
+      "order1",
     );
 
     await waitFor(() => {
-      expect(toast.error).toHaveBeenCalledWith("Unable to download file", expect.any(Object));
-      expect(consoleErrorSpy).toHaveBeenCalledWith("Download error:", expect.objectContaining({
-        message: "Simulated internal download error from mock"
-      }));
+      expect(toast.error).toHaveBeenCalledWith(
+        "Unable to download file",
+        expect.any(Object),
+      );
+      expect(consoleErrorSpy).toHaveBeenCalledWith(
+        "Download error:",
+        expect.objectContaining({
+          message: "Simulated internal download error from mock",
+        }),
+      );
 
-      const productAlphaItemAfterClick = screen.getByText("Product Alpha").closest("li");
+      const productAlphaItemAfterClick = screen
+        .getByText("Product Alpha")
+        .closest("li");
+
       // Crucially, the UI should NOT update to "downloadedOn"
-      expect(rtlWithin(productAlphaItemAfterClick!).getByRole("button", { name: "Download downloadButton" })).toBeInTheDocument();
-      expect(rtlWithin(productAlphaItemAfterClick!).getByRole("button", { name: "Download downloadButton" })).not.toBeDisabled();
+      expect(
+        rtlWithin(productAlphaItemAfterClick!).getByRole("button", {
+          name: "Download downloadButton",
+        }),
+      ).toBeInTheDocument();
+      expect(
+        rtlWithin(productAlphaItemAfterClick!).getByRole("button", {
+          name: "Download downloadButton",
+        }),
+      ).not.toBeDisabled();
       expect(productAlphaItemAfterClick).not.toHaveTextContent(/downloadedOn/);
     });
     consoleErrorSpy.mockRestore();
@@ -417,10 +505,19 @@ describe("DownloadsPage", () => {
       expect(screen.getByText("Product Beta (Downloaded)")).toBeInTheDocument();
     });
 
-    const downloadedItemEntry = screen.getByText("Product Beta (Downloaded)").closest("li");
+    const downloadedItemEntry = screen
+      .getByText("Product Beta (Downloaded)")
+      .closest("li");
+
     expect(downloadedItemEntry).toHaveTextContent(/downloadedOn/);
     // Use rtlWithin for scoped query
-    expect(rtlWithin(downloadedItemEntry!).queryByRole("button", { name: "Download downloadButton" })).not.toBeInTheDocument();
-    expect(rtlWithin(downloadedItemEntry!).getByTestId("icon-calendar")).toBeInTheDocument();
+    expect(
+      rtlWithin(downloadedItemEntry!).queryByRole("button", {
+        name: "Download downloadButton",
+      }),
+    ).not.toBeInTheDocument();
+    expect(
+      rtlWithin(downloadedItemEntry!).getByTestId("icon-calendar"),
+    ).toBeInTheDocument();
   });
 });

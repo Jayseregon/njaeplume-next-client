@@ -121,42 +121,57 @@ export function ProductDetail({ product }: { product: Product }) {
 
   return (
     <div className="container max-w-6xl mx-auto px-4">
-      {/* Back button visible on all screen sizes */}
-      <Button
-        asChild
-        className="mb-4 text-foreground"
-        size="sm"
-        variant="ghost"
-      >
-        <Link className="flex items-center" href={`/shop/${product.category}`}>
-          <ArrowLeft className="mr-2 h-4 w-4" />
-          {t(`backButton.${product.category}`)}
-        </Link>
-      </Button>
+      {/* Container for Back button and Wishlist (Heart) button */}
+      <div className="flex items-center justify-between mb-4">
+        <Button
+          asChild
+          className="text-foreground" // Removed mb-4 from here
+          size="sm"
+          variant="ghost"
+        >
+          <Link
+            className="flex items-center"
+            href={`/shop/${product.category}`}
+          >
+            <ArrowLeft className="mr-2 h-4 w-4" />
+            {t(`backButton.${product.category}`)}
+          </Link>
+        </Button>
+        {isSignedIn && (
+          <Button
+            className="p-1 h-8 w-8 rounded-full hover:bg-rose-100 dark:hover:bg-rose-800" // Removed ml-2, flex-shrink-0, relative, -top-3
+            disabled={isLikeActionLoading}
+            size="icon"
+            title={
+              isLiked
+                ? tWishlist("removeFromWishlist")
+                : tWishlist("addToWishlist")
+            }
+            variant="ghost"
+            onClick={handleToggleWishlist}
+          >
+            <Heart
+              className={`h-5 w-5 ${isLiked ? "fill-rose-500 text-rose-500" : "text-muted-foreground group-hover:text-rose-500"}`}
+            />
+          </Button>
+        )}
+      </div>
 
       {/* Title and price for mobile - appears before images */}
       <div className="md:hidden mb-6">
-        <PageTitle title={product.name} />
+        {/* Flex container for PageTitle - Heart button removed from here */}
+        <div className="flex items-center justify-center">
+          {" "}
+          {/* Centering container for the group */}
+          <div className="inline-flex items-center">
+            {" "}
+            {/* Group title */}
+            <PageTitle title={product.name} />
+            {/* Heart button removed from here */}
+          </div>
+        </div>
         <div className="flex items-center justify-between mt-4">
           <p className="text-3xl font-bold">{formatPrice(product.price)}</p>
-          {isSignedIn && (
-            <Button
-              className="p-1 h-8 w-8 rounded-full hover:bg-rose-100 dark:hover:bg-rose-800 mx-2"
-              disabled={isLikeActionLoading}
-              size="icon"
-              title={
-                isLiked
-                  ? tWishlist("removeFromWishlist")
-                  : tWishlist("addToWishlist")
-              }
-              variant="ghost"
-              onClick={handleToggleWishlist}
-            >
-              <Heart
-                className={`h-5 w-5 ${isLiked ? "fill-rose-500 text-rose-500" : "text-muted-foreground group-hover:text-rose-500"}`}
-              />
-            </Button>
-          )}
           <div className="mx-10" />
           <Button
             className="whitespace-nowrap w-32 flex items-center gap-2"
@@ -247,32 +262,21 @@ export function ProductDetail({ product }: { product: Product }) {
 
         {/* Product Info */}
         <div className="space-y-6">
-          {/* Title for desktop */}
-          <div className="hidden md:block">
-            <PageTitle title={product.name} />
+          {/* Title for desktop - Heart button removed from here */}
+          <div className="hidden md:flex md:items-center md:justify-center">
+            {" "}
+            {/* Centering container for the group */}
+            <div className="inline-flex items-center">
+              {" "}
+              {/* Group title */}
+              <PageTitle title={product.name} />
+              {/* Heart button removed from here */}
+            </div>
           </div>
 
           {/* Price and add to cart for desktop */}
           <div className="hidden md:flex items-center justify-between">
             <p className="text-3xl font-bold">{formatPrice(product.price)}</p>
-            {isSignedIn && (
-              <Button
-                className="p-1 h-8 w-8 rounded-full hover:bg-rose-100 dark:hover:bg-rose-800 mx-2"
-                disabled={isLikeActionLoading}
-                size="icon"
-                title={
-                  isLiked
-                    ? tWishlist("removeFromWishlist")
-                    : tWishlist("addToWishlist")
-                }
-                variant="ghost"
-                onClick={handleToggleWishlist}
-              >
-                <Heart
-                  className={`h-5 w-5 ${isLiked ? "fill-rose-500 text-rose-500" : "text-muted-foreground group-hover:text-rose-500"}`}
-                />
-              </Button>
-            )}
             <div className="mx-10" />
             <Button
               className="w-40 flex items-center gap-2"
