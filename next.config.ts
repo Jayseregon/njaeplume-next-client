@@ -53,10 +53,17 @@ const nextConfig: NextConfig = {
         port: "",
         pathname: "/**",
       },
+      {
+        protocol: "https",
+        hostname: "app.usercentrics.eu",
+        port: "",
+        pathname: "/**",
+      },
     ],
   },
   async headers() {
-    return isLocalDev
+    // Base security headers for production
+    const baseHeaders = isLocalDev
       ? []
       : [
           {
@@ -77,6 +84,42 @@ const nextConfig: NextConfig = {
             ],
           },
         ];
+
+    // Cache optimization headers - only add in production
+    const cacheHeaders = isLocalDev
+      ? []
+      : [
+          {
+            source: '/_next/static/(.*)',
+            headers: [
+              {
+                key: 'Cache-Control',
+                value: 'public, max-age=31536000, immutable',
+              },
+            ],
+          },
+          {
+            source: '/static/(.*)',
+            headers: [
+              {
+                key: 'Cache-Control',
+                value: 'public, max-age=31536000, immutable',
+              },
+            ],
+          },
+          {
+            source: '/(.*)\.(jpg|png|webp|svg|ico|woff2)',
+            headers: [
+              {
+                key: 'Cache-Control',
+                value: 'public, max-age=31536000, immutable',
+              },
+            ],
+          },
+        ];
+
+    // Combine all headers
+    return [...baseHeaders, ...cacheHeaders];
   },
 };
 
