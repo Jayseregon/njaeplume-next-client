@@ -21,7 +21,9 @@ import {
   fontDisplay,
   fontSansAlt,
 } from "@/config/fonts";
-import { Toaster } from "@/components/ui/sonner";
+// Remove the direct import of Toaster from sonner or ui/sonner if it was aliased
+// import { Toaster } from "@/components/ui/sonner";
+import { CustomToaster } from "@/components/ui/sonner-custom"; // Import the new custom toaster
 import DisableRightClick from "@/components/DisableRightClick";
 import { CartStoreProvider } from "@/providers/CartStoreProvider";
 import { RootProviders } from "@/providers/RootProviders";
@@ -128,13 +130,14 @@ export default async function RootLayout({
                   <DisableRightClick />
                   {children}
                 </main>
-                <Footer />{" "}
+                <Footer />
                 {/* Removed nonce prop, Footer should handle internally if needed */}
               </div>
             </CartStoreProvider>
           </NextIntlClientProvider>
         </RootProviders>
-        <Toaster />{" "}
+        <CustomToaster closeButton richColors />{" "}
+        {/* Use the new CustomToaster. Added richColors and closeButton as examples, adjust as needed. */}
         {/* Sonner's Toaster relies on 'unsafe-inline' from CSP for styles */}
         <UsercentricsCookieConsent
           nonce={nonce}
