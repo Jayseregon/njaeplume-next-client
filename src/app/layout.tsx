@@ -65,12 +65,7 @@ export default async function RootLayout({
   const messages = await getMessages();
 
   return (
-    <html
-      suppressHydrationWarning
-      className="bg-background"
-      lang={locale}
-      {...(nonce ? { nonce } : {})}
-    >
+    <html suppressHydrationWarning className="bg-background" lang={locale}>
       <Head>
         <meta
           content="width=device-width, initial-scale=1"
@@ -103,13 +98,6 @@ export default async function RootLayout({
           rel="preload"
         />
       </Head>
-      {/* Load Usercentrics blocking script early */}
-      <Script
-        id="uc-block-bundle-script"
-        nonce={nonce || undefined}
-        src="https://privacy-proxy.usercentrics.eu/latest/uc-block.bundle.js"
-        strategy="beforeInteractive"
-      />
       <body
         className={clsx(
           "min-h-screen font-sans antialiased",
@@ -119,35 +107,35 @@ export default async function RootLayout({
           fontDisplay.variable,
           fontSansAlt.variable,
         )}
-        nonce={nonce}
       >
+        {/* Load Usercentrics blocking script early, as the first child of body */}
+        <Script
+          id="uc-block-bundle-script"
+          nonce={nonce || undefined}
+          src="https://privacy-proxy.usercentrics.eu/latest/uc-block.bundle.js"
+          strategy="beforeInteractive"
+        />
         <SpeedInsights />
         <RootProviders
-          nonce={nonce}
+          nonce={nonce} // RootProviders should pass this to ThemeProvider internally
           themeProps={{ attribute: "class", defaultTheme: "dark", children }}
         >
           <NextIntlClientProvider messages={messages}>
             <CartStoreProvider>
-              <div
-                className="flex flex-col justify-between min-h-screen"
-                nonce={nonce || undefined}
-              >
+              <div className="flex flex-col justify-between min-h-screen">
                 <Navbar />
-
-                <main
-                  className="container mx-auto max-w-full px-6 grow"
-                  nonce={nonce || undefined}
-                >
+                <main className="container mx-auto max-w-full px-6 grow">
                   <DisableRightClick />
                   {children}
                 </main>
-
-                <Footer nonce={nonce || undefined} />
+                <Footer />{" "}
+                {/* Removed nonce prop, Footer should handle internally if needed */}
               </div>
             </CartStoreProvider>
           </NextIntlClientProvider>
         </RootProviders>
-        <Toaster />
+        <Toaster />{" "}
+        {/* Sonner's Toaster relies on 'unsafe-inline' from CSP for styles */}
         <UsercentricsCookieConsent
           nonce={nonce}
           settingsId="f9mN3JpuDNuygD"

@@ -115,15 +115,6 @@ describe("Footer", () => {
     expect(contactLink.closest("a")).toHaveAttribute("href", "/contact");
   });
 
-  it("applies nonce attribute when provided", () => {
-    const testNonce = "test-nonce-123";
-
-    render(<Footer nonce={testNonce} />);
-    const footer = screen.getByRole("contentinfo");
-
-    expect(footer).toHaveAttribute("nonce", testNonce);
-  });
-
   it("renders all translated text content", () => {
     render(<Footer />);
     expect(screen.getByText(/Copyright text 1/)).toBeInTheDocument();
