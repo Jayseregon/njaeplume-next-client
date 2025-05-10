@@ -71,7 +71,9 @@ export const Policy = ({ policyKey }: Props) => {
       switch (element.tagName) {
         case "H2":
           return (
-            <h2 className={`text-2xl font-bold my-4 ${elementClasses}`.trim()}>
+            <h2
+              className={`text-2xl font-bold my-4 text-start ${elementClasses}`.trim()}
+            >
               {Array.from(element.childNodes).map((childNode, index) => (
                 <React.Fragment key={index}>
                   {traverseNodes(childNode)}
