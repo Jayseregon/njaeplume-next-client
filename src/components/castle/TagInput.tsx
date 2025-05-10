@@ -1,9 +1,9 @@
 "use client";
 
 import { useState, useEffect, KeyboardEvent, useRef, MouseEvent } from "react";
-import { Tag } from "@prisma/client";
 import { X, PlusCircle } from "lucide-react";
 
+import { Tag } from "@/generated/client";
 import { Badge } from "@/src/components/ui/badge";
 import { Input } from "@/src/components/ui/input";
 import { createTagIfNotExists, getTags } from "@/src/actions/prisma/action";

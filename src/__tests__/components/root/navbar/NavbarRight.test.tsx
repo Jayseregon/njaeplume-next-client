@@ -1,6 +1,7 @@
 import { render, screen } from "@testing-library/react";
 
 import { NavbarRight } from "@/components/root/navbar/NavbarRight";
+import { CartStoreProvider } from "@/providers/CartStoreProvider"; // Import the provider
 
 // Mock the child components
 jest.mock("@/components/root/SearchInput", () => ({
@@ -37,20 +38,41 @@ jest.mock("@/components/root/UserLogin", () => ({
   ),
 }));
 
+// Mock CartButton component
+jest.mock("@/components/cart/CartButton", () => ({
+  CartButton: ({ nonce }: { nonce?: string }) => (
+    <div data-nonce={nonce} data-testid="cart-button">
+      Cart Button
+    </div>
+  ),
+}));
+
+// Mock CartDrawer component
+jest.mock("@/components/cart/CartDrawer", () => ({
+  CartDrawer: () => <div data-testid="cart-drawer">Cart Drawer</div>,
+}));
+
 describe("NavbarRight", () => {
   const mockNonce = "test-nonce-123";
 
+  // Helper function to render with provider
+  const renderWithProvider = (ui: React.ReactElement) => {
+    return render(<CartStoreProvider>{ui}</CartStoreProvider>);
+  };
+
   it("renders all child components", () => {
-    render(<NavbarRight nonce={mockNonce} />);
+    renderWithProvider(<NavbarRight nonce={mockNonce} />);
 
     expect(screen.getByTestId("search-input")).toBeInTheDocument();
     expect(screen.getByTestId("theme-switch")).toBeInTheDocument();
     expect(screen.getByTestId("locale-switcher")).toBeInTheDocument();
+    expect(screen.getByTestId("cart-button")).toBeInTheDocument(); // Check for cart button
     expect(screen.getByTestId("user-login")).toBeInTheDocument();
+    expect(screen.getByTestId("cart-drawer")).toBeInTheDocument(); // Check for cart drawer
   });
 
   it("passes nonce prop to all child components", () => {
-    render(<NavbarRight nonce={mockNonce} />);
+    renderWithProvider(<NavbarRight nonce={mockNonce} />);
 
     expect(screen.getByTestId("search-input")).toHaveAttribute(
       "data-nonce",
@@ -64,6 +86,10 @@ describe("NavbarRight", () => {
       "data-nonce",
       mockNonce,
     );
+    expect(screen.getByTestId("cart-button")).toHaveAttribute(
+      "data-nonce",
+      mockNonce,
+    );
     expect(screen.getByTestId("user-login")).toHaveAttribute(
       "data-nonce",
       mockNonce,
@@ -71,11 +97,12 @@ describe("NavbarRight", () => {
   });
 
   it("has correct responsive classes", () => {
-    const { container } = render(<NavbarRight nonce={mockNonce} />);
+    const { container } = renderWithProvider(<NavbarRight nonce={mockNonce} />);
 
-    const wrapper = container.firstChild as HTMLElement;
+    // The wrapper is now a Fragment (<>), so we check the div inside
+    const divWrapper = container.querySelector("div");
 
-    expect(wrapper).toHaveClass(
+    expect(divWrapper).toHaveClass(
       "hidden",
       "md:flex",
       "items-center",
@@ -85,15 +112,24 @@ describe("NavbarRight", () => {
   });
 
   it("renders in the correct order", () => {
-    render(<NavbarRight nonce={mockNonce} />);
+    renderWithProvider(<NavbarRight nonce={mockNonce} />);
 
-    const elements = screen.getAllByTestId(
-      /search-input|theme-switch|locale-switcher|user-login/,
+    // Query within the specific div container for NavbarRight items
+    const container = screen.getByTestId("search-input").parentElement;
+    const elements = Array.from(container?.children || []).map(
+      (el) => el.getAttribute("data-testid") || el.nodeName.toLowerCase(),
     );
 
-    expect(elements[0]).toHaveAttribute("data-testid", "search-input");
-    expect(elements[1]).toHaveAttribute("data-testid", "theme-switch");
-    expect(elements[2]).toHaveAttribute("data-testid", "locale-switcher");
-    expect(elements[3]).toHaveAttribute("data-testid", "user-login");
+    // Expected order within the div
+    expect(elements).toEqual([
+      "search-input",
+      "theme-switch",
+      "locale-switcher",
+      "cart-button",
+      "user-login",
+    ]);
+
+    // Check CartDrawer is rendered outside the main div
+    expect(screen.getByTestId("cart-drawer")).toBeInTheDocument();
   });
 });

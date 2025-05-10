@@ -1,14 +1,16 @@
 "use client";
 
-import React, { JSX } from "react";
+import React, { JSX, useContext } from "react";
 import { useTranslations } from "next-intl";
 import Link from "next/link";
 import { MapPin, PencilLine } from "lucide-react";
 
 import { getSubItemByKey } from "@/src/config/site";
+import { NonceContext } from "@/providers/RootProviders";
 
-export default function Footer({ nonce }: { nonce?: string }): JSX.Element {
+export default function Footer(): JSX.Element {
   const t = useTranslations("Footer");
+  const nonce = useContext(NonceContext);
 
   return (
     <footer
@@ -74,12 +76,12 @@ export default function Footer({ nonce }: { nonce?: string }): JSX.Element {
               >
                 {t("cookies")}
               </Link>
-              <Link
+              {/* <Link
                 className="hover:underline hover:text-primary transition-colors"
                 href="/policies/disclaimers"
               >
                 {t("disclaimer")}
-              </Link>
+              </Link> */}
               <Link
                 className="hover:underline hover:text-primary transition-colors"
                 href={getSubItemByKey("eula").href}

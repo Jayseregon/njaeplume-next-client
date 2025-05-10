@@ -17,12 +17,15 @@ export function formatDate(input: string | number | Date | null): string {
   });
 }
 
-/**
- * Returns a random subset of items from an array with a maximum size
- * @param items The array of items to select from
- * @param maxCount The maximum number of items to return (default: 5)
- * @returns A random subset of the original array
- */
+export function formatPrice(price: number) {
+  const formatted = new Intl.NumberFormat("en-CA", {
+    style: "currency",
+    currency: "CAD",
+  }).format(price);
+
+  return `CA${formatted}`;
+}
+
 export function getRandomSubset<T>(items: T[], maxCount: number = 5): T[] {
   if (!items || items.length <= maxCount) {
     return items;

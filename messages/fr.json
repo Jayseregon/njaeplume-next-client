@@ -2,7 +2,8 @@
   "HomePage": {
     "noticeTitle": "Des changements excitants arrivent !",
     "noticeMessage": "Nous réorganisons notre boutique pour vous offrir une expérience encore meilleure.",
-    "noticeCTA": "Restez à l'écoute et revenez bientôt pour des mises à jour !"
+    "noticeCTA": "Restez à l'écoute et revenez bientôt pour des mises à jour !",
+    "buttonCTA": "Magasiner maintenant"
   },
   "Utils": {
     "LoadingButton": "Veuillez patienter",
@@ -10,6 +11,11 @@
       "title": "Quelque chose s'est mal passé!",
       "message": "Veuillez réessayer plus tard."
     }
+  },
+  "policies": {
+    "privacy_policy": "Politique de confidentialité",
+    "cookies_policy": "Politique de cookies",
+    "terms_of_service": "Conditions d'utilisation"
   },
   "Footer": {
     "copyright1": "NJAE Plume",
@@ -231,11 +237,246 @@
       "freebies": "Voir tous les Gratuits"
     },
     "categoryTitles": {
-      "brushes": "Nos dernières Brosses",
+      "brushes": "Nos derniers Pinceaux",
       "stickers": "Nos derniers Autocollants",
       "templates": "Nos derniers Modèles",
       "planners": "Nos derniers Planificateurs",
       "freebies": "Nos derniers Gratuits"
     }
+  },
+  "AccountDownloads": {
+    "loading": "Chargement de vos produits numériques...",
+    "signInRequired": "Veuillez vous connecter pour accéder à vos téléchargements",
+    "backToDashboard": "Retour au Tableau de Bord",
+    "title": "Mes Téléchargements",
+    "downloadButton": "Télécharger",
+    "downloadedOn": "Téléchargé le {date}",
+    "noDownloadsTitle": "Aucun produit téléchargeable trouvé",
+    "noDownloadsMessage": "Vous n'avez pas encore acheté de produits numériques, ou vos commandes sont toujours en cours de traitement.",
+    "goShopping": "Aller magasiner",
+    "errorLoading": "Échec du chargement de vos produits téléchargeables."
+  },
+  "AccountOrders": {
+    "loading": "Chargement de vos commandes...",
+    "signInRequired": "Veuillez vous connecter pour voir vos commandes",
+    "backToDashboard": "Retour au Tableau de Bord",
+    "title": "Historique des Commandes",
+    "noOrdersTitle": "Aucune commande trouvée",
+    "noOrdersMessage": "Vous n'avez pas encore passé de commande.",
+    "goShopping": "Aller magasiner",
+    "errorLoading": "Échec du chargement de votre historique de commandes."
+  },
+  "AccountDashboard": {
+    "loading": "Chargement des informations de votre compte...",
+    "signInRequired": "Veuillez vous connecter pour accéder à votre compte",
+    "title": "Mon Compte",
+    "welcome": "Bienvenue, {firstName}",
+    "description": "Gérez votre liste de souhaits, vos téléchargements numériques et votre historique de commandes depuis votre tableau de bord personnel.",
+    "yourAccount": "Votre Compte",
+    "orders": "Commandes",
+    "downloadable": "Téléchargeables",
+    "totalFiles": "Fichiers Totals",
+    "recentOrder": "Commande Récente",
+    "viewAllOrders": "Voir Toutes les Commandes",
+    "orderId": "ID Commande :",
+    "noOrdersYet": "Vous n'avez pas encore passé de commande.",
+    "recentDownloads": "Téléchargements Récents",
+    "viewAllDownloads": "Voir Tous les Téléchargements",
+    "downloadButton": "Télécharger",
+    "downloadedOn": "Téléchargé le {date}",
+    "downloadsAvailable": "Des téléchargements sont disponibles. Cliquez sur 'Voir Tous les Téléchargements' pour les voir.",
+    "noDownloadsYet": "Vous n'avez pas encore de téléchargements.",
+    "paymentSuccess": "Paiement réussi ! Votre commande est complète.",
+    "viewWishlist": "Voir la Liste de Souhaits",
+    "wishlistSummary": "Vous avez {count, plural, =0 {aucun article} one {# article} other {# articles}} dans votre Liste de Souhaits.",
+    "noWishlistItems": "Votre Liste de Souhaits est vide. Commencez à ajouter des favoris !"
+  },
+  "AccountOrdersTable": {
+    "orderId": "ID Commande",
+    "date": "Date",
+    "status": "Statut",
+    "amount": "Montant",
+    "items": "Articles",
+    "viewItems": "Voir {count, plural, =1 {# article} other {# articles}}",
+    "itemsForOrder": "Articles pour la Commande {orderId}",
+    "price": "Prix : {price}",
+    "noOrdersFound": "Aucune commande trouvée."
+  },
+  "CartDrawer": {
+    "title": "Mon Panier",
+    "description": "Assurez-vous de vérifier votre panier avant de passer à la caisse",
+    "emptyCart": "Votre panier est vide",
+    "removeProduct": "Retirer {productName}",
+    "total": "Total",
+    "checkoutButton": "Passer à la caisse",
+    "clearCartButton": "Vider le panier",
+    "checkoutError": "Le paiement a échoué. Veuillez réessayer."
+  },
+  "ProductCard": {
+    "imageLoadError": "Échec du chargement de l'image",
+    "addToCartButtonTitle": "Ajouter au panier",
+    "addToCartSuccess": "{productName} a été ajouté à votre panier.",
+    "category": {
+      "brushes": "Pinceaux",
+      "stickers": "Autocollants",
+      "templates": "Modèles",
+      "planners": "Planificateurs"
+    }
+  },
+  "FreebieCard": {
+    "imageLoadError": "Échec du chargement de l'image",
+    "downloadButtonTitle": "Télécharger le gratuit",
+    "downloadSuccessTitle": "Merci pour votre téléchargement !",
+    "downloadSuccessDesc": "Nous espérons que vous apprécierez {productName} !",
+    "downloadErrorTitle": "Impossible de télécharger le fichier",
+    "downloadErrorDesc": "Veuillez réessayer plus tard ou nous contacter pour obtenir de l'aide.",
+    "downloadButtonText": "Télécharger",
+    "category": {
+      "freebies": "Gratuits"
+    }
+  },
+  "FreebiePage": {
+    "title": "Téléchargements Gratuits"
+  },
+  "ProductDetail": {
+    "backButton": {
+      "brushes": "Retour à Pinceaux",
+      "stickers": "Retour à Autocollants",
+      "templates": "Retour à Modèles",
+      "planners": "Retour à Planificateurs"
+    },
+    "addToCartButton": "Ajouter au panier",
+    "imageLoadError": "Échec du chargement de l'image",
+    "prevImageAria": "Image précédente",
+    "nextImageAria": "Image suivante",
+    "thumbnailAria": "Voir la miniature {index}"
+  },
+  "ProductSpecs": {
+    "bulletSymbol": "•●◍●•",
+    "customDemandText": "Pour toute demande d'art personnalisé, veuillez nous contacter via notre <contactLink>formulaire de contact</contactLink>, avant l'achat.",
+    "faqSectionText": "Consultez notre <faqLink>page FAQ</faqLink> pour plus d'informations sur l'utilisation de nos produits, ou n'hésitez pas à <contactLink>nous contacter</contactLink>.",
+    "copyright": {
+      "line1": "Conception originale. Vous ne pouvez pas revendre ou reproduire.",
+      "line2": "Pour les conditions complètes, veuillez vous référer à notre <eulaLink>Contrat de Licence Utilisateur Final (CLUF)</eulaLink>.",
+      "line3": "© 2021 - {currentYear} Nathalie Tran, alias Niniefy. Tous Droits Réservés."
+    },
+    "categoryNotAvailable": "Description non disponible pour cette catégorie.",
+    "accordionTriggers": {
+      "specifications": "Spécifications",
+      "howToUse": "Comment Utiliser",
+      "customDemands": "Demandes Personnalisées",
+      "faq": "FAQ",
+      "copyrights": "Droits d'Auteur"
+    },
+    "categories": {
+      "stickers": {
+        "description": "Ensemble d'autocollants numériques à utiliser avec vos applications compatibles. Idéal pour créer des cartes, des œuvres d'art, des cadeaux ou pour le journaling.",
+        "specItems": [
+          "Format .png",
+          "Fond transparent",
+          "Compatible avec toute application supportant les images : Noteful, GoodNotes®, Notability, Pages, Procreate®, Suite Adobe, etc.",
+          "Imprimable sur papier format Lettre, A4 ou plus petit.",
+          "Qualité HD",
+          "Entièrement fait à la main : Pas d'IA",
+          "Unique",
+          "Téléchargement direct après achat"
+        ],
+        "howtoUse": "Après le téléchargement, vous recevrez un fichier .zip dans le dossier <italic>Téléchargements</italic> de l'application <bold>Fichiers</bold> (iOS, iPadOS).<br></br>L'ouvrir révélera un dossier contenant tous les autocollants de cet ensemble.<br></br>Sélectionnez-en un ou plusieurs, et partagez-les vers une application compatible. Vous pouvez également importer le dossier entier comme nouveau pack d'autocollants dans des applications de journaling telles que : Noteful, GoodNotes®, Notability, etc."
+      },
+      "brushes": {
+        "description": "Pack de pinceaux numériques. Facilement ajustables selon vos besoins.",
+        "specItems": [
+          "Format .brushset",
+          "Compatible Procreate® et Adobe® Photoshop",
+          "Entièrement fait à la main : Pas d'IA",
+          "Unique",
+          "Téléchargement direct après achat"
+        ],
+        "howtoUse": "Après le téléchargement, vous recevrez un fichier .zip dans le dossier <italic>Téléchargements</italic> de l'application <bold>Fichiers</bold> (iOS, iPadOS).<br></br>L'ouvrir révélera un fichier .brushset.<br></br>Cliquez sur ce fichier, et il sera automatiquement importé dans Procreate® ; ou, appuyez longuement &rarr; Partager &rarr; sélectionnez l'application Procreate®.<br></br>Enfin, ouvrez Procreate®, sélectionnez une toile, et trouvez l'ensemble de pinceaux importé dans la Bibliothèque de Pinceaux."
+      },
+      "templates": {
+        "description": "Modèle(s) numérique(s) à utiliser avec vos applications compatibles. Idéal pour créer des cartes, des œuvres d'art, des cadeaux ou pour la planification et le journaling.",
+        "specItems": [
+          "Format .png",
+          "Compatible avec toute application supportant les images : Noteful, GoodNotes®, Notability, Pages, Procreate®, Suite Adobe, etc.",
+          "Imprimable sur papier format Lettre, A4 ou plus petit.",
+          "Grande qualité",
+          "Entièrement fait à la main : Pas d'IA",
+          "Unique",
+          "Téléchargement direct après achat"
+        ],
+        "howtoUse": "Après le téléchargement, vous recevrez un fichier .zip dans le dossier <italic>Téléchargements</italic> de l'application <bold>Fichiers</bold> (iOS, iPadOS).<br></br>L'ouvrir révélera un dossier contenant tous les modèles.<br></br>Sélectionnez-en un ou plusieurs, puis Partagez pour ouvrir avec votre application préférée ; ou, importez ces modèles directement depuis Noteful, GoodNotes®, Notability, etc."
+      },
+      "planners": {
+        "description1": "Planificateur numérique à utiliser toute l'année avec n'importe quel lecteur de fichiers PDF. Conçu pour le journaling, vous pouvez écrire sur chaque page pour consigner vos pensées, emplois du temps, habitudes, notes, etc.",
+        "description2": "Veuillez noter qu'il s'agit d'un fichier PDF, ce qui signifie qu'il ne peut pas se lier automatiquement à vos autres planificateurs ou applications comme Calendrier ou Rappels, et il n'y a pas de champs de saisie à remplir.",
+        "specItems": [
+          "Format .pdf",
+          "Compatible avec toute application de lecture PDF : Noteful, GoodNotes®, Notability, Pages, Notes, Procreate®, Suite Adobe, etc.",
+          "Imprimable sur papier format Lettre, A4 ou plus petit.",
+          "Grande qualité",
+          "Entièrement fait à la main : Pas d'IA",
+          "Unique",
+          "Téléchargement direct après achat"
+        ],
+        "howtoUse_part1": "Après le téléchargement, vous recevrez un fichier .zip dans le dossier <italic>Téléchargements</italic> de l'application <bold>Fichiers</bold> (iOS, iPadOS).<br></br>L'ouvrir révélera un fichier PDF.<br></br>Vous pouvez écrire dessus directement dans l'application <bold>Fichiers</bold> ; ou, l'importer dans une application compatible : appuyez longuement dessus &rarr; Partager &rarr; sélectionnez votre application favorite.",
+        "howtoUse_part2": "Si le planificateur contient des liens de calendrier, le fichier .zip révélera un dossier avec le planificateur et un autre fichier PDF avec des instructions sur l'utilisation de ces liens."
+      }
+    }
+  },
+  "Navbar": {
+    "brushes": "Pinceaux",
+    "stickers": "Autocollants",
+    "templates": "Modèles",
+    "planners": "Planificateurs",
+    "freebies": "Gratuits"
+  },
+  "PaymentConfirmation": {
+    "headTitle": "Confirmation de Paiement - NJAE Plume",
+    "heading": "Paiement Réussi !",
+    "subHeading": "Merci pour votre achat chez NJAE Plume",
+    "greeting": "Bonjour",
+    "confirmationText": "Nous sommes ravis de confirmer que votre paiement a été traité avec succès. Vos produits numériques sont maintenant prêts à être téléchargés.",
+    "orderDetailsTitle": "Détails de la Commande",
+    "orderNumberLabel": "Numéro de Commande",
+    "orderDateLabel": "Date de Commande",
+    "purchaseSummaryTitle": "Mon Achat",
+    "totalLabel": "Total",
+    "nextStepsTitle": "Prochaines Étapes",
+    "nextStepsText": "Cliquez sur le bouton ci-dessous pour télécharger votre achat. Le lien vous redirigera vers votre compte où vous pourrez accéder à tous vos articles achetés. Veuillez noter que chaque lien restera actif pendant 30 jours et ne peut être utilisé qu'une seule fois pour des raisons de sécurité.",
+    "downloadButtonText": "Voir Mes Achats",
+    "supportText": "Si vous avez des questions ou besoin d'aide, n'hésitez pas à contacter notre équipe de support à support@njaeplume.com",
+    "closingText": "Merci d'avoir magasiné chez NJAE Plume !",
+    "subject": "Confirmation de Commande"
+  },
+  "PaymentFailure": {
+    "headTitle": "Échec du Paiement - NJAE Plume",
+    "heading": "Le Paiement n'a pas Réussi",
+    "subHeading": "Nous n'avons pas pu traiter votre paiement pour NJAE Plume",
+    "greeting": "Bonjour",
+    "failureText": "Votre récente tentative de paiement a échoué. Cela pourrait être dû à des fonds insuffisants, à des détails de carte expirés ou à des mesures de sécurité de votre banque.",
+    "nextStepsTitle": "Que faire ensuite :",
+    "nextStepsText": "Aucun frais n'a été traité et aucune commande n'a été créée. Vous pouvez réessayer avec un autre mode de paiement ou vérifier auprès de votre banque qu'il n'y a pas de problème avec votre mode de paiement actuel.",
+    "supportText": "Si vous avez des questions ou besoin d'aide, n'hésitez pas à contacter notre équipe de support à support@njaeplume.com",
+    "closingText": "Merci de votre intérêt pour NJAE Plume.",
+    "subject": "Notification d'Échec de Paiement"
+  },
+  "Wishlist": {
+    "addToWishlist": "Ajouter à la Liste de Souhaits",
+    "removeFromWishlist": "Retirer de la Liste de Souhaits",
+    "added": "\"{productName}\" a été ajouté à votre Liste de Souhaits !",
+    "removed": "\"{productName}\" a été retiré de votre Liste de Souhaits.",
+    "error": "Échec de la mise à jour de la Liste de Souhaits. Veuillez réessayer.",
+    "signInRequired": "Veuillez vous connecter pour gérer votre Liste de Souhaits."
+  },
+  "AccountWishlist": {
+    "title": "Ma Liste de Souhaits",
+    "loading": "Chargement de votre Liste de Souhaits...",
+    "errorLoading": "Impossible de charger votre Liste de Souhaits. Veuillez réessayer plus tard.",
+    "signInRequired": "Veuillez vous connecter pour voir votre Liste de Souhaits.",
+    "backToDashboard": "Retour au Tableau de Bord",
+    "noItemsTitle": "Votre Liste de Souhaits est vide",
+    "noItemsMessage": "Vous n'avez encore ajouté aucun produit à votre Liste de Souhaits. Commencez à explorer et trouvez quelque chose que vous aimez !",
+    "goShopping": "Aller magasiner"
   }
 }

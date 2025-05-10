@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
-// import { useTranslations } from "next-intl";
+import { useTranslations } from "next-intl";
 
 import { PageTitle } from "@/src/components/root/PageTitle";
 import { CategoryGallery } from "@/src/components/product/CategoryGallery";
@@ -10,7 +10,7 @@ import { Product } from "@/src/interfaces/Products";
 
 export default function FreebiesPage() {
   const [products, setProducts] = useState<Product[]>([]);
-  // const t = useTranslations("Portfolio");
+  const t = useTranslations("FreebiePage");
 
   useEffect(() => {
     async function fetchProducts() {
@@ -30,7 +30,7 @@ export default function FreebiesPage() {
 
   return (
     <div>
-      <PageTitle title="Free Downloads" />
+      <PageTitle title={t("title")} />
       <div className="py-5" />
       <CategoryGallery products={products} showAsFreebies={true} />
     </div>

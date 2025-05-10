@@ -6,7 +6,14 @@ export default function robots(): MetadataRoute.Robots {
       {
         userAgent: "*",
         allow: "/",
-        disallow: ["/private/", "/admin/", "/login/", "/signin/"],
+        disallow: [
+          "/private/",
+          "/admin/",
+          "/login/",
+          "/signin/",
+          "/castle/",
+          "/account/",
+        ],
       },
     ],
     sitemap: "https://www.njaeplume.com/sitemap.xml",

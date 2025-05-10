@@ -2,7 +2,8 @@
   "HomePage": {
     "noticeTitle": "Exciting Changes Are Coming!",
     "noticeMessage": "We're currently revamping our shop to bring you an even better experience.",
-    "noticeCTA": "Stay tuned and check back soon for updates!"
+    "noticeCTA": "Stay tuned and check back soon for updates!",
+    "buttonCTA": "Shop Now"
   },
   "Utils": {
     "LoadingButton": "Please wait",
@@ -10,6 +11,11 @@
       "title": "Something went wrong!",
       "message": "Please try again later."
     }
+  },
+  "policies": {
+    "privacy_policy": "Privacy Policy",
+    "cookies_policy": "Cookie Policy",
+    "terms_of_service": "Terms of Service"
   },
   "Footer": {
     "copyright1": "NJAE Plume",
@@ -237,5 +243,240 @@
       "planners": "Our latest Planners",
       "freebies": "Our latest Freebies"
     }
+  },
+  "AccountDownloads": {
+    "loading": "Loading your digital products...",
+    "signInRequired": "Please sign in to access your downloads",
+    "backToDashboard": "Back to Dashboard",
+    "title": "My Downloads",
+    "downloadButton": "Download",
+    "downloadedOn": "Downloaded on {date}",
+    "noDownloadsTitle": "No downloadable products found",
+    "noDownloadsMessage": "You haven't purchased any digital products yet, or your orders are still processing.",
+    "goShopping": "Go Shopping",
+    "errorLoading": "Failed to load your downloadable products."
+  },
+  "AccountOrders": {
+    "loading": "Loading your orders...",
+    "signInRequired": "Please sign in to view your orders",
+    "backToDashboard": "Back to Dashboard",
+    "title": "Order History",
+    "noOrdersTitle": "No orders found",
+    "noOrdersMessage": "You haven't placed any orders yet.",
+    "goShopping": "Go Shopping",
+    "errorLoading": "Failed to load your order history."
+  },
+  "AccountDashboard": {
+    "loading": "Loading your account information...",
+    "signInRequired": "Please sign in to access your account",
+    "title": "My Account",
+    "welcome": "Welcome, {firstName}",
+    "description": "Manage your Wishlist, digital downloads and order history from your personal dashboard.",
+    "yourAccount": "Your Account",
+    "orders": "Orders",
+    "downloadable": "Downloadable",
+    "totalFiles": "Total Files",
+    "recentOrder": "Recent Order",
+    "viewAllOrders": "View All Orders",
+    "orderId": "Order ID:",
+    "noOrdersYet": "You haven't placed any orders yet.",
+    "recentDownloads": "Recent Downloads",
+    "viewAllDownloads": "View All Downloads",
+    "downloadButton": "Download",
+    "downloadedOn": "Downloaded on {date}",
+    "downloadsAvailable": "You have downloads available. Click 'View All Downloads' to see them.",
+    "noDownloadsYet": "You don't have any downloads yet.",
+    "paymentSuccess": "Payment successful! Your order is complete.",
+    "viewWishlist": "View Wishlist",
+    "wishlistSummary": "You have {count, plural, =0 {no items} one {# item} other {# items}} in your wishlist.",
+    "noWishlistItems": "Your wishlist is empty. Start adding some favorites!"
+  },
+  "AccountOrdersTable": {
+    "orderId": "Order ID",
+    "date": "Date",
+    "status": "Status",
+    "amount": "Amount",
+    "items": "Items",
+    "viewItems": "View {count, plural, =1 {# item} other {# items}}",
+    "itemsForOrder": "Items for Order {orderId}",
+    "price": "Price: {price}",
+    "noOrdersFound": "No orders found."
+  },
+  "CartDrawer": {
+    "title": "My Cart",
+    "description": "Make sure to review your cart before checkout",
+    "emptyCart": "Your cart is empty",
+    "removeProduct": "Remove {productName}",
+    "total": "Total",
+    "checkoutButton": "Proceed to Checkout",
+    "clearCartButton": "Clear Cart",
+    "checkoutError": "Checkout failed. Please try again."
+  },
+  "ProductCard": {
+    "imageLoadError": "Failed to load image",
+    "addToCartButtonTitle": "Add to cart",
+    "addToCartSuccess": "{productName} has been added to your cart.",
+    "category": {
+      "brushes": "Brushes",
+      "stickers": "Stickers",
+      "templates": "Templates",
+      "planners": "Planners"
+    }
+  },
+  "FreebieCard": {
+    "imageLoadError": "Failed to load image",
+    "downloadButtonTitle": "Download Freebie",
+    "downloadSuccessTitle": "Thank you for downloading!",
+    "downloadSuccessDesc": "We hope you enjoy {productName}!",
+    "downloadErrorTitle": "Unable to download file",
+    "downloadErrorDesc": "Please try again later or contact us for assistance.",
+    "downloadButtonText": "Download",
+    "category": {
+      "freebies": "Freebies"
+    }
+  },
+  "FreebiePage": {
+    "title": "Free Downloads"
+  },
+  "ProductDetail": {
+    "backButton": {
+      "brushes": "Back to Brushes",
+      "stickers": "Back to Stickers",
+      "templates": "Back to Templates",
+      "planners": "Back to Planners"
+    },
+    "addToCartButton": "Add to Cart",
+    "imageLoadError": "Failed to load image",
+    "prevImageAria": "Previous image",
+    "nextImageAria": "Next image",
+    "thumbnailAria": "View thumbnail {index}"
+  },
+  "ProductSpecs": {
+    "bulletSymbol": "•●◍●•",
+    "customDemandText": "For any custom art demand, please reach out to us through our <contactLink>contact form</contactLink>, before purchase.",
+    "faqSectionText": "Check our <faqLink>FAQ page</faqLink> for more information on how to use our products, or feel free to <contactLink>contact us</contactLink>.",
+    "copyright": {
+      "line1": "Original design. You may not resell or reproduce.",
+      "line2": "For full terms, please refere to our <eulaLink>End-User License Agreement (EULA)</eulaLink>.",
+      "line3": "© 2021 - {currentYear} Nathalie Tran, aka Niniefy. All Rights Reserved."
+    },
+    "categoryNotAvailable": "Description not available for this category.",
+    "accordionTriggers": {
+      "specifications": "Specifications",
+      "howToUse": "How to Use",
+      "customDemands": "Custom Demands",
+      "faq": "FAQ",
+      "copyrights": "Copyrights"
+    },
+    "categories": {
+      "stickers": {
+        "description": "Digital stickers set to use with your compatible applications. Great for creating cards or artworks, gifts or journaling.",
+        "specItems": [
+          ".png format",
+          "Transparent background",
+          "Compatible with any image supporting application: Noteful, GoodNotes®, Notability, Pages, Procreate®, Adobe Suite, etc.",
+          "Printable on Letter, A4 or smaller paper size.",
+          "HD quality",
+          "Entirely handmade: No AI",
+          "Unique",
+          "Direct download upon purchase"
+        ],
+        "howtoUse": "Upon downloading, you will receive a .zip file, in the <italic>Downloads</italic> folder in <bold>Files</bold> app (iOS, iPadOS).<br></br>Opening it will reveal a folder containing all the stickers of this set.<br></br>Select one of more, and share them to a compatible application. You can also import the whole folder as a new stickers pack into journaling apps such as: Noteful, GoodNotes®, Notability, etc."
+      },
+      "brushes": {
+        "description": "Digital brushes pack. Easily adjustable according to your needs.",
+        "specItems": [
+          ".brushset format",
+          "Procreate® and Adobe® Photoshop compatible",
+          "Entirely handmade: No AI",
+          "Unique",
+          "Direct download upon purchase"
+        ],
+        "howtoUse": "Upon downloading, you will receive a .zip file, in the <italic>Downloads</italic> folder in <bold>Files</bold> app (iOS, iPadOS).<br></br>Opening it will reveal a .brushset file.<br></br>Click on this file, and it will automatically be imported in Procreate® ; or, long-press &rarr; Share &rarr; select the Procreate® app.<br></br>Finally, open Procreate® select a canvas, and find the imported brushset in the Brush Library."
+      },
+      "templates": {
+        "description": "Digital template(s) to use with your compatible applications. Great for creating cards or artworks, gifts or planning and journaling.",
+        "specItems": [
+          ".png format",
+          "Compatible with any image supporting application: Noteful, GoodNotes®, Notability, Pages, Procreate®, Adobe Suite, etc.",
+          "Printable on Letter, A4 or smaller paper size.",
+          "Great quality",
+          "Entirely handmade: No AI",
+          "Unique",
+          "Direct download upon purchase"
+        ],
+        "howtoUse": "Upon downloading, you will receive a .zip file, in the <italic>Downloads</italic> folder in <bold>Files</bold> app (iOS, iPadOS).<br></br>Opening it will reveal a folder containing every templates.<br></br>Select one of more, then Share to open with your preferred application ; or, import these templates directly from Noteful, GoodNotes®, Notability, and so on."
+      },
+      "planners": {
+        "description1": "Digital planner to use all year long with any PDF file reader. Made for journaling, you can write on every page to log in your thoughts, schedules, habits, notes, etc.",
+        "description2": "Please note that this is a PDF file, which means it cannot link automatically to your other planners or apps like Calendar or Reminders, and there are no input fields to fill in.",
+        "specItems": [
+          ".pdf format",
+          "Compatible with any PDF reader application: Noteful, GoodNotes®, Notability, Pages, Notes, Procreate®, Adobe Suite, etc.",
+          "Printable on Letter, A4 or smaller paper size.",
+          "Great quality",
+          "Entirely handmade: No AI",
+          "Unique",
+          "Direct download upon purchase"
+        ],
+        "howtoUse_part1": "Upon downloading, you will receive a .zip file, in the <italic>Downloads</italic> folder in <bold>Files</bold> app (iOS, iPadOS).<br></br>Opening it will reveal a PDF file.<br></br>You can write on it directly in <bold>Files</bold> app ; or, import it into a compatible application: long-press on it &rarr; Share &rarr; select your favourite application.",
+        "howtoUse_part2": "If the planner has calendar links, the .zip file will reveal a folder with the planner and another PDF file with instructions on the use of these links."
+      }
+    }
+  },
+  "Navbar": {
+    "brushes": "Brushes",
+    "stickers": "Stickers",
+    "templates": "Templates",
+    "planners": "Planners",
+    "freebies": "Freebies"
+  },
+  "PaymentConfirmation": {
+    "headTitle": "Payment Confirmation - NJAE Plume",
+    "heading": "Payment Successful!",
+    "subHeading": "Thank you for your purchase from NJAE Plume",
+    "greeting": "Hi",
+    "confirmationText": "We are delighted to confirm that your payment has been successfully processed. Your digital products are now ready for download.",
+    "orderDetailsTitle": "Order Details",
+    "orderNumberLabel": "Order Number",
+    "orderDateLabel": "Order Date",
+    "purchaseSummaryTitle": "My Purchase",
+    "totalLabel": "Total",
+    "nextStepsTitle": "Next Steps",
+    "nextStepsText": "Click the button below to download your purchase. The link will redirect you to your account where you can access all your purchased items. Please note that each link will remain active for 30 days and can only be used once for security purposes.",
+    "downloadButtonText": "View My Purchases",
+    "supportText": "If you have any questions or need assistance, please don't hesitate to contact our support team at support@njaeplume.com",
+    "closingText": "Thank you for shopping with NJAE Plume!",
+    "subject": "Order Confirmation"
+  },
+  "PaymentFailure": {
+    "headTitle": "Payment Failed - NJAE Plume",
+    "heading": "Payment Was Not Successful",
+    "subHeading": "We were unable to process your payment for NJAE Plume",
+    "greeting": "Hi",
+    "failureText": "Your recent payment attempt failed. This could be due to insufficient funds, expired card details, or security measures from your bank.",
+    "nextStepsTitle": "What to do next:",
+    "nextStepsText": "No charges have been processed, and no order has been created. You can try again with a different payment method or check with your bank to ensure there are no issues with your current payment method.",
+    "supportText": "If you have any questions or need assistance, please don't hesitate to contact our support team at support@njaeplume.com",
+    "closingText": "Thank you for your interest in NJAE Plume.",
+    "subject": "Payment Failure Notification"
+  },
+  "Wishlist": {
+    "addToWishlist": "Add to Wishlist",
+    "removeFromWishlist": "Remove from Wishlist",
+    "added": "\"{productName}\" added to your wishlist!",
+    "removed": "\"{productName}\" removed from your wishlist.",
+    "error": "Failed to update wishlist. Please try again.",
+    "signInRequired": "Please sign in to manage your wishlist."
+  },
+  "AccountWishlist": {
+    "title": "My Wishlist",
+    "loading": "Loading your wishlist...",
+    "errorLoading": "Could not load your wishlist. Please try again later.",
+    "signInRequired": "Please sign in to view your wishlist.",
+    "backToDashboard": "Back to Dashboard",
+    "noItemsTitle": "Your Wishlist is Empty",
+    "noItemsMessage": "You haven't added any products to your wishlist yet. Start exploring and find something you love!",
+    "goShopping": "Go Shopping"
   }
 }

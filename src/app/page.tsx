@@ -10,8 +10,7 @@ import { Button } from "@/components/ui/button";
 import { getHomeItemByKey } from "@/config/site";
 import { LoadingButton } from "@/components/root/LoadingButton";
 import { PageTitle } from "@/components/root/PageTitle";
-
-import { NonceContext } from "./providers";
+import { NonceContext } from "@/providers/RootProviders";
 
 export default function RootPage() {
   const nonce = useContext(NonceContext);
@@ -62,7 +61,7 @@ export default function RootPage() {
         {shop && shop.href ? (
           <Button asChild className="w-auto" variant="form">
             <Link href={shop.href}>
-              <Store /> {shop.label}
+              <Store /> {t("buttonCTA")}
             </Link>
           </Button>
         ) : (

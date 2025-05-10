@@ -2,8 +2,8 @@
 
 import crypto from "crypto";
 
-import { Category, PrismaClient } from "@prisma/client";
-
+import { Category } from "@/generated/client";
+import { prisma } from "@/src/lib/prismaClient";
 import { ProductFormState } from "@/src/interfaces/Products";
 import { GenerateUploadUrlResult } from "@/src/interfaces/Products";
 import { getProductZipFileName } from "@/src/lib/actionHelpers";
@@ -87,6 +87,7 @@ export async function createProductWithUploads(
     const name = formData.get("name") as string;
     const price = parseFloat(formData.get("price") as string);
     const description = formData.get("description") as string;
+    const description_fr = formData.get("description_fr") as string;
     const category = formData.get("category") as Category;
 
     // Extract file paths
@@ -141,6 +142,7 @@ export async function createProductWithUploads(
       name,
       price,
       description,
+      description_fr,
       category,
       zip_file_name: zipFilePath,
       tagIds: tagIds, // Pass the tag IDs for association
@@ -168,8 +170,6 @@ export async function deleteProductWithFiles(
 ): Promise<{ success: boolean; error?: string }> {
   try {
     // 1. Get the product details to know which files to delete
-    const prisma = new PrismaClient();
-
     const product = await prisma.product.findUnique({
       where: { id: productId },
       include: { images: true },

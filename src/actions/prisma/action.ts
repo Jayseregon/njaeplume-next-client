@@ -1,8 +1,14 @@
 "use server";
 
-import { PrismaClient, Category } from "@prisma/client";
+import { auth } from "@clerk/nextjs/server";
 
-import { Product } from "@/src/interfaces/Products";
+import { Category } from "@/generated/client";
+import { prisma } from "@/src/lib/prismaClient";
+import {
+  Product,
+  OrderWithItems,
+  WishlistItem,
+} from "@/src/interfaces/Products"; // Added WishlistItem
 import { slugifyProductName, normalizeTagName } from "@/src/lib/actionHelpers";
 
 // New cache implementations
@@ -13,8 +19,6 @@ const categoryProductsCache = new Map<
   { data: any; timestamp: number }
 >();
 const CACHE_DURATION = 60000 * 5; // cache duration in ms (60s * 5: 5 minutes)
-
-const prisma = new PrismaClient();
 
 async function generateUniqueSlug(
   name: string,
@@ -161,6 +165,7 @@ export async function createProduct(data: {
   name: string;
   price: number;
   description: string;
+  description_fr: string;
   category: Category;
   zip_file_name: string;
   tagIds: string[];
@@ -174,6 +179,7 @@ export async function createProduct(data: {
         name: data.name,
         price: data.price,
         description: data.description,
+        description_fr: data.description_fr,
         category: data.category,
         zip_file_name: data.zip_file_name,
         slug: slug,
@@ -253,12 +259,8 @@ export async function getProductBySlug(slug: string) {
   }
 }
 
-/**
- * Fetches up to three latest products for each category that has products.
- * Optimized for the shop page with caching.
- */
 export async function getLatestProductsByCategory(limit = 3) {
-  const cacheKey = `latest_${limit}`;
+  const cacheKey = `latest_${limit}_no_freebies`; // Updated cache key
   const cacheEntry = categoryProductsCache.get(cacheKey);
 
   // Return cached data if valid
@@ -267,8 +269,10 @@ export async function getLatestProductsByCategory(limit = 3) {
   }
 
   try {
-    // Get all categories
-    const categories = Object.values(Category);
+    // Get all categories EXCEPT freebies
+    const categories = Object.values(Category).filter(
+      (cat) => cat !== Category.freebies,
+    );
 
     // Prepare query to get latest products for each category with limit
     const categoryProducts = await Promise.all(
@@ -314,5 +318,238 @@ export async function getLatestProductsByCategory(limit = 3) {
     return [];
   } finally {
     await prisma.$disconnect();
+  }
+}
+
+export async function getUserOrders(options?: {
+  limit?: number;
+}): Promise<OrderWithItems[]> {
+  const { userId } = await auth();
+
+  if (!userId) {
+    throw new Error("User not authenticated");
+  }
+
+  try {
+    const orders = await prisma.order.findMany({
+      where: {
+        userId: userId,
+        status: "COMPLETED",
+      },
+      include: {
+        items: {
+          include: {
+            product: {
+              include: {
+                images: true,
+                tags: true,
+              },
+            },
+          },
+        },
+      },
+      orderBy: {
+        createdAt: "desc",
+      },
+      take: options?.limit,
+    });
+
+    return orders as OrderWithItems[];
+  } catch (error) {
+    console.error("Error fetching user orders:", error);
+    throw new Error("Failed to fetch orders.");
+  }
+}
+
+// Add or update this server action to handle download tracking
+export async function updateOrderItemDownload(
+  orderItemId: string,
+): Promise<boolean> {
+  try {
+    // Get the current auth session
+    const { userId } = await auth();
+
+    if (!userId) {
+      console.error(
+        "No authenticated user found when trying to update download",
+      );
+
+      return false;
+    }
+
+    // First, verify this order item belongs to the authenticated user
+    const orderItem = await prisma.orderItem.findUnique({
+      where: { id: orderItemId },
+      include: {
+        order: true,
+      },
+    });
+
+    if (!orderItem) {
+      console.error(`Order item ${orderItemId} not found`);
+
+      return false;
+    }
+
+    // Verify this order belongs to the current user
+    if (orderItem.order.userId !== userId) {
+      console.error(`User ${userId} does not own order item ${orderItemId}`);
+
+      return false;
+    }
+
+    // Update the download count and timestamp
+    await prisma.orderItem.update({
+      where: { id: orderItemId },
+      data: {
+        downnloadCount: 1, // Increment to 1 (first download)
+        downloadedAt: new Date(),
+      },
+    });
+
+    console.log(
+      `Successfully updated download status for order item ${orderItemId}`,
+    );
+
+    return true;
+  } catch (error) {
+    console.error("Error updating order item download:", error);
+
+    return false;
+  }
+}
+
+export async function isProductInWishlist(productId: string): Promise<boolean> {
+  const { userId } = await auth();
+
+  if (!userId) {
+    console.error(
+      "No authenticated user found when trying to check wishlist status",
+    );
+
+    return false;
+  }
+
+  try {
+    const wishlistItem = await prisma.wishlistItem.findUnique({
+      where: {
+        userId_productId: {
+          userId,
+          productId,
+        },
+      },
+    });
+
+    return !!wishlistItem;
+  } catch (error) {
+    console.error("Error checking wishlist status:", error);
+
+    // Return false or throw error, depending on desired error handling
+    return false;
+  }
+}
+
+export async function addToWishlist(
+  productId: string,
+): Promise<WishlistItem | null> {
+  const { userId } = await auth();
+
+  if (!userId) {
+    throw new Error("User not authenticated. Cannot add to wishlist.");
+  }
+
+  try {
+    // Check if product exists
+    const product = await prisma.product.findUnique({
+      where: { id: productId },
+    });
+
+    if (!product) {
+      throw new Error("Product not found.");
+    }
+
+    const wishlistItem = await prisma.wishlistItem.create({
+      data: {
+        userId,
+        productId,
+      },
+    });
+
+    return wishlistItem as WishlistItem;
+  } catch (error) {
+    console.error("Error adding to wishlist:", error);
+    // Prisma throws P2002 if item already exists due to @@id([userId, productId])
+    // You might want to handle this specific error gracefully or let it propagate
+    if ((error as any).code === "P2002") {
+      // Item already in wishlist, return existing or null based on desired behavior
+      const existingItem = await prisma.wishlistItem.findUnique({
+        where: { userId_productId: { userId, productId } },
+      });
+
+      return existingItem as WishlistItem | null;
+    }
+    throw new Error("Failed to add product to wishlist.");
+  }
+}
+
+export async function removeFromWishlist(productId: string): Promise<boolean> {
+  const { userId } = await auth();
+
+  if (!userId) {
+    throw new Error("User not authenticated. Cannot remove from wishlist.");
+
+    return false;
+  }
+
+  try {
+    await prisma.wishlistItem.delete({
+      where: {
+        userId_productId: {
+          userId,
+          productId,
+        },
+      },
+    });
+
+    return true;
+  } catch (error) {
+    console.error("Error removing from wishlist:", error);
+    // Prisma throws P2025 if item to delete is not found.
+    if ((error as any).code === "P2025") {
+      // Item not found, which means it's already removed or was never there.
+      // Consider this a success or handle as an error based on requirements.
+      return true;
+    }
+    throw new Error("Failed to remove product from wishlist.");
+  }
+}
+
+export async function getUserWishlist(): Promise<Product[]> {
+  const { userId } = await auth();
+
+  if (!userId) {
+    throw new Error("User not authenticated. Cannot fetch wishlist.");
+  }
+
+  try {
+    const wishlistItems = await prisma.wishlistItem.findMany({
+      where: { userId },
+      include: {
+        product: {
+          include: {
+            images: true,
+            tags: true,
+          },
+        },
+      },
+      orderBy: {
+        createdAt: "desc",
+      },
+    });
+
+    return wishlistItems.map((item) => item.product as Product);
+  } catch (error) {
+    console.error("Error fetching user wishlist:", error);
+    throw new Error("Failed to fetch wishlist.");
   }
 }

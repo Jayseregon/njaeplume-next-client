@@ -1,12 +1,13 @@
 generator client {
   provider        = "prisma-client-js"
+  output          = "../generated/client"
   previewFeatures = ["multiSchema"]
 }
 
 datasource db {
   provider = "postgresql"
   url      = env("DATABASE_URL_AIVEN")
-  schemas  = ["products"]
+  schemas  = ["products", "orders"]
 }
 
 enum Category {
@@ -29,17 +30,20 @@ model Tag {
 }
 
 model Product {
-  id            String         @id @default(cuid())
-  name          String
-  price         Float
-  description   String
-  category      Category
-  createdAt     DateTime       @default(now())
-  updatedAt     DateTime       @updatedAt
-  zip_file_name String
-  slug          String         @unique
-  tags          Tag[]          @relation("ProductToTag")
-  images        ProductImage[]
+  id             String         @id @default(cuid())
+  name           String
+  price          Float
+  description    String
+  description_fr String         @default("")
+  category       Category
+  createdAt      DateTime       @default(now())
+  updatedAt      DateTime       @updatedAt
+  zip_file_name  String
+  slug           String         @unique
+  tags           Tag[]          @relation("ProductToTag")
+  images         ProductImage[]
+  OrderItem      OrderItem[]
+  wishlistedBy   WishlistItem[] // Added relation to WishlistItem
 
   @@schema("products")
 }
@@ -51,5 +55,58 @@ model ProductImage {
   alt_text  String
   url       String
 
+  @@schema("products")
+}
+
+enum OrderStatus {
+  PENDING
+  COMPLETED
+  FAILED
+
+  @@schema("orders")
+}
+
+model Order {
+  id                      String      @id @default(cuid())
+  displayId               String      @unique
+  userId                  String // Clerk User ID
+  amount                  Float
+  status                  OrderStatus @default(PENDING)
+  stripeCheckoutSessionId String      @unique
+  stripeChargeId          String?     @unique
+  stripeCustomerId        String?
+  createdAt               DateTime    @default(now())
+  updatedAt               DateTime    @updatedAt
+  items                   OrderItem[]
+
+  // Add indexes for faster lookups
+  @@index([userId])
+  @@index([stripeCheckoutSessionId])
+  @@schema("orders")
+}
+
+model OrderItem {
+  id             String    @id @default(cuid())
+  orderId        String
+  order          Order     @relation(fields: [orderId], references: [id], onDelete: Cascade)
+  productId      String
+  product        Product   @relation(fields: [productId], references: [id]) // Don't cascade delete product if order item is deleted
+  quantity       Int       @default(1) // Quantity is always 1 for digital products
+  price          Float
+  downnloadCount Int       @default(0)
+  downloadedAt   DateTime?
+
+  @@schema("orders")
+}
+
+model WishlistItem {
+  userId    String
+  productId String
+  product   Product  @relation(fields: [productId], references: [id], onDelete: Cascade)
+  createdAt DateTime @default(now())
+
+  @@id([userId, productId]) // Composite primary key
+  @@index([userId])
+  @@index([productId])
   @@schema("products")
 }

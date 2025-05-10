@@ -8,6 +8,8 @@ import { SpeedInsights } from "@vercel/speed-insights/next";
 import { headers } from "next/headers";
 import Head from "next/head";
 import { getLocale, getMessages } from "next-intl/server";
+import Link from "next/link";
+import Script from "next/script"; // Import Script
 
 import Navbar from "@/components/root/navbar/Navbar";
 import Footer from "@/components/root/Footer";
@@ -19,10 +21,13 @@ import {
   fontDisplay,
   fontSansAlt,
 } from "@/config/fonts";
-import { Toaster } from "@/components/ui/sonner";
+// Remove the direct import of Toaster from sonner or ui/sonner if it was aliased
+// import { Toaster } from "@/components/ui/sonner";
+import { CustomToaster } from "@/components/ui/sonner-custom"; // Import the new custom toaster
 import DisableRightClick from "@/components/DisableRightClick";
-
-import { Providers } from "./providers";
+import { CartStoreProvider } from "@/providers/CartStoreProvider";
+import { RootProviders } from "@/providers/RootProviders";
+import UsercentricsCookieConsent from "@/components/legals/UsercentricsCookieConsent";
 
 export const metadata: Metadata = {
   title: {
@@ -62,12 +67,7 @@ export default async function RootLayout({
   const messages = await getMessages();
 
   return (
-    <html
-      suppressHydrationWarning
-      className="bg-background"
-      lang={locale}
-      {...(nonce ? { nonce } : {})}
-    >
+    <html suppressHydrationWarning className="bg-background" lang={locale}>
       <Head>
         <meta
           content="width=device-width, initial-scale=1"
@@ -86,6 +86,19 @@ export default async function RootLayout({
           name="theme-color"
           nonce={nonce}
         />
+        <Link
+          href="//privacy-proxy.usercentrics.eu"
+          nonce={nonce}
+          rel="preconnect"
+        />
+        <Link href="//app.usercentrics.eu" nonce={nonce} rel="preconnect" />
+        {/* Add preload for the blocking script */}
+        <Link
+          as="script"
+          href="https://privacy-proxy.usercentrics.eu/latest/uc-block.bundle.js"
+          nonce={nonce || undefined}
+          rel="preload"
+        />
       </Head>
       <body
         className={clsx(
@@ -96,33 +109,41 @@ export default async function RootLayout({
           fontDisplay.variable,
           fontSansAlt.variable,
         )}
-        nonce={nonce}
       >
+        {/* Load Usercentrics blocking script early, as the first child of body */}
+        <Script
+          id="uc-block-bundle-script"
+          nonce={nonce || undefined}
+          src="https://privacy-proxy.usercentrics.eu/latest/uc-block.bundle.js"
+          strategy="beforeInteractive"
+        />
         <SpeedInsights />
-        <Providers
-          nonce={nonce}
+        <RootProviders
+          nonce={nonce} // RootProviders should pass this to ThemeProvider internally
           themeProps={{ attribute: "class", defaultTheme: "dark", children }}
         >
           <NextIntlClientProvider messages={messages}>
-            <div
-              className="flex flex-col justify-between min-h-screen"
-              nonce={nonce || undefined}
-            >
-              <Navbar />
-
-              <main
-                className="container mx-auto max-w-full px-6 grow"
-                nonce={nonce || undefined}
-              >
-                <DisableRightClick />
-                {children}
-              </main>
-
-              <Footer nonce={nonce || undefined} />
-            </div>
+            <CartStoreProvider>
+              <div className="flex flex-col justify-between min-h-screen">
+                <Navbar />
+                <main className="container mx-auto max-w-full px-6 grow">
+                  <DisableRightClick />
+                  {children}
+                </main>
+                <Footer />
+                {/* Removed nonce prop, Footer should handle internally if needed */}
+              </div>
+            </CartStoreProvider>
           </NextIntlClientProvider>
-        </Providers>
-        <Toaster />
+        </RootProviders>
+        <CustomToaster closeButton richColors />{" "}
+        {/* Use the new CustomToaster. Added richColors and closeButton as examples, adjust as needed. */}
+        {/* Sonner's Toaster relies on 'unsafe-inline' from CSP for styles */}
+        <UsercentricsCookieConsent
+          nonce={nonce}
+          settingsId="f9mN3JpuDNuygD"
+          translationsUrl="https://termageddon.ams3.cdn.digitaloceanspaces.com/translations/"
+        />
       </body>
     </html>
   );

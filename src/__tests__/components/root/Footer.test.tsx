@@ -88,7 +88,7 @@ describe("Footer", () => {
       { text: "Cookies", href: "/policies/cookies" },
       { text: "Returns", href: "/policies/returns-refunds" },
       { text: "Shipping", href: "/policies/shipping" },
-      { text: "Disclaimers", href: "/policies/disclaimers" },
+      // { text: "Disclaimers", href: "/policies/disclaimers" },
     ];
 
     policyLinks.forEach((link) => {
@@ -113,15 +113,6 @@ describe("Footer", () => {
 
     expect(contactLink).toBeInTheDocument();
     expect(contactLink.closest("a")).toHaveAttribute("href", "/contact");
-  });
-
-  it("applies nonce attribute when provided", () => {
-    const testNonce = "test-nonce-123";
-
-    render(<Footer nonce={testNonce} />);
-    const footer = screen.getByRole("contentinfo");
-
-    expect(footer).toHaveAttribute("nonce", testNonce);
   });
 
   it("renders all translated text content", () => {
