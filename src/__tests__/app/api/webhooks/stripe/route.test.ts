@@ -93,6 +93,9 @@ let originalConsoleError: typeof console.error;
 let originalConsoleWarn: typeof console.warn;
 
 describe("Stripe Webhook Handler", () => {
+  // Define default locale for tests, matching the one in route.ts
+  const defaultLocale = "en";
+
   beforeEach(() => {
     jest.resetModules();
     jest.clearAllMocks();
@@ -183,8 +186,8 @@ describe("Stripe Webhook Handler", () => {
   });
 
   describe("Event Handling", () => {
-    it("handles checkout.session.completed event and creates an order", async () => {
-      // Mock checkout.session.completed event
+    it("handles checkout.session.completed event, creates order, and sends notification with locale", async () => {
+      // Mock checkout.session.completed event with locale
       const checkoutSessionCompletedEvent = {
         type: "checkout.session.completed",
         data: {
@@ -196,8 +199,9 @@ describe("Stripe Webhook Handler", () => {
                 { id: "prod_123", price: 29.99 },
                 { id: "prod_456", price: 19.99 },
               ]),
+              locale: "fr", // Add locale to metadata
             },
-            amount_total: 4998, // $49.98 in cents
+            amount_total: 4998,
             payment_intent: "pi_test_123",
             customer: "cus_test_123",
             customer_details: {
@@ -269,7 +273,6 @@ describe("Stripe Webhook Handler", () => {
         return Promise.resolve(mockCreatedOrder);
       });
 
-      // Updated NextRequest construction
       const req = new NextRequest(
         new Request("http://localhost/api/webhooks/stripe", {
           method: "POST",
@@ -288,7 +291,7 @@ describe("Stripe Webhook Handler", () => {
       // Verify transaction was called
       expect(mockTransaction).toHaveBeenCalled();
 
-      // Verify confirmation email was sent
+      // Verify confirmation email was sent with the correct locale
       expect(sendPaymentConfirmationNotification).toHaveBeenCalledWith(
         expect.objectContaining({
           id: "ord_123",
@@ -296,6 +299,119 @@ describe("Stripe Webhook Handler", () => {
         }),
         expect.objectContaining({ id: "cs_test_123" }),
         expect.objectContaining({ id: "user_123" }),
+        "fr", // Verify locale is passed
+      );
+    });
+
+    it("handles checkout.session.completed event and uses default locale if missing in metadata", async () => {
+      // Mock event without locale in metadata
+      const checkoutSessionCompletedEvent = {
+        type: "checkout.session.completed",
+        data: {
+          object: {
+            id: "cs_test_no_locale",
+            metadata: {
+              // No locale key
+              userId: "user_123",
+              cartItems: JSON.stringify([{ id: "prod_123", price: 29.99 }]),
+            },
+            amount_total: 2999,
+            payment_intent: "pi_test_no_locale",
+            customer: "cus_test_123",
+            customer_details: {
+              email: "customer@example.com",
+              name: "Test Customer",
+            },
+          },
+        },
+      };
+
+      (stripe.webhooks.constructEvent as jest.Mock).mockReturnValue(
+        checkoutSessionCompletedEvent,
+      );
+
+      const mockCreatedOrder = {
+        id: "ord_no_locale",
+        displayId: "ORD-NO-LOCALE",
+        items: [] /* ... other order details ... */,
+      };
+
+      mockOrderFindFirst.mockResolvedValue(null);
+      mockTransaction.mockImplementation(() =>
+        Promise.resolve(mockCreatedOrder),
+      );
+
+      const req = new NextRequest(
+        new Request("http://localhost/api/webhooks/stripe", {
+          method: "POST",
+          body: JSON.stringify({}),
+        }),
+      );
+
+      await POST(req);
+
+      // Verify confirmation email was sent with the default locale
+      expect(sendPaymentConfirmationNotification).toHaveBeenCalledWith(
+        expect.anything(),
+        expect.anything(),
+        expect.anything(),
+        defaultLocale, // Verify hardcoded default locale is used
+      );
+    });
+
+    it("handles checkout.session.completed event and uses default locale if locale is invalid", async () => {
+      // Mock event with invalid locale
+      const checkoutSessionCompletedEvent = {
+        type: "checkout.session.completed",
+        data: {
+          object: {
+            id: "cs_test_invalid_locale",
+            metadata: {
+              userId: "user_123",
+              cartItems: JSON.stringify([{ id: "prod_123", price: 29.99 }]),
+              locale: "xx", // Invalid locale
+            },
+            amount_total: 2999,
+            payment_intent: "pi_test_invalid_locale",
+            customer: "cus_test_123",
+            customer_details: {
+              email: "customer@example.com",
+              name: "Test Customer",
+            },
+          },
+        },
+      };
+
+      (stripe.webhooks.constructEvent as jest.Mock).mockReturnValue(
+        checkoutSessionCompletedEvent,
+      );
+
+      const mockCreatedOrder = {
+        id: "ord_invalid_locale",
+        displayId: "ORD-INVALID-LOCALE",
+        items: [] /* ... other order details ... */,
+      };
+
+      mockOrderFindFirst.mockResolvedValue(null);
+      mockTransaction.mockImplementation(() =>
+        Promise.resolve(mockCreatedOrder),
+      );
+
+      const req = new NextRequest(
+        new Request("http://localhost/api/webhooks/stripe", {
+          method: "POST",
+          body: JSON.stringify({}),
+        }),
+      );
+
+      await POST(req);
+
+      // Verify confirmation email was sent with the default locale
+      expect(sendPaymentConfirmationNotification).toHaveBeenCalledWith(
+        expect.anything(),
+        expect.anything(),
+        expect.anything(),
+        defaultLocale, // Verify hardcoded default locale is used
       );
     });
 
@@ -328,7 +444,6 @@ describe("Stripe Webhook Handler", () => {
         stripeCheckoutSessionId: "cs_test_123",
       });
 
-      // Updated NextRequest construction
       const req = new NextRequest(
         new Request("http://localhost/api/webhooks/stripe", {
           method: "POST",
@@ -351,13 +466,16 @@ describe("Stripe Webhook Handler", () => {
       expect(sendPaymentConfirmationNotification).not.toHaveBeenCalled();
     });
 
-    it("handles checkout.session.async_payment_failed event", async () => {
-      // Mock checkout.session.async_payment_failed event
+    it("handles checkout.session.async_payment_failed event with locale", async () => {
+      // Mock event with locale
       const asyncPaymentFailedEvent = {
         type: "checkout.session.async_payment_failed",
         data: {
           object: {
             id: "cs_test_failed",
+            metadata: {
+              locale: "fr", // Add locale
+            },
             customer_details: {
               email: "customer@example.com",
               name: "Test Customer",
@@ -370,14 +488,12 @@ describe("Stripe Webhook Handler", () => {
         asyncPaymentFailedEvent,
       );
 
-      // Updated NextRequest construction
       const req = new NextRequest(
         new Request("http://localhost/api/webhooks/stripe", {
           method: "POST",
           body: JSON.stringify({}),
         }),
       );
-
       const response = await POST(req);
 
       expect(response.status).toBe(200);
@@ -386,11 +502,54 @@ describe("Stripe Webhook Handler", () => {
 
       expect(data.received).toBe(true);
 
-      // Verify failure email was sent
-      expect(sendPaymentFailureNotification).toHaveBeenCalled();
+      // Verify failure email was sent with locale
+      expect(sendPaymentFailureNotification).toHaveBeenCalledWith(
+        expect.objectContaining({ id: "cs_test_failed" }),
+        expect.anything(),
+        expect.any(String),
+        "fr", // Verify locale
+      );
     });
 
-    it("handles charge.failed event", async () => {
+    it("handles checkout.session.async_payment_failed event with default locale", async () => {
+      // Mock event without locale
+      const asyncPaymentFailedEvent = {
+        type: "checkout.session.async_payment_failed",
+        data: {
+          object: {
+            id: "cs_test_failed_no_locale",
+            metadata: {}, // No locale
+            customer_details: {
+              email: "customer@example.com",
+              name: "Test Customer",
+            },
+          },
+        },
+      };
+
+      (stripe.webhooks.constructEvent as jest.Mock).mockReturnValue(
+        asyncPaymentFailedEvent,
+      );
+
+      const req = new NextRequest(
+        new Request("http://localhost/api/webhooks/stripe", {
+          method: "POST",
+          body: JSON.stringify({}),
+        }),
+      );
+
+      await POST(req);
+
+      // Verify failure email was sent with default locale
+      expect(sendPaymentFailureNotification).toHaveBeenCalledWith(
+        expect.objectContaining({ id: "cs_test_failed_no_locale" }),
+        expect.anything(),
+        expect.any(String),
+        defaultLocale, // Verify hardcoded default locale
+      );
+    });
+
+    it("handles charge.failed event with default locale", async () => {
       // Mock charge.failed event
       const chargeFailedEvent = {
         type: "charge.failed",
@@ -410,14 +569,12 @@ describe("Stripe Webhook Handler", () => {
         chargeFailedEvent,
       );
 
-      // Updated NextRequest construction
       const req = new NextRequest(
         new Request("http://localhost/api/webhooks/stripe", {
           method: "POST",
           body: JSON.stringify({}),
         }),
       );
-
       const response = await POST(req);
 
       expect(response.status).toBe(200);
@@ -426,11 +583,12 @@ describe("Stripe Webhook Handler", () => {
 
       expect(data.received).toBe(true);
 
-      // Verify failure email was sent with the error message
+      // Verify failure email was sent with the default locale
       expect(sendPaymentFailureNotification).toHaveBeenCalledWith(
         expect.objectContaining({ id: "ch_test_failed" }),
         expect.anything(),
         "Your card was declined",
+        defaultLocale, // Verify hardcoded default locale
       );
     });
   });
@@ -458,7 +616,6 @@ describe("Stripe Webhook Handler", () => {
       );
       mockOrderFindFirst.mockResolvedValue(null);
 
-      // Updated NextRequest construction
       const req = new NextRequest(
         new Request("http://localhost/api/webhooks/stripe", {
           method: "POST",
@@ -497,7 +654,6 @@ describe("Stripe Webhook Handler", () => {
       );
       mockOrderFindFirst.mockResolvedValue(null);
 
-      // Updated NextRequest construction
       const req = new NextRequest(
         new Request("http://localhost/api/webhooks/stripe", {
           method: "POST",
@@ -536,7 +692,6 @@ describe("Stripe Webhook Handler", () => {
       );
       mockOrderFindFirst.mockResolvedValue(null);
 
-      // Updated NextRequest construction
       const req = new NextRequest(
         new Request("http://localhost/api/webhooks/stripe", {
           method: "POST",
@@ -579,7 +734,6 @@ describe("Stripe Webhook Handler", () => {
       // Mock database transaction failure
       mockTransaction.mockRejectedValue(new Error("Database error"));
 
-      // Updated NextRequest construction
       const req = new NextRequest(
         new Request("http://localhost/api/webhooks/stripe", {
           method: "POST",
@@ -615,7 +769,6 @@ describe("Stripe Webhook Handler", () => {
       irrelevantEvent,
     );
 
-    // Updated NextRequest construction
     const req = new NextRequest(
       new Request("http://localhost/api/webhooks/stripe", {
         method: "POST",

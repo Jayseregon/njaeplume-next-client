@@ -1,7 +1,6 @@
 import React from "react";
 import { render, screen, waitFor } from "@testing-library/react";
 import { useUser } from "@clerk/nextjs";
-import { useSearchParams, useRouter } from "next/navigation";
 import { toast } from "sonner";
 
 // Mock console methods to prevent output during tests
@@ -13,12 +12,6 @@ jest.mock("@clerk/nextjs", () => ({
   useUser: jest.fn(),
 }));
 
-// Mock next navigation hooks
-jest.mock("next/navigation", () => ({
-  useSearchParams: jest.fn(),
-  useRouter: jest.fn(),
-}));
-
 // Mock toast notifications
 jest.mock("sonner", () => ({
   toast: {
@@ -27,19 +20,8 @@ jest.mock("sonner", () => ({
   },
 }));
 
-// Mock the cart store
-const mockClearCart: () => void = jest.fn();
-const mockSetCartOpen: (open: boolean) => void = jest.fn();
-
-jest.mock("@/providers/CartStoreProvider", () => ({
-  useCartStore: (selector: (state: any) => any) => {
-    // Return the appropriate mock function based on what state is being selected
-    if (selector.toString().includes("clearCart")) return mockClearCart;
-    if (selector.toString().includes("setCartOpen")) return mockSetCartOpen;
-
-    return undefined;
-  },
-}));
+// REMOVED: Mock for useSearchParams, useRouter since we don't use them anymore
+// REMOVED: Mock for useCartStore since we don't use it anymore
 
 // Mock getUserOrders action
 const mockGetUserOrders = jest.fn() as jest.Mock<
@@ -113,20 +95,12 @@ jest.mock("@/components/ui/button", () => ({
   ),
 }));
 
-// Mock Suspense component
-jest.mock("react", () => {
-  const actualReact = jest.requireActual("react");
+// REMOVED: Mock for Suspense since we don't use it anymore
 
-  return {
-    ...actualReact,
-    Suspense: ({ fallback, children }: any) => (
-      <>
-        <div data-testid="suspense-fallback">{fallback}</div>
-        {children}
-      </>
-    ),
-  };
-});
+// Mock next-intl
+jest.mock("next-intl", () => ({
+  useTranslations: () => (key: string) => key, // Simple mock returning the key
+}));
 
 // Import after mocks
 import OrdersPage from "@/app/(secured)/account/orders/page";
@@ -152,6 +126,8 @@ const mockOrders: OrderWithItems[] = [
         productId: "prod_1",
         quantity: 1,
         price: 2999,
+        downnloadCount: 0,
+        downloadedAt: null,
         product: {
           id: "prod_1",
           name: "Digital Brush Set",
@@ -186,6 +162,8 @@ const mockOrders: OrderWithItems[] = [
         productId: "prod_2",
         quantity: 1,
         price: 1999,
+        downnloadCount: 0,
+        downloadedAt: null,
         product: {
           id: "prod_2",
           name: "Digital Stickers",
@@ -223,13 +201,8 @@ describe("OrdersPage", () => {
       user: null,
     });
 
-    (useSearchParams as jest.Mock).mockReturnValue({
-      get: jest.fn().mockReturnValue(null),
-    });
-
-    (useRouter as jest.Mock).mockReturnValue({
-      replace: jest.fn(),
-    });
+    // REMOVED: Mock for useSearchParams and useRouter
+    // REMOVED: Mock for cart store functions
 
     mockGetUserOrders.mockResolvedValue([]);
   });
@@ -243,16 +216,8 @@ describe("OrdersPage", () => {
   it("renders loading state when user data is loading", async () => {
     render(<OrdersPage />);
 
-    // Check for the suspense fallback
-    expect(screen.getByTestId("suspense-fallback")).toBeInTheDocument();
-    expect(screen.getByTestId("suspense-fallback")).toHaveTextContent(
-      "Loading...",
-    );
-
-    // Then after the component renders, we should see the loading message
-    await waitFor(() => {
-      expect(screen.getByText("Loading your orders...")).toBeInTheDocument();
-    });
+    // Check for loading message
+    expect(screen.getByText("loading")).toBeInTheDocument();
   });
 
   it("shows sign-in message when user is not authenticated", async () => {
@@ -263,11 +228,8 @@ describe("OrdersPage", () => {
 
     render(<OrdersPage />);
 
-    await waitFor(() => {
-      expect(
-        screen.getByText("Please sign in to view your orders"),
-      ).toBeInTheDocument();
-    });
+    // Check for sign-in message using the rendered text (mock returns key part)
+    expect(screen.getByText("signInRequired")).toBeInTheDocument();
   });
 
   it("displays empty state when user has no orders", async () => {
@@ -281,11 +243,10 @@ describe("OrdersPage", () => {
     render(<OrdersPage />);
 
     await waitFor(() => {
-      expect(screen.getByText("No orders found")).toBeInTheDocument();
-      expect(
-        screen.getByText("You haven't placed any orders yet."),
-      ).toBeInTheDocument();
-      expect(screen.getByText("Go Shopping")).toBeInTheDocument();
+      // Check for empty state messages using translation keys (mock returns key part)
+      expect(screen.getByText("noOrdersTitle")).toBeInTheDocument();
+      expect(screen.getByText("noOrdersMessage")).toBeInTheDocument();
+      expect(screen.getByText("goShopping")).toBeInTheDocument();
     });
 
     // Check that the link to shop is present
@@ -306,6 +267,8 @@ describe("OrdersPage", () => {
       expect(screen.getByTestId("orders-table")).toBeInTheDocument();
       expect(screen.getByTestId("order-ORD-123456")).toBeInTheDocument();
       expect(screen.getByTestId("order-ORD-789012")).toBeInTheDocument();
+      // Check PageTitle receives the correct key (mock t returns the key)
+      expect(screen.getByTestId("page-title")).toHaveTextContent("title");
     });
   });
 
@@ -315,17 +278,21 @@ describe("OrdersPage", () => {
       user: { id: "user_123", firstName: "John", lastName: "Doe" },
     });
 
+    mockGetUserOrders.mockResolvedValue([]);
+
     render(<OrdersPage />);
 
     await waitFor(() => {
-      const backLink = screen.getByText("Back to Dashboard");
-
-      expect(backLink).toBeInTheDocument();
-      expect(screen.getByTestId("link--account")).toHaveAttribute(
-        "href",
-        "/account",
-      );
+      expect(screen.getByTestId("link--account")).toBeInTheDocument();
     });
+
+    expect(screen.getByTestId("arrow-left-icon")).toBeInTheDocument();
+    // Check button text using translation key
+    expect(screen.getByText("backToDashboard")).toBeInTheDocument();
+    expect(screen.getByTestId("link--account")).toHaveAttribute(
+      "href",
+      "/account",
+    );
   });
 
   it("calls getUserOrders with correct parameters", async () => {
@@ -337,53 +304,11 @@ describe("OrdersPage", () => {
     render(<OrdersPage />);
 
     await waitFor(() => {
-      // Use the mock function variable instead of the imported function
       expect(mockGetUserOrders).toHaveBeenCalled();
     });
   });
 
-  it("handles successful checkout and clears cart when session_id is present", async () => {
-    // Setup mocks for successful checkout scenario
-    (useUser as jest.Mock).mockReturnValue({
-      isLoaded: true,
-      user: { id: "user_123", firstName: "John", lastName: "Doe" },
-    });
-
-    const mockGet = jest.fn().mockImplementation((param: string) => {
-      if (param === "session_id") return "cs_test_123";
-
-      return null;
-    });
-
-    (useSearchParams as jest.Mock).mockReturnValue({
-      get: mockGet,
-    });
-
-    const mockReplace = jest.fn();
-
-    (useRouter as jest.Mock).mockReturnValue({
-      replace: mockReplace,
-    });
-
-    render(<OrdersPage />);
-
-    await waitFor(() => {
-      // Verify cart was cleared and success message shown
-      expect(mockClearCart).toHaveBeenCalled();
-      expect(mockSetCartOpen).toHaveBeenCalledWith(false);
-      expect(toast.success).toHaveBeenCalledWith(
-        "Payment successful! Your order is complete.",
-      );
-
-      // Verify URL was updated to remove the session_id
-      expect(mockReplace).toHaveBeenCalled();
-
-      // Verify console.log was called with the expected message
-      expect(console.log).toHaveBeenCalledWith(
-        "Checkout successful, clearing cart...",
-      );
-    });
-  });
+  // REMOVED: Test for checkout and cart clearing functionality
 
   it("handles API errors gracefully", async () => {
     (useUser as jest.Mock).mockReturnValue({
@@ -397,10 +322,8 @@ describe("OrdersPage", () => {
     render(<OrdersPage />);
 
     await waitFor(() => {
-      expect(toast.error).toHaveBeenCalledWith(
-        "Failed to load your order history.",
-      );
-      // Verify console.error was called with the expected message
+      // Check toast error message using translation key
+      expect(toast.error).toHaveBeenCalledWith("errorLoading");
       expect(console.error).toHaveBeenCalledWith(
         "Error fetching orders:",
         expect.any(Error),

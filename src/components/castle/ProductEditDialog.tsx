@@ -48,6 +48,7 @@ export const ProductEditDialog = () => {
         name: selectedProduct.name,
         price: selectedProduct.price,
         description: selectedProduct.description,
+        description_fr: selectedProduct.description_fr,
         category: selectedProduct.category,
         zip_file_name: selectedProduct.zip_file_name,
         slug: selectedProduct.slug,
@@ -303,6 +304,19 @@ export const ProductEditDialog = () => {
                 inputType="textarea"
                 label="Description"
                 name="description"
+              />
+
+              <FormField
+                className="col-span-3"
+                id="description_fr"
+                inputProps={{
+                  rows: 5,
+                  value: formData.description_fr || "",
+                  onChange: handleChange,
+                }}
+                inputType="textarea"
+                label="Description-French"
+                name="description_fr"
               />
 
               {/* Tags Field */}

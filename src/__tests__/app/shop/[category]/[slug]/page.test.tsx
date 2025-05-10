@@ -126,7 +126,7 @@ describe("Dynamic Product Page", () => {
       const metadata = await generateMetadata({ params });
 
       expect(metadata).toEqual({
-        title: "Sample Product | NJAE Plume Brushes",
+        title: "Sample Product | Brushes",
         description:
           "A sample product description that is long enough for testing metadata.",
       });
@@ -177,7 +177,7 @@ describe("Dynamic Product Page", () => {
 
         const metadata = await generateMetadata({ params });
 
-        expect(metadata.title).toBe(`Sample Product | NJAE Plume ${expected}`);
+        expect(metadata.title).toBe(`Sample Product | ${expected}`);
       }
     });
 

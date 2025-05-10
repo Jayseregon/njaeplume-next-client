@@ -3,12 +3,15 @@ import { render, screen, fireEvent } from "@testing-library/react";
 import { TextInput } from "@/components/contact/TextInput";
 
 // Mock translation function
-const mockT = Object.assign((key: string) => `Translated ${key}`, {
-  rich: (key: string) => key,
-  markup: (key: string) => key,
-  raw: (key: string) => key,
-  has: (_key: string) => true,
-});
+const mockT = Object.assign(
+  (key: string, ..._args: any[]) => `Translated ${key}`,
+  {
+    rich: (key: string, ..._args: any[]) => key,
+    markup: (key: string, ..._args: any[]) => key,
+    raw: (key: string) => key,
+    has: (_key: string) => true,
+  },
+);
 
 describe("TextInput", () => {
   const defaultProps = {

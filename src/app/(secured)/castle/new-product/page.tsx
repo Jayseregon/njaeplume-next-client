@@ -272,6 +272,17 @@ export default function NewProductPage() {
                   name="description"
                 />
 
+                <FormField
+                  id="description_fr"
+                  inputProps={{
+                    placeholder: "And the French equivalent...",
+                    rows: 5,
+                  }}
+                  inputType="textarea"
+                  label="Description-French"
+                  name="description_fr"
+                />
+
                 {/* Tags field */}
                 <div className="flex flex-col gap-2">
                   <Label className="text-foreground" htmlFor="tags">

@@ -72,6 +72,7 @@ export async function sendPaymentConfirmationNotification(
   order: Order,
   session: Stripe.Checkout.Session,
   clerkUser: any,
+  localeFromMeta: string,
 ): Promise<void> {
   const logPrefix = `[WEBHOOK] [ORDER:${order.displayId}]`;
   let emailSent = false;
@@ -85,6 +86,7 @@ export async function sendPaymentConfirmationNotification(
         order,
         stripeDetails.name,
         stripeDetails.email,
+        localeFromMeta,
       );
 
       emailSent = logEmailResult(
@@ -113,6 +115,7 @@ export async function sendPaymentConfirmationNotification(
           order,
           clerkDetails.name,
           clerkDetails.email,
+          localeFromMeta,
         );
 
         emailSent = logEmailResult(
@@ -142,6 +145,7 @@ export async function sendPaymentConfirmationNotification(
 export async function sendPaymentFailureNotification(
   stripeObject: Stripe.Checkout.Session | Stripe.Charge,
   clerkUser: any,
+  localeFromMeta: string,
   failureReason?: string,
 ): Promise<void> {
   const logPrefix = "[WEBHOOK] [FAILURE]";
@@ -152,9 +156,11 @@ export async function sendPaymentFailureNotification(
 
   if (stripeDetails.name && stripeDetails.email) {
     try {
+      // Pass locale to sendPaymentFailureEmail
       const result = await sendPaymentFailureEmail(
         stripeDetails.name,
         stripeDetails.email,
+        localeFromMeta,
       );
 
       emailSent = logEmailResult(
@@ -181,9 +187,11 @@ export async function sendPaymentFailureNotification(
 
     if (clerkDetails.name && clerkDetails.email) {
       try {
+        // Pass locale to sendPaymentFailureEmail
         const result = await sendPaymentFailureEmail(
           clerkDetails.name,
           clerkDetails.email,
+          localeFromMeta,
         );
 
         emailSent = logEmailResult(

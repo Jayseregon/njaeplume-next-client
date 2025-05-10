@@ -7,16 +7,21 @@ import { FreebieCard } from "@/src/components/product/FreebieCard";
 interface CategoryGalleryProps {
   products: Product[];
   showAsFreebies?: boolean;
+  onWishlistItemRemoved?: (productId: string) => void;
 }
 
 export const CategoryGallery = ({
   products,
   showAsFreebies = false,
+  onWishlistItemRemoved,
 }: CategoryGalleryProps) => {
   if (!products?.length) {
     return (
       <div className="flex justify-center">
-        <div className="animate-spin border-4 rounded-full w-12 h-12 border-foreground border-t-transparent" />
+        <div
+          className="animate-spin border-4 rounded-full w-12 h-12 border-foreground border-t-transparent"
+          role="status"
+        />
       </div>
     );
   }
@@ -28,7 +33,11 @@ export const CategoryGallery = ({
           showAsFreebies || product.category === "freebies" ? (
             <FreebieCard key={product.id} product={product} />
           ) : (
-            <ProductCard key={product.id} product={product} />
+            <ProductCard
+              key={product.id}
+              product={product}
+              onWishlistChange={onWishlistItemRemoved}
+            />
           ),
         )}
       </div>

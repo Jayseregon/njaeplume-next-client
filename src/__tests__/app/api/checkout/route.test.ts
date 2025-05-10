@@ -1,5 +1,6 @@
 import { NextRequest } from "next/server";
 import { auth, currentUser } from "@clerk/nextjs/server";
+import { cookies } from "next/headers"; // Import cookies
 
 import { stripe } from "@/lib/stripe";
 import { POST } from "@/app/api/checkout/route";
@@ -18,26 +19,31 @@ global.Request = jest.fn().mockImplementation((url, options = {}) => ({
   json: async () => JSON.parse(options.body || "{}"),
 }));
 
-// Mock NextRequest
-jest.mock("next/server", () => {
-  return {
-    NextRequest: jest.fn().mockImplementation((request) => ({
-      url: request.url,
-      method: request.method,
-      json: async () => {
-        return request.json
-          ? await request.json()
-          : JSON.parse(request.body || "{}");
-      },
-    })),
-    NextResponse: {
-      json: (data: any, options: { status: any }) => ({
-        status: options?.status || 200,
-        json: async () => data,
-      }),
+// Mock NextRequest and NextResponse
+jest.mock("next/server", () => ({
+  NextRequest: jest.fn().mockImplementation((request) => ({
+    url: request.url,
+    method: request.method,
+    json: async () => {
+      return request.json
+        ? await request.json()
+        : JSON.parse(request.body || "{}");
     },
-  };
-});
+  })),
+  NextResponse: {
+    json: (data: any, options?: { status?: number }) => ({
+      // Make options optional
+      status: options?.status || 200,
+      json: async () => data,
+    }),
+  },
+}));
+
+// Mock next/headers
+jest.mock("next/headers", () => ({
+  cookies: jest.fn(), // Mock cookies function
+  headers: jest.fn(() => new Map()), // Mock headers if needed elsewhere
+}));
 
 // Mock Clerk authentication
 jest.mock("@clerk/nextjs/server", () => ({
@@ -72,7 +78,7 @@ afterEach(() => {
   process.env = originalEnv;
 });
 
-// Sample test data
+// Sample test data (ensure it matches Zod schema)
 const mockUser = {
   id: "user_123",
   primaryEmailAddressId: "email_123",
@@ -84,7 +90,7 @@ const mockItems = [
     id: "product_123",
     name: "Digital Brush Pack",
     price: 29.99,
-    category: Category.brushes,
+    category: Category.brushes, // Use enum value
     description: "A set of digital brushes",
     createdAt: new Date().toISOString(),
     updatedAt: new Date().toISOString(),
@@ -121,6 +127,10 @@ describe("Checkout API", () => {
       id: "cs_test_123",
       url: "https://checkout.stripe.com/123",
     });
+    // Default mock for cookies
+    (cookies as jest.Mock).mockReturnValue({
+      get: jest.fn().mockReturnValue(undefined), // Default to no locale cookie
+    });
   });
 
   // Restore console methods after each test
@@ -149,28 +159,27 @@ describe("Checkout API", () => {
     expect(data.error).toBe("Unauthorized");
   });
 
-  it("returns 400 when validation fails", async () => {
+  it("returns 400 when validation fails (Zod)", async () => {
     (auth as unknown as jest.Mock).mockResolvedValue({ userId: "user_123" });
     (currentUser as jest.Mock).mockResolvedValue(mockUser);
 
-    // Invalid payload - missing required fields
+    // Invalid payload - missing required fields (e.g., price, category)
+    const invalidItems = [{ id: "invalid", name: "Invalid Item" }];
     const req = new NextRequest(
       new Request("http://localhost/api/checkout", {
         method: "POST",
-        body: JSON.stringify({ items: [{ id: "invalid" }] }),
+        body: JSON.stringify({ items: invalidItems }),
       }),
     );
 
     const response = await POST(req);
 
     expect(response.status).toBe(400);
-
     const data = await response.json();
 
+    // Expect structured Zod error
     expect(data.error).toBe("Invalid input");
     expect(data.details).toBeDefined();
-
-    // Verify error logging occurred
     expect(console.error).toHaveBeenCalledWith(
       "Checkout validation failed:",
       expect.any(Array),
@@ -197,9 +206,19 @@ describe("Checkout API", () => {
     expect(data.error).toBe("Cart is empty");
   });
 
-  it("creates a Stripe checkout session and returns the URL", async () => {
+  it("creates a Stripe checkout session with locale and returns the URL", async () => {
     (auth as unknown as jest.Mock).mockResolvedValue({ userId: "user_123" });
     (currentUser as jest.Mock).mockResolvedValue(mockUser);
+    // Mock cookies to return 'fr' locale
+    (cookies as jest.Mock).mockReturnValue({
+      get: jest.fn((name) => {
+        if (name === "NEXT_LOCALE") {
+          return { name: "NEXT_LOCALE", value: "fr" };
+        }
+
+        return undefined;
+      }),
+    });
 
     const mockSession = {
       id: "cs_test_123",
@@ -224,17 +243,21 @@ describe("Checkout API", () => {
 
     expect(data.url).toBe(mockSession.url);
 
-    // Verify Stripe was called with correct parameters
+    // Verify Stripe call includes locale in metadata and correct currency
     expect(stripe.checkout.sessions.create).toHaveBeenCalledWith(
       expect.objectContaining({
         payment_method_types: ["card"],
         line_items: expect.arrayContaining([
           expect.objectContaining({
             price_data: expect.objectContaining({
-              currency: "cad",
+              currency: "cad", // Check currency
               unit_amount: Math.round(mockItems[0].price * 100),
               product_data: expect.objectContaining({
                 name: mockItems[0].name,
+                description: mockItems[0].tags[0].slug, // Add description check
+                images: [
+                  `${process.env.NEXT_PUBLIC_BUNNY_PUBLIC_ASSETS_PULL_ZONE_URL}/${mockItems[0].images[0].url}`,
+                ], // Add images check
               }),
             }),
             quantity: 1,
@@ -243,41 +266,48 @@ describe("Checkout API", () => {
         mode: "payment",
         metadata: expect.objectContaining({
           userId: "user_123",
+          cartItems: JSON.stringify(
+            mockItems.map((item) => ({ id: item.id, price: item.price })),
+          ),
+          locale: "fr", // Check locale from cookie mock
         }),
         customer_email: "test@example.com",
+        // Use the actual URLs based on environment variables
+        success_url: `${process.env.NEXT_PUBLIC_APP_URL}/account?session_id={CHECKOUT_SESSION_ID}`,
+        cancel_url: `${process.env.NEXT_PUBLIC_APP_URL}/shop`,
       }),
     );
   });
 
-  it("handles metadata string length constraints", async () => {
+  it("returns 500 when metadata string is too long", async () => {
     (auth as unknown as jest.Mock).mockResolvedValue({ userId: "user_123" });
     (currentUser as jest.Mock).mockResolvedValue(mockUser);
 
-    // Create a large number of items to potentially exceed metadata limit
-    const manyItems = Array(50)
+    // Create items that will exceed metadata limit when stringified
+    const longItems = Array(50)
       .fill(null)
       .map((_, i) => ({
         ...mockItems[0],
-        id: `product_${i}`,
-        name: `Product ${i}`.padEnd(50, "x"), // Long names to increase JSON length
+        id: `product_${i}_${"longid".repeat(10)}`, // Make ID longer
+        price: 10.0 + i,
       }));
 
     const req = new NextRequest(
       new Request("http://localhost/api/checkout", {
         method: "POST",
-        body: JSON.stringify({ items: manyItems }),
+        body: JSON.stringify({ items: longItems }),
       }),
     );
 
     const response = await POST(req);
 
     expect(response.status).toBe(500);
-
     const data = await response.json();
 
-    expect(data.error).toContain("Checkout failed due to internal error");
-
-    // Verify error logging occurred
+    // Expect structured error
+    expect(data.error).toBe(
+      "Checkout failed due to internal error (metadata).",
+    );
     expect(console.error).toHaveBeenCalledWith(
       "Metadata string too long for Stripe Checkout",
     );

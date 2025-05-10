@@ -13,7 +13,7 @@ jest.mock("@/components/icons", () => ({
 
 // Mock translation function
 const mockT = Object.assign(
-  (key: string) => {
+  (key: string, ..._args: any[]) => {
     const translations: { [key: string]: string } = {
       title: "Success Title",
       success: "Success Message",
@@ -22,9 +22,9 @@ const mockT = Object.assign(
     return translations[key] || key;
   },
   {
-    rich: (key: string) => key,
-    markup: (key: string) => key,
-    raw: (key: string) => key,
+    rich: (key: string, ..._args: any[]) => key,
+    markup: (key: string, ..._args: any[]) => key,
+    raw: (key: string, ..._args: any[]) => key,
     has: (_key: string) => true,
   },
 );

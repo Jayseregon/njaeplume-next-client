@@ -12,6 +12,10 @@ import {
 import { prisma } from "@/lib/prismaClient";
 import { Order } from "@/interfaces/StripeWebhook";
 
+// Define supported locales and default locale directly
+const supportedLocales = ["en", "fr"];
+const defaultLocale = "en";
+
 const relevantEvents = new Set([
   "checkout.session.completed",
   "checkout.session.async_payment_failed", // Added for async failures
@@ -64,6 +68,15 @@ export async function POST(req: NextRequest) {
 
           const userId = session.metadata?.userId;
           const cartItemsString = session.metadata?.cartItems;
+          const localeFromMeta = session.metadata?.locale;
+          // Use hardcoded values for validation and fallback
+          const locale =
+            localeFromMeta && supportedLocales.includes(localeFromMeta)
+              ? localeFromMeta
+              : defaultLocale; // Fallback to hardcoded default
+
+          console.log(`[WEBHOOK] Locale from metadata: ${locale}`);
+
           const stripeCustomerId = session.customer as string; // Can be null if customer wasn't created/attached
           const amountTotal = session.amount_total;
           const paymentIntentId = session.payment_intent as string;
@@ -157,11 +170,11 @@ export async function POST(req: NextRequest) {
                 data: parsedCartItems.map((item) => ({
                   orderId: order.id,
                   productId: item.id,
-                  price: item.price, // Store price paid at time of checkout
+                  price: item.price,
                 })),
               });
 
-              // Return the created order with necessary includes for email
+              // Return the created order with necessary data for email
               return await tx.order.findUniqueOrThrow({
                 where: { id: order.id },
                 include: {
@@ -174,7 +187,12 @@ export async function POST(req: NextRequest) {
               `[WEBHOOK] Order ${newOrder.displayId} created successfully via transaction.`,
             );
 
-            await sendPaymentConfirmationNotification(newOrder, session, user);
+            await sendPaymentConfirmationNotification(
+              newOrder,
+              session,
+              user,
+              locale, // Pass the determined locale
+            );
           } catch (dbError) {
             console.error(
               "[WEBHOOK] Database transaction failed for order creation:",
@@ -193,20 +211,31 @@ export async function POST(req: NextRequest) {
         case "checkout.session.async_payment_failed": {
           const session = event.data.object as Stripe.Checkout.Session;
           const customerEmail = session.customer_details?.email;
+          // Attempt to get locale from metadata, fallback to default
+          const localeFromMeta = session.metadata?.locale;
+          // Use hardcoded values for validation and fallback
+          const locale =
+            localeFromMeta && supportedLocales.includes(localeFromMeta)
+              ? localeFromMeta
+              : defaultLocale;
+
+          console.log(
+            `[WEBHOOK] Locale for async failure (from meta or default): ${locale}`,
+          );
 
           console.warn(
             `[WEBHOOK] Handling checkout.session.async_payment_failed: ${session.id}`,
           );
-          // Log relevant details for debugging
           console.warn(
             `[WEBHOOK] Failure details: Session ID: ${session.id}, Customer Email: ${customerEmail}`,
           );
 
-          // Send failure email notification
+          // Send failure email notification with locale
           await sendPaymentFailureNotification(
             session,
             user,
             "Your recent payment attempt failed. Please update your payment method or try again.",
+            locale, // Pass determined locale
           );
 
           // No order is created, so just acknowledge the events
@@ -215,17 +244,24 @@ export async function POST(req: NextRequest) {
 
         case "charge.failed": {
           const charge = event.data.object as Stripe.Charge;
+          // Locale might not be easily available here. Defaulting.
+          const locale = defaultLocale; // Use hardcoded default
+
+          console.log(
+            `[WEBHOOK] Locale for charge failure (defaulting): ${locale}`,
+          );
 
           console.warn(
             `[WEBHOOK] Handling charge.failed: ${charge.id}, Reason: ${charge.failure_message}`,
           );
 
-          // Send failure email notification
+          // Send failure email notification with locale
           await sendPaymentFailureNotification(
             charge,
             user,
             charge.failure_message ||
               "Your payment could not be processed. Please try again with a different payment method.",
+            locale, // Pass determined (default) locale
           );
 
           // No order is created

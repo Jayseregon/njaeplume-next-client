@@ -2,6 +2,8 @@
 import { z } from "zod";
 import { Resend } from "resend";
 
+import enMessages from "@/messages/en.json";
+import frMessages from "@/messages/fr.json";
 import { verifyRecaptcha } from "@/src/lib/actionHelpers";
 import ContactFormTemplate from "@/src/emails/ContactFormTemplate";
 import { Order } from "@/src/interfaces/StripeWebhook";
@@ -12,12 +14,30 @@ const RECAPTCHA_SECRET = process.env.RECAPTCHA_SECRET_KEY;
 const contactDefaultFrom = process.env.CONTACT_DEFAULT_FROM;
 const resend = new Resend(process.env.RESEND_API_KEY);
 
+// Define available locales and message map
+type Messages = typeof enMessages;
+const messagesMap: Record<string, Messages> = {
+  en: enMessages,
+  fr: frMessages,
+};
+
 export async function sendPaymentConfirmationEmail(
   newOrder: Order,
   customerName: string,
   customerEmail: string,
+  locale: string,
 ): Promise<{ success: boolean; error?: string }> {
   try {
+    // Select messages based on locale, fallback to 'en'
+    const messages = messagesMap[locale] || messagesMap.en;
+    // Extract only the PaymentConfirmation messages
+    const paymentConfirmationMessages = messages.PaymentConfirmation;
+    // Extract ProductCard messages for category translation
+    const productCardMessages = messages.ProductCard;
+
+    console.log("Selected locale:", locale);
+    console.log("Selected messages:", messages);
+
     const schema = z.object({
       displayId: z.string(),
       amount: z.number(),
@@ -36,6 +56,7 @@ export async function sendPaymentConfirmationEmail(
       ),
       customerName: z.string(),
       customerEmail: z.string().email("Invalid email address"),
+      locale: z.string(),
     });
 
     const parsed = schema.safeParse({
@@ -45,6 +66,7 @@ export async function sendPaymentConfirmationEmail(
       items: newOrder.items,
       customerName,
       customerEmail,
+      locale,
     });
 
     if (!parsed.success) {
@@ -60,7 +82,8 @@ export async function sendPaymentConfirmationEmail(
     // Generate a proper download link to the user's account/orders page
     const downloadLink = `${process.env.NEXT_PUBLIC_APP_URL}/account/downloads`;
 
-    const subject = "Order Confirmation: " + data.displayId;
+    // Use translated subject from the filtered messages
+    const subject = `${paymentConfirmationMessages.subject}: ${data.displayId}`;
 
     const { error } = await resend.emails.send({
       from: contactDefaultFrom!,
@@ -70,6 +93,8 @@ export async function sendPaymentConfirmationEmail(
       react: PaymentConfirmationEmail({
         ...data,
         downloadLink,
+        messages: paymentConfirmationMessages,
+        categoryMessages: productCardMessages.category,
       }),
     });
 
@@ -89,16 +114,24 @@ export async function sendPaymentConfirmationEmail(
 export async function sendPaymentFailureEmail(
   customerName: string,
   customerEmail: string,
+  locale: string,
 ): Promise<{ success: boolean; error?: string }> {
   try {
+    // Select messages based on locale, fallback to 'en'
+    const messages = messagesMap[locale] || messagesMap.en;
+    // Extract only the PaymentFailure messages
+    const paymentFailureMessages = messages.PaymentFailure;
+
     const schema = z.object({
       customerName: z.string(),
       customerEmail: z.string().email("Invalid email address"),
+      locale: z.string(),
     });
 
     const parsed = schema.safeParse({
       customerName,
       customerEmail,
+      locale,
     });
 
     if (!parsed.success) {
@@ -111,7 +144,8 @@ export async function sendPaymentFailureEmail(
 
     const data = parsed.data;
 
-    const subject = "Payment Failure Notification";
+    // Use translated subject
+    const subject = paymentFailureMessages.subject;
 
     const { error } = await resend.emails.send({
       from: contactDefaultFrom!,
@@ -119,7 +153,8 @@ export async function sendPaymentFailureEmail(
       subject: subject,
       text: subject,
       react: PaymentFailureEmail({
-        ...data,
+        customerName: data.customerName,
+        messages: paymentFailureMessages,
       }),
     });
 

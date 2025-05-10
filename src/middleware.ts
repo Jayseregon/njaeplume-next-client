@@ -8,10 +8,11 @@ function applyCsp(response: Response, _req: NextRequest): Response {
   const nonce = Buffer.from(crypto.randomUUID()).toString("base64");
   const cspHeader = `
     default-src 'self';
-    script-src 'self' 'nonce-${nonce}' https://www.google.com https://www.gstatic.com https://vercel.live https://*.clerk.accounts.dev https://clerk.njaeplume.com;
-    style-src 'self' 'nonce-${nonce}' 'unsafe-inline';
-    img-src 'self' blob: data: https://njaeink-remote-pull.b-cdn.net https://njae-plume-public-assets-pull.b-cdn.net https://img.clerk.com;
+    script-src 'self' 'nonce-${nonce}' 'unsafe-eval' 'strict-dynamic' https://www.google.com https://www.gstatic.com https://vercel.live https://*.clerk.accounts.dev https://clerk.njaeplume.com https://app.termageddon.com https://privacy-proxy.usercentrics.eu https://app.usercentrics.eu https://termageddon.ams3.cdn.digitaloceanspaces.com;
+    style-src 'self' 'nonce-${nonce}' 'unsafe-inline' 'unsafe-eval' https://app.termageddon.com ;
+    img-src 'self' blob: data: https://njaeink-remote-pull.b-cdn.net https://njae-plume-public-assets-pull.b-cdn.net https://img.clerk.com https://app.usercentrics.eu https://uct.service.usercentrics.eu;
     font-src 'self';
+    connect-src 'self' https://app.termageddon.com https://privacy-proxy.usercentrics.eu https://app.usercentrics.eu https://api.usercentrics.eu https://fonts.gstatic.com https://consent-api.service.consent.usercentrics.eu https://graphql.usercentrics.eu https://aggregator.service.usercentrics.eu https://termageddon.ams3.cdn.digitaloceanspaces.com;
     object-src 'none';
     base-uri 'self';
     form-action 'self';
@@ -19,6 +20,7 @@ function applyCsp(response: Response, _req: NextRequest): Response {
     worker-src 'self' blob:;
     connect-src 'self' https://ny.storage.bunnycdn.com https://storage.bunnycdn.com https://*.clerk.accounts.dev https://clerk-telemetry.com https://clerk.njaeplume.com;
     frame-ancestors 'none';
+    priority 'high' https://privacy-proxy.usercentrics.eu/latest/uc-block.bundle.js;
     upgrade-insecure-requests;
   `
     .replace(/\s{2,}/g, " ")

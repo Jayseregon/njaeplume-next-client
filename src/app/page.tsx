@@ -61,7 +61,7 @@ export default function RootPage() {
         {shop && shop.href ? (
           <Button asChild className="w-auto" variant="form">
             <Link href={shop.href}>
-              <Store /> {shop.label}
+              <Store /> {t("buttonCTA")}
             </Link>
           </Button>
         ) : (

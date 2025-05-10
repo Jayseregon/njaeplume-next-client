@@ -88,7 +88,7 @@ describe("Footer", () => {
       { text: "Cookies", href: "/policies/cookies" },
       { text: "Returns", href: "/policies/returns-refunds" },
       { text: "Shipping", href: "/policies/shipping" },
-      { text: "Disclaimers", href: "/policies/disclaimers" },
+      // { text: "Disclaimers", href: "/policies/disclaimers" },
     ];
 
     policyLinks.forEach((link) => {

@@ -1,6 +1,7 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
+import { useLocale } from "next-intl";
 import Image from "next/image";
 import Link from "next/link";
 import {
@@ -8,8 +9,11 @@ import {
   ChevronRight,
   ArrowLeft,
   ShoppingCart,
+  Heart,
 } from "lucide-react";
 import { toast } from "sonner";
+import { useTranslations } from "next-intl";
+import { useUser } from "@clerk/nextjs";
 
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
@@ -17,17 +21,51 @@ import { Separator } from "@/components/ui/separator";
 import { Product } from "@/src/interfaces/Products";
 import ErrorBoundary from "@/src/components/root/ErrorBoundary";
 import { PageTitle } from "@/src/components/root/PageTitle";
-import { getProductSpecificationsByCategory } from "@/src/lib/specsSelector";
+import { ProductSpecifications } from "@/src/components/product/specsSelector";
 import { useCartStore } from "@/providers/CartStoreProvider";
 import { formatPrice } from "@/lib/utils";
+import {
+  addToWishlist,
+  removeFromWishlist,
+  isProductInWishlist,
+} from "@/src/actions/prisma/action";
 
 export function ProductDetail({ product }: { product: Product }) {
+  const locale = useLocale();
+  const t = useTranslations("ProductDetail");
+  const tCard = useTranslations("ProductCard");
+  const tWishlist = useTranslations("Wishlist");
   const [currentImageIndex, setCurrentImageIndex] = useState(0);
   const pullZone = process.env.NEXT_PUBLIC_BUNNY_PUBLIC_ASSETS_PULL_ZONE_URL;
+  const { isSignedIn } = useUser();
+
+  const [isLiked, setIsLiked] = useState(false);
+  const [isLikeActionLoading, setIsLikeActionLoading] = useState(false);
 
   // Extract only the specific functions we need from the store
   const addToCart = useCartStore((state) => state.addToCart);
   const toggleCart = useCartStore((state) => state.toggleCart);
+
+  useEffect(() => {
+    if (isSignedIn && product.id) {
+      const checkWishlistStatus = async () => {
+        setIsLikeActionLoading(true);
+        try {
+          const status = await isProductInWishlist(product.id);
+
+          setIsLiked(status);
+        } catch (error) {
+          console.error("Failed to check wishlist status", error);
+        } finally {
+          setIsLikeActionLoading(false);
+        }
+      };
+
+      checkWishlistStatus();
+    } else {
+      setIsLiked(false);
+    }
+  }, [isSignedIn, product.id]);
 
   const hasMultipleImages = product.images.length > 1;
 
@@ -44,39 +82,104 @@ export function ProductDetail({ product }: { product: Product }) {
 
   const handleAddToCart = () => {
     addToCart(product);
-    toast.info(`${product.name} has been added to your cart.`);
-
-    // Optional: open the cart drawer after adding the item
+    toast.info(tCard("addToCartSuccess", { productName: product.name }));
     setTimeout(() => toggleCart(), 300);
   };
 
+  const handleToggleWishlist = async () => {
+    if (!isSignedIn) {
+      toast.error(tWishlist("signInRequired"));
+
+      return;
+    }
+    if (isLikeActionLoading) return;
+
+    setIsLikeActionLoading(true);
+    const originalIsLiked = isLiked;
+
+    setIsLiked(!originalIsLiked); // Optimistic update
+
+    try {
+      if (!originalIsLiked) {
+        await addToWishlist(product.id);
+        toast.success(tWishlist("added", { productName: product.name }));
+      } else {
+        await removeFromWishlist(product.id);
+        toast.success(tWishlist("removed", { productName: product.name }));
+      }
+    } catch (error) {
+      console.error("Failed to update wishlist", error);
+      toast.error(tWishlist("error"));
+      setIsLiked(originalIsLiked); // Revert on error
+    } finally {
+      setIsLikeActionLoading(false);
+    }
+  };
+
+  const productDescription =
+    locale === "fr" ? product.description_fr : product.description;
+
   return (
     <div className="container max-w-6xl mx-auto px-4">
-      {/* Back button visible on all screen sizes */}
-      <Button
-        asChild
-        className="mb-4 text-foreground"
-        size="sm"
-        variant="ghost"
-      >
-        <Link className="flex items-center" href="/shop/brushes">
-          <ArrowLeft className="mr-2 h-4 w-4" />
-          Back to {product.category}
-        </Link>
-      </Button>
+      {/* Container for Back button and Wishlist (Heart) button */}
+      <div className="flex items-center justify-between mb-4">
+        <Button
+          asChild
+          className="text-foreground" // Removed mb-4 from here
+          size="sm"
+          variant="ghost"
+        >
+          <Link
+            className="flex items-center"
+            href={`/shop/${product.category}`}
+          >
+            <ArrowLeft className="mr-2 h-4 w-4" />
+            {t(`backButton.${product.category}`)}
+          </Link>
+        </Button>
+        {isSignedIn && (
+          <Button
+            className="p-1 h-8 w-8 rounded-full hover:bg-rose-100 dark:hover:bg-rose-800" // Removed ml-2, flex-shrink-0, relative, -top-3
+            disabled={isLikeActionLoading}
+            size="icon"
+            title={
+              isLiked
+                ? tWishlist("removeFromWishlist")
+                : tWishlist("addToWishlist")
+            }
+            variant="ghost"
+            onClick={handleToggleWishlist}
+          >
+            <Heart
+              className={`h-5 w-5 ${isLiked ? "fill-rose-500 text-rose-500" : "text-muted-foreground group-hover:text-rose-500"}`}
+            />
+          </Button>
+        )}
+      </div>
 
       {/* Title and price for mobile - appears before images */}
       <div className="md:hidden mb-6">
-        <PageTitle title={product.name} />
+        {/* Flex container for PageTitle - Heart button removed from here */}
+        <div className="flex items-center justify-center">
+          {" "}
+          {/* Centering container for the group */}
+          <div className="inline-flex items-center">
+            {" "}
+            {/* Group title */}
+            <PageTitle title={product.name} />
+            {/* Heart button removed from here */}
+          </div>
+        </div>
         <div className="flex items-center justify-between mt-4">
           <p className="text-3xl font-bold">{formatPrice(product.price)}</p>
+          <div className="mx-10" />
           <Button
             className="whitespace-nowrap w-32 flex items-center gap-2"
             size="sm"
             onClick={handleAddToCart}
           >
             <ShoppingCart className="h-4 w-4" />
-            Add to Cart
+            {t("addToCartButton")}
           </Button>
         </div>
       </div>
@@ -88,7 +191,7 @@ export function ProductDetail({ product }: { product: Product }) {
           <ErrorBoundary
             fallback={
               <div className="w-full aspect-square bg-muted flex items-center justify-center rounded-lg">
-                <p>Failed to load image</p>
+                <p>{t("imageLoadError")}</p>
               </div>
             }
           >
@@ -107,7 +210,7 @@ export function ProductDetail({ product }: { product: Product }) {
               {hasMultipleImages && (
                 <>
                   <Button
-                    aria-label="Previous image"
+                    aria-label={t("prevImageAria")}
                     className="absolute left-2 top-1/2 -translate-y-1/2 bg-background/80 hover:bg-background/90 rounded-full"
                     size="icon"
                     variant="secondary"
@@ -117,7 +220,7 @@ export function ProductDetail({ product }: { product: Product }) {
                   </Button>
 
                   <Button
-                    aria-label="Next image"
+                    aria-label={t("nextImageAria")}
                     className="absolute right-2 top-1/2 -translate-y-1/2 bg-background/80 hover:bg-background/90 rounded-full"
                     size="icon"
                     variant="secondary"
@@ -136,7 +239,7 @@ export function ProductDetail({ product }: { product: Product }) {
               {product.images.map((image, i) => (
                 <button
                   key={image.id}
-                  aria-label={`View thumbnail ${i + 1}`}
+                  aria-label={t("thumbnailAria", { index: i + 1 })}
                   className={`flex-shrink-0 relative h-20 w-20 rounded-md overflow-hidden transition-all transform hover:scale-105 focus:scale-95 ${
                     currentImageIndex === i
                       ? "ring-2 ring-primary ring-offset-2"
@@ -159,20 +262,28 @@ export function ProductDetail({ product }: { product: Product }) {
 
         {/* Product Info */}
         <div className="space-y-6">
-          {/* Title for desktop */}
-          <div className="hidden md:block">
-            <PageTitle title={product.name} />
+          {/* Title for desktop - Heart button removed from here */}
+          <div className="hidden md:flex md:items-center md:justify-center">
+            {" "}
+            {/* Centering container for the group */}
+            <div className="inline-flex items-center">
+              {" "}
+              {/* Group title */}
+              <PageTitle title={product.name} />
+              {/* Heart button removed from here */}
+            </div>
           </div>
 
           {/* Price and add to cart for desktop */}
           <div className="hidden md:flex items-center justify-between">
             <p className="text-3xl font-bold">{formatPrice(product.price)}</p>
+            <div className="mx-10" />
             <Button
               className="w-40 flex items-center gap-2"
               onClick={handleAddToCart}
             >
               <ShoppingCart className="h-4 w-4" />
-              Add to Cart
+              {t("addToCartButton")}
             </Button>
           </div>
 
@@ -181,7 +292,7 @@ export function ProductDetail({ product }: { product: Product }) {
           {/* Description */}
           <div>
             <p className="whitespace-pre-wrap text-justify text-lg">
-              {product.description}
+              {productDescription}
             </p>
           </div>
 
@@ -200,7 +311,7 @@ export function ProductDetail({ product }: { product: Product }) {
 
           {/* Product Specifications */}
           <div className="w-full text-justify">
-            {getProductSpecificationsByCategory(product.category)}
+            <ProductSpecifications category={product.category} />
           </div>
         </div>
       </div>

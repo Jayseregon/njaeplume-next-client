@@ -97,13 +97,19 @@ const config: Config = {
 
   // A map from regular expressions to module names or to arrays of module names that allow to stub out resources with a single module
   moduleNameMapper: {
+    // Specific aliases for folders directly under src
     "^@/components/(.*)$": "<rootDir>/src/components/$1",
     "^@/config/(.*)$": "<rootDir>/src/config/$1",
     "^@/types/(.*)$": "<rootDir>/src/types/$1",
     "^@/interfaces/(.*)$": "<rootDir>/src/interfaces/$1",
     "^@/lib/(.*)$": "<rootDir>/src/lib/$1",
-    "^@/(.*)$": "<rootDir>/src/$1",
-    "^@/src/(.*)$": "<rootDir>/src/$1",
+    // Aliases for paths that explicitly start with @/src/
+    // These must come before the general "@/(.*)" rule to avoid "src/src" duplication.
+    "^@/src/hooks/(.*)$": "<rootDir>/src/hooks/$1",
+    "^@/src/(.*)$": "<rootDir>/src/$1", 
+    // General alias for @/foo -> src/foo (e.g., @/actions/file -> src/actions/file)
+    "^@/(.*)$": "<rootDir>/src/$1", 
+    // Other mocks
     "^framer-motion$": "<rootDir>/src/__tests__/__mocks__/framer-motion.tsx",
   },
 

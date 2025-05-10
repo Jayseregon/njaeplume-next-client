@@ -3,6 +3,7 @@
 import { useEffect, useState } from "react";
 import { useParams } from "next/navigation";
 import { notFound } from "next/navigation";
+import { useTranslations } from "next-intl";
 
 import { PageTitle } from "@/src/components/root/PageTitle";
 import { CategoryGallery } from "@/src/components/product/CategoryGallery";
@@ -16,16 +17,12 @@ const isCategoryValid = (category: string): category is Category => {
   return Object.values(Category).includes(category as Category);
 };
 
-const getCategoryTitle = (category: string): string => {
-  // Capitalize the first letter
-  return category.charAt(0).toUpperCase() + category.slice(1);
-};
-
 export default function CategoryPage() {
   const params = useParams();
   const categorySlug = params?.category as string;
   const [products, setProducts] = useState<Product[]>([]);
   const [isLoading, setIsLoading] = useState(true);
+  const t = useTranslations("Navbar");
 
   useEffect(() => {
     // Validate that the category is valid
@@ -57,7 +54,8 @@ export default function CategoryPage() {
     return notFound();
   }
 
-  const categoryTitle = getCategoryTitle(categorySlug);
+  // Use translated title
+  const categoryTitle = t(categorySlug);
 
   return (
     <div>

@@ -87,6 +87,7 @@ export async function createProductWithUploads(
     const name = formData.get("name") as string;
     const price = parseFloat(formData.get("price") as string);
     const description = formData.get("description") as string;
+    const description_fr = formData.get("description_fr") as string;
     const category = formData.get("category") as Category;
 
     // Extract file paths
@@ -141,6 +142,7 @@ export async function createProductWithUploads(
       name,
       price,
       description,
+      description_fr,
       category,
       zip_file_name: zipFilePath,
       tagIds: tagIds, // Pass the tag IDs for association

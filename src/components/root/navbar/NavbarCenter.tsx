@@ -3,6 +3,7 @@
 import React from "react";
 import NextLink from "next/link";
 import clsx from "clsx";
+import { useTranslations } from "next-intl"; // Import useTranslations
 
 import {
   NavigationMenu,
@@ -14,6 +15,8 @@ import { siteConfig } from "@/config/site";
 import { NavbarCenterProps } from "@/src/interfaces/Root";
 
 export function NavbarCenter({ currentPath }: NavbarCenterProps) {
+  const t = useTranslations("Navbar");
+
   return (
     <div className="hidden md:flex flex-1 justify-center">
       <NavigationMenu className="border-0 shadow-none bg-background">
@@ -27,7 +30,8 @@ export function NavbarCenter({ currentPath }: NavbarCenterProps) {
                   currentPath === item.href && "text-primary font-medium",
                 )}
               >
-                <NextLink href={item.href}>{item.label}</NextLink>
+                {/* Use translated label */}
+                <NextLink href={item.href}>{t(item.key)}</NextLink>
               </NavigationMenuLink>
             </NavigationMenuItem>
           ))}

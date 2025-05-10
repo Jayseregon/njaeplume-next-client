@@ -47,6 +47,11 @@ jest.mock("@/actions/prisma/action", () => ({
     mockGetProductsByCategory(category),
 }));
 
+// Mock next-intl
+jest.mock("next-intl", () => ({
+  useTranslations: () => (key: string) => key, // Simple mock returning the key
+}));
+
 // Sample freebie product data
 const mockProducts = [
   {
@@ -90,13 +95,12 @@ describe("FreebiesPage", () => {
     console.error = originalConsoleError;
   });
 
-  it("renders the page title correctly", async () => {
+  it("renders the page title correctly using translation key", async () => {
     mockGetProductsByCategory.mockResolvedValue(mockProducts);
 
     render(<FreebiesPage />);
-    expect(screen.getByTestId("page-title")).toHaveTextContent(
-      "Free Downloads",
-    );
+    // Check PageTitle receives the correct key
+    expect(screen.getByTestId("page-title")).toHaveTextContent("title");
   });
 
   it("renders loading state initially with empty products", async () => {

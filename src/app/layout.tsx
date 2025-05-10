@@ -8,6 +8,8 @@ import { SpeedInsights } from "@vercel/speed-insights/next";
 import { headers } from "next/headers";
 import Head from "next/head";
 import { getLocale, getMessages } from "next-intl/server";
+import Link from "next/link";
+import Script from "next/script"; // Import Script
 
 import Navbar from "@/components/root/navbar/Navbar";
 import Footer from "@/components/root/Footer";
@@ -23,6 +25,7 @@ import { Toaster } from "@/components/ui/sonner";
 import DisableRightClick from "@/components/DisableRightClick";
 import { CartStoreProvider } from "@/providers/CartStoreProvider";
 import { RootProviders } from "@/providers/RootProviders";
+import UsercentricsCookieConsent from "@/components/legals/UsercentricsCookieConsent";
 
 export const metadata: Metadata = {
   title: {
@@ -86,7 +89,27 @@ export default async function RootLayout({
           name="theme-color"
           nonce={nonce}
         />
+        <Link
+          href="//privacy-proxy.usercentrics.eu"
+          nonce={nonce}
+          rel="preconnect"
+        />
+        <Link href="//app.usercentrics.eu" nonce={nonce} rel="preconnect" />
+        {/* Add preload for the blocking script */}
+        <Link
+          as="script"
+          href="https://privacy-proxy.usercentrics.eu/latest/uc-block.bundle.js"
+          nonce={nonce || undefined}
+          rel="preload"
+        />
       </Head>
+      {/* Load Usercentrics blocking script early */}
+      <Script
+        id="uc-block-bundle-script"
+        nonce={nonce || undefined}
+        src="https://privacy-proxy.usercentrics.eu/latest/uc-block.bundle.js"
+        strategy="beforeInteractive"
+      />
       <body
         className={clsx(
           "min-h-screen font-sans antialiased",
@@ -125,6 +148,11 @@ export default async function RootLayout({
           </NextIntlClientProvider>
         </RootProviders>
         <Toaster />
+        <UsercentricsCookieConsent
+          nonce={nonce}
+          settingsId="f9mN3JpuDNuygD"
+          translationsUrl="https://termageddon.ams3.cdn.digitaloceanspaces.com/translations/"
+        />
       </body>
     </html>
   );

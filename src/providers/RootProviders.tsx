@@ -24,7 +24,15 @@ export function RootProviders({
   nonce,
 }: RootProvidersProps) {
   return (
-    <ClerkProvider nonce={nonce}>
+    <ClerkProvider
+      appearance={{
+        variables: {
+          colorBackground: "rgb(248, 245, 238)",
+          colorText: "rgb(196, 146, 136)",
+        },
+      }}
+      nonce={nonce}
+    >
       <NonceContext.Provider value={nonce}>
         <NextThemesProvider
           defaultTheme="dark"

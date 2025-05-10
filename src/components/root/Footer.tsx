@@ -74,12 +74,12 @@ export default function Footer({ nonce }: { nonce?: string }): JSX.Element {
               >
                 {t("cookies")}
               </Link>
-              <Link
+              {/* <Link
                 className="hover:underline hover:text-primary transition-colors"
                 href="/policies/disclaimers"
               >
                 {t("disclaimer")}
-              </Link>
+              </Link> */}
               <Link
                 className="hover:underline hover:text-primary transition-colors"
                 href={getSubItemByKey("eula").href}

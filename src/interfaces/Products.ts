@@ -5,6 +5,7 @@ export interface Product {
   name: string;
   price: number;
   description: string;
+  description_fr: string;
   category: Category;
   createdAt: Date;
   updatedAt: Date;
@@ -50,4 +51,11 @@ export interface OrderWithItems extends Order {
 
 export interface OrderItemWithProduct extends OrderItem {
   product: Product;
+}
+
+export interface WishlistItem {
+  userId: string;
+  productId: string;
+  createdAt: Date;
+  product?: Product;
 }

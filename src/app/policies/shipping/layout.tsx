@@ -5,7 +5,7 @@ export default function ShippingLayout({
 }) {
   return (
     <section className="flex flex-col items-center justify-center gap-4 py-6 md:py-10">
-      <div className="inline-block max-w-xl text-center justify-center">
+      <div className="inline-block max-w-4xl text-center justify-center">
         {children}
       </div>
     </section>

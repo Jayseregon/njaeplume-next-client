@@ -43,14 +43,3 @@ export const domAnimation = {};
 export const LazyMotion = ({ children }: { children: React.ReactNode }) =>
   children;
 export const m = motion;
-
-// Add a test to satisfy Jest's requirement
-describe("Framer Motion Mocks", () => {
-  it("provides mock components", () => {
-    expect(motion.div).toBeDefined();
-    expect(motion.nav).toBeDefined();
-    expect(motion.button).toBeDefined();
-    expect(AnimatePresence).toBeDefined();
-    expect(LazyMotion).toBeDefined();
-  });
-});
